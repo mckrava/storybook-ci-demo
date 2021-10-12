@@ -33,9 +33,6 @@
     "extract": "formatjs extract 'src/**/*.ts*' --out-file lang/en.json --id-interpolation-pattern '[sha512:contenthash:base64:6]' --ignore **/*.d.ts",
     "deploy-storybook": "storybook-to-ghpages"
   },
-  "resolutions": {
-    "mini-css-extract-plugin": "0.7.0"
-  },
   "eslintConfig": {
     "extends": [
       "react-app",
