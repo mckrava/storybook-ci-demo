@@ -21,12 +21,12 @@ jobs:
         run: yarn install
 
       - name: Build project
-        run: yarn build-storybook
+        run: yarn build-storybook --output-dir=./develop
 
       - name: Upload production-ready build files
         uses: actions/upload-artifact@v2
         with:
-          name: production-files
+          name: build-files
           path: ./develop
 
 
@@ -38,7 +38,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
-          name: production-files
+          name: build-files
           path: ./develop
 
       - uses: actions/checkout@v2
