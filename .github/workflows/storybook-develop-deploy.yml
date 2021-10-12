@@ -4,14 +4,43 @@ on:
     branches:
       - develop
 jobs:
-  build-and-deploy:
+  build:
+    name: Build Storybook
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: develop
+
+      - name: Install NPM packages
+        run: yarn install
+
+      - name: Build project
+        run: yarn build-storybook
+
+      - name: Upload production-ready build files
+        uses: actions/upload-artifact@v2
+        with:
+          name: production-files
+          path: ./develop
+
+
+  deploy:
+    name: Deploy Storubook
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: production-files
+          path: ./develop
+
       - uses: actions/checkout@v2
       - name: Install and Build 🔧
         # This needs an Acces Token stored as "GH_TOKEN" 👇
         run: |
           yarn install
-          yarn deploy-storybook -- --ci --branch=storybook-gh-pages --source-branch=develop --out=./develop
+          yarn deploy-storybook -- --ci --branch=storybook-gh-pages --source-branch=develop --existing-output-dir=./develop
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
