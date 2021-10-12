@@ -1,6 +1,9 @@
-name: Build & Deploy Storybook
+name: Build & Deploy Storybook Develop
 on:
   push:
+    branches:
+      - develop
+  pull_request:
     branches:
       - develop
 jobs:
@@ -49,16 +52,3 @@ jobs:
           publish_branch: storybook-gh-pages
           publish_dir: ./develop
           destination_dir: develop
-
-#      - name: Install Node.js
-#        uses: actions/setup-node@v1
-#        with:
-#          node-version: 14.x
-#
-#      - name: Install and Build 🔧
-#        # This needs an Acces Token stored as "GH_TOKEN" 👇
-#        run: |
-#          yarn install
-#          yarn deploy-storybook -- --ci --branch=storybook-gh-pages --existing-output-dir=./develop
-#        env:
-#          GH_TOKEN: ${{ secrets.GH_TOKEN }}
