@@ -35,17 +35,30 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
           name: build-files
           path: ./develop
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          publish_branch: storybook-gh-pages
+          publish_dir: ./develop
+          destination_dir: develop
 
-      - uses: actions/checkout@v2
-      - name: Install and Build 🔧
-        # This needs an Acces Token stored as "GH_TOKEN" 👇
-        run: |
-          yarn install
-          yarn deploy-storybook -- --ci --branch=storybook-gh-pages --source-branch=develop --existing-output-dir=./develop
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+#      - name: Install Node.js
+#        uses: actions/setup-node@v1
+#        with:
+#          node-version: 14.x
+#
+#      - name: Install and Build 🔧
+#        # This needs an Acces Token stored as "GH_TOKEN" 👇
+#        run: |
+#          yarn install
+#          yarn deploy-storybook -- --ci --branch=storybook-gh-pages --existing-output-dir=./develop
+#        env:
+#          GH_TOKEN: ${{ secrets.GH_TOKEN }}
