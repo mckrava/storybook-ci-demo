@@ -45,10 +45,15 @@ jobs:
         with:
           name: build-files
           path: ./fix-build
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GH_TOKEN }}
           publish_branch: storybook-gh-pages
           publish_dir: ./fix-build
-          destination_dir: ${ $GITHUB_REF#refs/heads/ }
+          destination_dir: ${{ steps.extract_branch.outputs.branch }}
