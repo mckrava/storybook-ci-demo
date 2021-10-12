@@ -51,4 +51,4 @@ jobs:
           github_token: ${{ secrets.GH_TOKEN }}
           publish_branch: storybook-gh-pages
           publish_dir: ./fix-build
-          destination_dir: ${{ $GITHUB_REF#refs/heads/ }}
+          destination_dir: ${ $GITHUB_REF#refs/heads/ }
