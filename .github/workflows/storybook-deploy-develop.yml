@@ -23,13 +23,10 @@ jobs:
       - name: Install NPM packages
         run: yarn install
 
-      - name: Build project
-        run: yarn build
-        env:
-          CI: false
-
-      - name: Build Storybook
-        run: yarn build-storybook --output-dir=./develop
+      - name: Build project and Storybook
+        run: |
+          yarn build
+          yarn build-storybook --output-dir=./develop
         env:
           CI: false
 
