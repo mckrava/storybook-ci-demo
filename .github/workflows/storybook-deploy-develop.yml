@@ -24,7 +24,14 @@ jobs:
         run: yarn install
 
       - name: Build project
+        run: yarn build
+        env:
+          CI: false
+
+      - name: Build Storybook
         run: yarn build-storybook --output-dir=./develop
+        env:
+          CI: false
 
       - name: Upload production-ready build files
         uses: actions/upload-artifact@v2
