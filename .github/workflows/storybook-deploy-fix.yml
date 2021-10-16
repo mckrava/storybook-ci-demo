@@ -12,15 +12,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-#      - name: Branch name
-#        run: echo running on branch ${GITHUB_REF#refs/heads/}
+      - name: Branch name
+        run: echo running on branch ${GITHUB_REF#refs/heads/}
 
-      - name: Extract branch name
+      - name: Extract branch name 1
         shell: bash
         run: |
           BRANCH_NAME="##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+
+      - name: Extract branch name 2
+        shell: bash
+        run: |
           echo $BRANCH_NAME
-        id: extract_branch
+#        id: extract_branch
 #
 #      - name: Install Node.js
 #        uses: actions/setup-node@v1
