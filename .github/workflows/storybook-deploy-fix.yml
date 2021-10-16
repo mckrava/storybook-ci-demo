@@ -54,7 +54,10 @@ jobs:
 
       - name: Check ls 2
         shell: bash
-        run: ls
+        run: |
+          ls
+          cd fix
+          ls
 
       - uses: EndBug/add-and-commit@v7
         with:
