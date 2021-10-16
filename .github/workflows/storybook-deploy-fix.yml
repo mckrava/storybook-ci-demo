@@ -20,13 +20,13 @@ jobs:
         shell: bash
         run: |
           chmod -R 777 ./scripts/gh-actions-branch-name-serialize.sh
-          echo "##[set-output name=folder_name;]fix/$(./scripts/gh-actions-branch-name-serialize.sh "${GITHUB_REF#refs/heads/fix/}")"
+          echo "##[set-output name=folder_name;]$GITHUB_WORKSPACE/fix/$(./scripts/gh-actions-branch-name-serialize.sh "${GITHUB_REF#refs/heads/fix/}")"
         id: branch_folder_name
 
       - name: Remove Existing build
         uses: JesseTG/rm@v1.0.2
         with:
-          path: ${{ "$GITHUB_WORKSPACE/${steps.branch_folder_name.outputs.folder_name}" }}
+          path: ${{ steps.branch_folder_name.outputs.folder_name }}
 
       - uses: EndBug/add-and-commit@v7
         with:
