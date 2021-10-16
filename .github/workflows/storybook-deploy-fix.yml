@@ -12,55 +12,62 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Branch name
-        run: echo running on branch ${GITHUB_REF#refs/heads/}
+#      - name: Branch name
+#        run: echo running on branch ${GITHUB_REF#refs/heads/}
 
-      - name: Install Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: 14.x
-
-      - name: Install NPM packages
-        run: yarn install
-
-      - name: Build project
-        run: yarn build
-        env:
-          CI: false
-
-      - name: Build Storybook
-        run: yarn build-storybook --output-dir=./fix-build
-        env:
-          CI: false
-
-      - name: Upload production-ready build files
-        uses: actions/upload-artifact@v2
-        with:
-          name: build-files
-          path: ./fix-build
-
-
-  deploy:
-    name: Deploy Storubook
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: build-files
-          path: ./fix-build
       - name: Extract branch name
         shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        run: |
+          BRANCH_NAME=echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          echo processed branch name - ${BRANCH_NAME}
         id: extract_branch
-
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GH_TOKEN }}
-          publish_branch: storybook-gh-pages
-          publish_dir: ./fix-build
-          destination_dir: ${{ steps.extract_branch.outputs.branch }}
+#
+#      - name: Install Node.js
+#        uses: actions/setup-node@v1
+#        with:
+#          node-version: 14.x
+#
+#      - name: Install NPM packages
+#        run: yarn install
+#
+#      - name: Build project
+#        run: yarn build
+#        env:
+#          CI: false
+#
+#      - name: Build Storybook
+#        run: yarn build-storybook --output-dir=./fix-build
+#        env:
+#          CI: false
+#
+#      - name: Upload production-ready build files
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: build-files
+#          path: ./fix-build
+#
+#
+#  deploy:
+#    name: Deploy Storubook
+#    needs: build
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#
+#      - name: Download artifact
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: build-files
+#          path: ./fix-build
+#      - name: Extract branch name
+#        shell: bash
+#        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+#        id: extract_branch
+#
+#      - name: Deploy
+#        uses: peaceiris/actions-gh-pages@v3
+#        with:
+#          github_token: ${{ secrets.GH_TOKEN }}
+#          publish_branch: storybook-gh-pages
+#          publish_dir: ./fix-build
+#          destination_dir: ${{ steps.extract_branch.outputs.branch }}
