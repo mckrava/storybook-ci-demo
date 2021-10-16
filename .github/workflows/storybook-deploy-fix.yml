@@ -76,7 +76,7 @@ jobs:
 #        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         run: |
           chmod -R 777 ./fix-build/gh-actions-branch-name-serialize.sh
-          echo "##[set-output name=branch;]$(./scripts/gh-actions-branch-name-serialize.sh "${GITHUB_REF#refs/heads/fix/}")"
+          echo "##[set-output name=branch;]fix/$(./scripts/gh-actions-branch-name-serialize.sh "${GITHUB_REF#refs/heads/fix/}")"
         id: extract_branch
       - name: Delete sanitize script file
         shell: bash
