@@ -23,6 +23,7 @@ jobs:
           chmod -R 777 ./scripts/gh-actions-branch-name-serialize.sh
           ./scripts/gh-actions-branch-name-serialize.sh "${GITHUB_REF#refs/heads/}"
           BRANCH_NAME=$(./scripts/gh-actions-branch-name-serialize.sh "${GITHUB_REF#refs/heads/}")
+          echo ">>> $BRANCH_NAME"
 
       - name: Extract branch name 2
         shell: bash
