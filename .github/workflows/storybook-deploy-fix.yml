@@ -19,7 +19,7 @@ jobs:
         shell: bash
         run: |
           BRANCH_NAME=echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-          echo processed branch name - ${BRANCH_NAME}
+          echo processed branch name - $BRANCH_NAME
         id: extract_branch
 #
 #      - name: Install Node.js
