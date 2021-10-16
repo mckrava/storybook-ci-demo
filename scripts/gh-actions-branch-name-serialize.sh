@@ -1,6 +1,5 @@
 #!/bin/bash
 # Sanitize $STRING for a container name
-echo "param - $1"
 STRING=$1
 
 # first, strip underscores
