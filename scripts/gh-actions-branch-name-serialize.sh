@@ -3,9 +3,9 @@
 STRING=$1
 
 # first, strip underscores
-CLEAN=${STRING//_/}
+#CLEAN=${STRING//_/}
 # next, replace spaces with underscores
-CLEAN=${CLEAN// /_}
+CLEAN=${STRING// /_}
 # now, clean out anything that's not alphanumeric or an underscore
 CLEAN=${CLEAN//[a-zA-Z0-9_\-\\/]/}
 # finally, lowercase with TR
