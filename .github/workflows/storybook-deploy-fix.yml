@@ -65,7 +65,7 @@ jobs:
       - name: Extract branch folder name
         shell: bash
         run: |
-          chmod -R 777 ./scripts/gh-actions-branch-name-serialize.sh
+          chmod -R 777 ./sb-build-files/gh-actions-branch-name-serialize.sh
           echo "##[set-output name=folder_name;]$GITHUB_WORKSPACE/fix/$(./sb-build-files/gh-actions-branch-name-serialize.sh "${GITHUB_REF#refs/heads/fix/}")"
         id: branch_folder_name
 
