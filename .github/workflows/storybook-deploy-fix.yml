@@ -20,7 +20,8 @@ jobs:
         run: |
           ls
           pwd
-          BRANCH_NAME=$(sh ./scripts/gh-actions-branch-name-serialize.sh)
+          chmod -R 777 ./scripts/gh-actions-branch-name-serialize.sh
+          BRANCH_NAME=$(./scripts/gh-actions-branch-name-serialize.sh "${GITHUB_REF#refs/heads/}")
 
       - name: Extract branch name 2
         shell: bash
