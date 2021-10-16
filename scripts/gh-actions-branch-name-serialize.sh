@@ -1,6 +1,6 @@
 #!/bin/bash
 # Sanitize $STRING for a container name
-STRING="#2-testing-branch"
+STRING=$1
 
 # first, strip underscores
 CLEAN=${STRING//_/}
