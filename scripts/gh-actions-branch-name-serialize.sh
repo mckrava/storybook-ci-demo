@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/dash
 # Sanitize $STRING for a container name
 STRING="#2\$-testing-branch_%"
 
