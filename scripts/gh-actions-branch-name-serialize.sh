@@ -1,6 +1,6 @@
-#!/bin/dash
+#!/bin/bash
 # Sanitize $STRING for a container name
-STRING="#2\$-testing-branch_%"
+STRING="#2-testing-branch"
 
 # first, strip underscores
 CLEAN=${STRING//_/}
