@@ -43,10 +43,18 @@ jobs:
           echo "##[set-output name=folder_name;]$GITHUB_WORKSPACE/fix/$(./scripts/gh-actions-branch-name-serialize.sh "${GITHUB_REF#refs/heads/fix/}")"
         id: branch_folder_name
 
+      - name: Check ls
+        shell: bash
+        run: ls
+
       - name: Remove Existing build
         uses: JesseTG/rm@v1.0.2
         with:
           path: ${{ steps.branch_folder_name.outputs.folder_name }}
+
+      - name: Check ls 2
+        shell: bash
+        run: ls
 
       - uses: EndBug/add-and-commit@v7
         with:
