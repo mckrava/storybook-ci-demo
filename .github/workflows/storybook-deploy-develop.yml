@@ -63,7 +63,7 @@ jobs:
 
   deploy:
     name: Deploy Storubook
-    needs: build
+    needs: clear_build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
