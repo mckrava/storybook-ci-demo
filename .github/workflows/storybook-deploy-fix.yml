@@ -35,9 +35,11 @@ jobs:
         env:
           CI: false
 
-      - name: Copy script file
-        shell: bash
-        run: cp -v ./scripts/gh-actions-branch-name-serialize.sh ./sb-build-files/gh-actions-branch-name-serialize.sh
+      - name: Upload name sanitize script file
+        uses: actions/upload-artifact@v2
+        with:
+          name: sanitize-script-file
+          path: ./scripts/gh-actions-branch-name-serialize.sh
 
 
       - name: Upload production-ready build files
@@ -56,17 +58,17 @@ jobs:
         with:
           ref: storybook-gh-pages
 
-      - name: Download artifact
+      - name: Download artifact (sanitize script)
         uses: actions/download-artifact@v2
         with:
-          name: build-files
-          path: ./sb-build-files
+          name: sanitize-script-file
+          path: ./scripts
 
       - name: Extract branch folder name
         shell: bash
         run: |
-          chmod -R 777 ./sb-build-files/gh-actions-branch-name-serialize.sh
-          echo "##[set-output name=folder_name;]$GITHUB_WORKSPACE/fix/$(./sb-build-files/gh-actions-branch-name-serialize.sh "${GITHUB_REF#refs/heads/fix/}")"
+          chmod -R 777 ./scripts/gh-actions-branch-name-serialize.sh
+          echo "##[set-output name=folder_name;]$GITHUB_WORKSPACE/fix/$(./scripts/gh-actions-branch-name-serialize.sh "${GITHUB_REF#refs/heads/fix/}")"
         id: branch_folder_name
 
       - name: Remove Existing build
@@ -74,9 +76,9 @@ jobs:
         with:
           path: ${{ steps.branch_folder_name.outputs.folder_name }}
 
-      - name: Remove build files from current branch
+      - name: Remove redundant files from the current branch
         shell: bash
-        run: rm -r ./sb-build-files
+        run: rm -r ./scripts
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -88,15 +90,21 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Download artifact
+      - name: Download artifact (build files)
         uses: actions/download-artifact@v2
         with:
           name: build-files
           path: ./sb-build-files
 
+      - name: Download artifact (sanitize script)
+        uses: actions/download-artifact@v2
+        with:
+          name: sanitize-script-file
+          path: ./scripts
+
       - name: Extract branch name
         shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        run: echo "##[set-output name=branch;]fix/$(./scripts/gh-actions-branch-name-serialize.sh "${GITHUB_REF#refs/heads/fix/}")"
         id: extract_branch
 
       - name: Deploy Storybook to GH Pages
