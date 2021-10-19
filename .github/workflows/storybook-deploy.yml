@@ -99,7 +99,6 @@ jobs:
         run: chmod -R 777 ./scripts/gh-actions-branch-name-serialize.sh
 
       - name: Extract branch folder name
-        if: github.event_name == 'push'
         shell: bash
         run: |
           if [[ $GITHUB_EVENT_NAME = 'push' ]]
@@ -161,7 +160,6 @@ jobs:
           path: ./scripts
 
       - name: Extract branch name (Push event)
-        if: github.event_name == 'push'
         shell: bash
         run: |
           if [[ $GITHUB_EVENT_NAME = 'push' ]]
