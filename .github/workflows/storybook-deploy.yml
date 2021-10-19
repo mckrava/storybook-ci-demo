@@ -2,18 +2,18 @@ name: Build & Deploy Storybook Fix
 on:
   push:
     branches:
+      - develop
       - 'fix/**'
   pull_request:
     branches:
       - 'fix/**'
+      - develop
 jobs:
   build:
     name: Build Storybook
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Branch name
-        run: echo running on branch ${GITHUB_REF#refs/heads/}
 
       - name: Install Node.js
         uses: actions/setup-node@v1
@@ -68,7 +68,7 @@ jobs:
         shell: bash
         run: |
           chmod -R 777 ./scripts/gh-actions-branch-name-serialize.sh
-          echo "##[set-output name=folder_name;]$GITHUB_WORKSPACE/fix/$(./scripts/gh-actions-branch-name-serialize.sh "${GITHUB_REF#refs/heads/fix/}")"
+          echo "##[set-output name=folder_name;]$GITHUB_WORKSPACE/$(./scripts/gh-actions-branch-name-serialize.sh "${GITHUB_REF#refs/heads/}")"
         id: branch_folder_name
 
       - name: Remove Existing build
@@ -107,7 +107,7 @@ jobs:
 
       - name: Extract branch name
         shell: bash
-        run: echo "##[set-output name=branch;]fix/$(./scripts/gh-actions-branch-name-serialize.sh "${GITHUB_REF#refs/heads/fix/}")"
+        run: echo "##[set-output name=branch;]$(./scripts/gh-actions-branch-name-serialize.sh "${GITHUB_REF#refs/heads/}")"
         id: extract_branch
 
       - name: Deploy Storybook to GH Pages
