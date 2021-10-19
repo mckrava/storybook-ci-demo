@@ -25,11 +25,11 @@ jobs:
           echo ">>> GITHUB_WORKSPACE - $GITHUB_WORKSPACE"
 
       - name: Pysh >
-        if: ${{ GITHUB_EVENT_NAME == "push" }}
+        if: github.event_name == 'push'
         run: echo "Push action !!! "
 
       - name: PR >
-        if: ${{ GITHUB_EVENT_NAME == "pull_request" }}
+        if: github.event_name == "pull_request"
         run: echo "PR action !!! "
 
 
