@@ -22,6 +22,15 @@ jobs:
           echo ">>> GITHUB_BASE_REF - $GITHUB_BASE_REF"
           echo ">>> GITHUB_EVENT_NAME - $GITHUB_EVENT_NAME"
           echo ">>> GITHUB_REPOSITORY - $GITHUB_REPOSITORY"
+          echo ">>> GITHUB_WORKSPACE - $GITHUB_WORKSPACE"
+
+      - name: Pysh >
+        if: ${{ GITHUB_EVENT_NAME == "push" }}
+        run: echo "Push action !!! "
+
+      - name: PR >
+        if: ${{ GITHUB_EVENT_NAME == "pull_request" }}
+        run: echo "PR action !!! "
 
 
 #
@@ -79,12 +88,11 @@ jobs:
 #        run: |
 #          chmod -R 777 ./scripts/gh-actions-branch-name-serialize.sh
 #          echo "##[set-output name=folder_name;]$GITHUB_WORKSPACE/$(./scripts/gh-actions-branch-name-serialize.sh "${GITHUB_HEAD_REF#refs/heads/}")"
-#          echo ">>> $GITHUB_WORKSPACE/$(./scripts/gh-actions-branch-name-serialize.sh "${GITHUB_HEAD_REF}")"
-#          echo ">>> $GITHUB_WORKSPACE/$(./scripts/gh-actions-branch-name-serialize.sh "${GITHUB_HEAD_REF}")"
 #        id: branch_folder_name
 #
 #      - name: Remove Existing build
 #        uses: JesseTG/rm@v1.0.2
+#        if: ${{ success() }}
 #        with:
 #          path: ${{ steps.branch_folder_name.outputs.folder_name }}
 #
