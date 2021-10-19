@@ -40,7 +40,7 @@ jobs:
             echo "Push ttt"
           elif [[ $GITHUB_EVENT_NAME = 'pull_request' ]]
           then
-            echo "Push ttt"
+            echo "PR ttt"
           else
             echo "++++"
           fi
