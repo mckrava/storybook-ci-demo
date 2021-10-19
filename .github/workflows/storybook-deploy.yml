@@ -35,11 +35,14 @@ jobs:
       - name: PR >
 #        run: if GITHUB_EVENT_NAME == 'push' (BRANCH_NAME="${GITHUB_REF#refs/heads/}") else ()
         run: |
-          if GITHUB_EVENT_NAME == 'push'
+          if GITHUB_EVENT_NAME 'push'
+          then
+            echo "Push ttt"
+          elseif GITHUB_EVENT_NAME 'pull_request'
           then
             echo "Push ttt"
           else
-            echo "PR"
+            echo "++++"
           fi
 
 
