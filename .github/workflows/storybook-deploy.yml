@@ -80,8 +80,8 @@ jobs:
         shell: bash
         run: rm -r ./scripts
 
-      - name: Chack git status
-        run: git status
+      - name: Add changes to git 
+        run: git add .
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
