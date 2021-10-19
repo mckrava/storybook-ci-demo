@@ -38,7 +38,7 @@ jobs:
           if GITHUB_EVENT_NAME 'push'
           then
             echo "Push ttt"
-          elseif GITHUB_EVENT_NAME 'pull_request'
+          elif GITHUB_EVENT_NAME 'pull_request'
           then
             echo "Push ttt"
           else
