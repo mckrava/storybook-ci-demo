@@ -24,26 +24,14 @@ jobs:
         run: |
           echo "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
 
-      - name: Checkout gh-pages branch existance
-        shell: bash
-        run: |
-          git rev-parse --verify --quiet app-builds-gh-pages
-        env:
-          GH_PAGES_FULL_BRANCH: ${{ secrets.GH_PAGES_FULL_BRANCH }}
-
+      - name: Checkout
+        uses: actions/checkout@v2
 
       - name: Checkout gh-pages branch existance
         shell: bash
         run: |
-          IS_GHP_BRANCH_EXISTS=$(git show-ref --verify --quiet --heads GH_PAGES_FULL_BRANCH)
-          echo ">>> $IS_GHP_BRANCH_EXISTS"
-          if [ -n "$IS_GHP_BRANCH_EXISTS" ]; then
-            echo "> true"
-            echo "##[set-output name=is_ghp_branch_exists;]true"
-          else
-            echo "> false"
-            echo "##[set-output name=is_ghp_branch_exists;]false"
-          fi
+          chmod -R 777 ./scripts
+          echo "##[set-output name=is_ghp_branch_exists;]$(./scripts/gh-actions-is-branch-exists.sh "$GH_PAGES_FULL_BRANCH")"
         env:
           GH_PAGES_FULL_BRANCH: ${{ secrets.GH_PAGES_FULL_BRANCH }}
         id: ghp_branch_existance
