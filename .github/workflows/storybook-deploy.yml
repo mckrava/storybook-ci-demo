@@ -23,7 +23,7 @@ jobs:
       - name: Checkout gh-pages branch existance
         shell: bash
         run: |
-          git rev-parse --verify $GH_PAGES_FULL_BRANCH
+          git rev-parse --verify "$GH_PAGES_FULL_BRANCH"
         env:
           GH_PAGES_FULL_BRANCH: ${{ secrets.GH_PAGES_FULL_BRANCH }}
 
