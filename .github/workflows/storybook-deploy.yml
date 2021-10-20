@@ -19,6 +19,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+      - name: 111
+        shell: bash
+        run: |
+          echo "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
+
       - name: Checkout gh-pages branch existance
         shell: bash
         run: |
