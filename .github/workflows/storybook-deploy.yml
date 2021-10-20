@@ -145,9 +145,8 @@ jobs:
         id: branch_folder_name
 
       - name: Remove Existing build (app and storybook)
-        if: ${{ steps.ghp_branch_existance.outputs.is_ghp_branch_exists == 'true' }}
         uses: JesseTG/rm@v1.0.2
-        if: ${{ success() }}
+        if: ${{ success() && steps.ghp_branch_existance.outputs.is_ghp_branch_exists == 'true' }}
         with:
           path: ${{ steps.branch_folder_name.outputs.folder_name }}
 
