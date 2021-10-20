@@ -18,7 +18,8 @@ jobs:
     name: Build UI app and Storybook
     runs-on: ubuntu-latest
     steps:
-
+      - uses: actions/checkout@v2
+        
       - name: Checkout gh-pages branch existance
         shell: bash
         run: |
