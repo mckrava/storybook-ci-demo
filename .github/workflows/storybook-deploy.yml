@@ -1,49 +1,24 @@
-name: Build & Deploy Storybook Fix
+name: Build & Deploy Storybook (Develop, Fix)
 on:
   push:
     branches:
       - develop
       - 'fix/**'
+      - 'feat/**'
   pull_request:
     branches:
       - 'fix/**'
-      - develop
+      - 'feat/**'
+
+# GH_PAGES_FULL_BRANCH - app-builds-gh-pages
+# GH_PAGES_BRANCH - storybook-gh-pages
+
 jobs:
   build:
-    name: Build Storybook
+    name: Build UI app and Storybook
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
-      - name: Debug
-        run: |
-          echo ">>> GITHUB_HEAD_REF - $GITHUB_HEAD_REF"
-          echo ">>> GITHUB_REF - $GITHUB_REF"
-          echo ">>> GITHUB_BASE_REF - $GITHUB_BASE_REF"
-          echo ">>> GITHUB_EVENT_NAME - $GITHUB_EVENT_NAME"
-          echo ">>> GITHUB_REPOSITORY - $GITHUB_REPOSITORY"
-          echo ">>> GITHUB_WORKSPACE - $GITHUB_WORKSPACE"
-
-#      - name: Pysh >
-#        if: github.event_name == 'push'
-#        run: echo "Push action !!! "
-#
-#      - name: PR >
-#        if: github.event_name == 'pull_request'
-#        run: echo "PR action !!! "
-
-#      - name: PR >
-#        run: if GITHUB_EVENT_NAME == 'push' (BRANCH_NAME="${GITHUB_REF#refs/heads/}") else ()
-#        run: |
-#          if [[ $GITHUB_EVENT_NAME = 'push' ]]
-#          then
-#            echo "Push ttt"
-#          elif [[ $GITHUB_EVENT_NAME = 'pull_request' ]]
-#          then
-#            echo "PR ttt"
-#          else
-#            echo "++++"
-#          fi
 
       - name: Install Node.js
         uses: actions/setup-node@v1
@@ -72,21 +47,27 @@ jobs:
           path: ./scripts/gh-actions-branch-name-serialize.sh
 
 
-      - name: Upload production-ready build files
+      - name: Upload production-ready SB build files
         uses: actions/upload-artifact@v2
         with:
-          name: build-files
+          name: sb-build-files
           path: ./sb-build-files
+
+      - name: Upload production-ready App build files
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-build-files
+          path: ./build
 
   clear_build:
     name: Clear existing build
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Checkout storybook-gh-pages branch
+      - name: Checkout gh-pages branch
         uses: actions/checkout@v2
         with:
-          ref: ${{ secrets.GH_PAGES_BRANCH }}
+          ref: ${{ secrets.GH_PAGES_FULL_BRANCH }}
 
       - name: Download artifact (sanitize script)
         uses: actions/download-artifact@v2
@@ -94,7 +75,7 @@ jobs:
           name: sanitize-script-file
           path: ./scripts
 
-      - name: Update script file rights
+      - name: Update script file
         shell: bash
         run: chmod -R 777 ./scripts/gh-actions-branch-name-serialize.sh
 
@@ -112,19 +93,7 @@ jobs:
           fi
         id: branch_folder_name
 
-#      - name: Extract branch folder name (Push event)
-#        if: github.event_name == 'push'
-#        shell: bash
-#        run: echo "##[set-output name=folder_name;]$GITHUB_WORKSPACE/$(./scripts/gh-actions-branch-name-serialize.sh "${GITHUB_REF#refs/heads/}")"
-#        id: branch_folder_name
-#
-#      - name: Extract branch folder name (PR event)
-#        if: github.event_name == 'pull_request'
-#        shell: bash
-#        run: echo "##[set-output name=folder_name;]$GITHUB_WORKSPACE/$(./scripts/gh-actions-branch-name-serialize.sh "$GITHUB_BASE_REF")"
-#        id: branch_folder_name
-
-      - name: Remove Existing build
+      - name: Remove Existing build (app and storybook)
         uses: JesseTG/rm@v1.0.2
         if: ${{ success() }}
         with:
@@ -138,20 +107,27 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         if: steps.auto-commit-action.outputs.changes_detected == 'true'
         with:
-          branch: ${{ secrets.GH_PAGES_BRANCH }}
+          branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
 
   deploy:
     name: Deploy Storybook
-    needs: clear_build
+    if: ${{ always() && needs.build.result=='success' }}
+    needs: [build, clear_build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
-      - name: Download artifact (build files)
+      - name: Download artifact - Storybook (build files)
         uses: actions/download-artifact@v2
         with:
-          name: build-files
+          name: sb-build-files
           path: ./sb-build-files
+
+      - name: Download artifact - App (build files)
+        uses: actions/download-artifact@v2
+        with:
+          name: app-build-files
+          path: ./app-build-files
 
       - name: Download artifact (sanitize script)
         uses: actions/download-artifact@v2
@@ -159,7 +135,7 @@ jobs:
           name: sanitize-script-file
           path: ./scripts
 
-      - name: Extract branch name (Push event)
+      - name: Extract branch folder name
         shell: bash
         run: |
           if [[ $GITHUB_EVENT_NAME = 'push' ]]
@@ -173,22 +149,18 @@ jobs:
           fi
         id: extract_branch
 
-#      - name: Extract branch name (Push event)
-#        if: github.event_name == 'push'
-#        shell: bash
-#        run: echo "##[set-output name=branch;]$(./scripts/gh-actions-branch-name-serialize.sh "${GITHUB_REF#refs/heads/}")"
-#        id: extract_branch
-#
-#      - name: Extract branch name (PR event)
-#        if: github.event_name == 'pull_request'
-#        shell: bash
-#        run: echo "##[set-output name=branch;]$(./scripts/gh-actions-branch-name-serialize.sh "$GITHUB_BASE_REF")"
-#        id: extract_branch
-
       - name: Deploy Storybook to GH Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GH_TOKEN }}
-          publish_branch: ${{ secrets.GH_PAGES_BRANCH }}
+          publish_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
           publish_dir: ./sb-build-files
-          destination_dir: ${{ steps.extract_branch.outputs.branch }}
+          destination_dir: ${{ format('{0}/{1}', steps.extract_branch.outputs.branch, 'storybook') }}
+
+      - name: Deploy App to GH Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          publish_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
+          publish_dir: ./app-build-files
+          destination_dir: ${{ format('{0}/{1}', steps.extract_branch.outputs.branch, 'app') }}
