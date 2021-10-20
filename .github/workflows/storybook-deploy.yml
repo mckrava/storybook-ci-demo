@@ -23,7 +23,7 @@ jobs:
       - name: Checkout gh-pages branch existance
         shell: bash
         run: |
-          IS_GHP_BRANCH_EXISTS=$(git show-ref --verify --quiet "refs/heads/$GH_PAGES_FULL_BRANCH")
+          IS_GHP_BRANCH_EXISTS=$(git show-ref --verify --quiet --heads GH_PAGES_FULL_BRANCH)
           echo ">>> $IS_GHP_BRANCH_EXISTS"
           if [ -n "$IS_GHP_BRANCH_EXISTS" ]; then
             echo "> true"
