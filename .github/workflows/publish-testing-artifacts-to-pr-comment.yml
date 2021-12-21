@@ -1,13 +1,13 @@
 name: Add artifact links to pull request
 on:
   workflow_run:
-    workflows: ["E2E and Unit Testing Flow"]
+    workflows: ["E2E_and_Unit_Testing_Flow"]
     types: [completed]
 
 jobs:
   artifacts-url-comments:
     name: Add artifact links to pull request
-    runs-on: windows-2019
+    runs-on: ubuntu-latest
     steps:
       - name: Add artifact links to pull request
         uses: tonyhallett/artifacts-url-comments@v1.1.0

@@ -1,4 +1,4 @@
-name: E2E and Unit Testing Flow
+name: E2E_and_Unit_Testing_Flow
 on:
   pull_request:
     branches:
@@ -197,11 +197,7 @@ jobs:
       # Update folders structure
 
       - name: Change folders permissions
-        run: |
-#          chmod -R 777 polkadot
-#          chmod -R 777 Basilisk-node
-#          chmod -R 777 Basilisk-api
-          chmod -R 777 ui-app
+        run: chmod -R 777 ui-app
 
       # Prepare Rust Env
 
@@ -255,8 +251,6 @@ jobs:
         run: |
           cd ui-app
           DEBUG=pw:browser* HEADFUL=true xvfb-run --auto-servernum -- yarn test:e2e-ci
-#        env:
-#          PLAYWRIGHT_TEST_BASE_URL: ${{ github.event.deployment_status.target_url }}
 
       - name: Sleep for 5 seconds
         run: sleep 5s
