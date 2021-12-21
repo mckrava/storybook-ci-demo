@@ -16,8 +16,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
-          prefix: Here are the artifacts
-          suffix: Have a nice day.
-          format: (name)[url]
+          prefix: 'Testing flow artifacts:'
+          suffix: Or check GH Actions for more logs.
+          format: 'Artifact - ({name})[{url}]'
           addTo: pull
           errorNoArtifacts: 'false'
