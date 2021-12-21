@@ -1,4 +1,4 @@
-name: E2E_and_Unit_Testing_Flow
+name: E2E and Unit Testing Flow
 on:
   pull_request:
     branches:
@@ -135,8 +135,8 @@ jobs:
         with:
           node-version: 16.x
 
-#      - name: Install Node.js HTTP-Server
-#        run: npm install -g http-server
+      - name: Install Node.js HTTP-Server
+        run: npm install -g http-server
 
 #      - name: Download artifact - Basilisk-node
 #        uses: actions/download-artifact@v2
@@ -181,23 +181,23 @@ jobs:
       # Prepare UI-app
 
       # Install NPM deps for running tests
-#      - name: Cache Node Modules for ui-app
-#        id: cache-node-modules-ui-app
-#        uses: actions/cache@v2
-#        with:
-#          path: ui-app/node_modules
-#          key: node-modules-ui-app-${{ hashFiles('ui-app/yarn.lock') }}
-#
-#      - name: Install Dependencies for ui-app
-#        if: steps.cache-node-modules-ui-app.outputs.cache-hit != 'true'
-#        run: |
-#          cd ui-app
-#          yarn
+      - name: Cache Node Modules for ui-app
+        id: cache-node-modules-ui-app
+        uses: actions/cache@v2
+        with:
+          path: ui-app/node_modules
+          key: node-modules-ui-app-${{ hashFiles('ui-app/yarn.lock') }}
+
+      - name: Install Dependencies for ui-app
+        if: steps.cache-node-modules-ui-app.outputs.cache-hit != 'true'
+        run: |
+          cd ui-app
+          yarn
 
       # Update folders structure
 
-#      - name: Change folders permissions
-#        run: chmod -R 777 ui-app
+      - name: Change folders permissions
+        run: chmod -R 777 ui-app
 
       # Prepare Rust Env
 
@@ -216,76 +216,76 @@ jobs:
 #        run: sleep 10s
 #        shell: bash
 
-#      - name: Run UI application
-#        shell: bash
-#        run: |
-#          cd ui-app/build
-#          http-server -s -p 3000 -a 127.0.0.1 &
+      - name: Run UI application
+        shell: bash
+        run: |
+          cd ui-app/build
+          http-server -s -p 3000 -a 127.0.0.1 &
 #
-#      - name: Sleep for 10 seconds
-#        run: sleep 10s
-#        shell: bash
-#
-#      - name: Install OS dependencies for Playwright
-#        run: npx playwright install-deps
-#
-#      - name: Make e2e testing env vars file visible
-#        run: mv ui-app/.env.test.e2e.ci ui-app/e2e-tests-vars.txt
-#        shell: bash
-#
-#      - name: Prepate E2E Tests Env Variables
-#        uses: falnyr/replace-env-vars-action@master
-#        env:
-#          E2E_TEST_ACCOUNT_NAME_ALICE: ${{ secrets.E2E_TEST_ACCOUNT_NAME_ALICE }}
-#          E2E_TEST_ACCOUNT_PASSWORD_ALICE: ${{ secrets.E2E_TEST_ACCOUNT_PASSWORD_ALICE }}
-#          E2E_TEST_ACCOUNT_SEED_ALICE: ${{ secrets.E2E_TEST_ACCOUNT_SEED_ALICE }}
-#        with:
-#          filename: ui-app/e2e-tests-vars.txt
-#
-#      - name: Make e2e testing env vars file hidden
-#        run: mv ui-app/e2e-tests-vars.txt ui-app/.env.test.e2e.ci
-#        shell: bash
-#
-#      - name: Run e2e tests
-#        shell: bash
-#        run: |
-#          cd ui-app
-#          DEBUG=pw:browser* HEADFUL=true xvfb-run --auto-servernum -- yarn test:e2e-ci
+      - name: Sleep for 10 seconds
+        run: sleep 10s
+        shell: bash
+
+      - name: Install OS dependencies for Playwright
+        run: npx playwright install-deps
+
+      - name: Make e2e testing env vars file visible
+        run: mv ui-app/.env.test.e2e.ci ui-app/e2e-tests-vars.txt
+        shell: bash
+
+      - name: Prepate E2E Tests Env Variables
+        uses: falnyr/replace-env-vars-action@master
+        env:
+          E2E_TEST_ACCOUNT_NAME_ALICE: ${{ secrets.E2E_TEST_ACCOUNT_NAME_ALICE }}
+          E2E_TEST_ACCOUNT_PASSWORD_ALICE: ${{ secrets.E2E_TEST_ACCOUNT_PASSWORD_ALICE }}
+          E2E_TEST_ACCOUNT_SEED_ALICE: ${{ secrets.E2E_TEST_ACCOUNT_SEED_ALICE }}
+        with:
+          filename: ui-app/e2e-tests-vars.txt
+
+      - name: Make e2e testing env vars file hidden
+        run: mv ui-app/e2e-tests-vars.txt ui-app/.env.test.e2e.ci
+        shell: bash
+
+      - name: Run e2e tests
+        shell: bash
+        run: |
+          cd ui-app
+          DEBUG=pw:browser* HEADFUL=true xvfb-run --auto-servernum -- yarn test:e2e-ci
 
       - name: Sleep for 5 seconds
         run: sleep 5s
         shell: bash
-#
-#      - name: Upload trace files
-#        if: always()
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: traces_screenshots
-#          path: ./ui-app/traces
-#
-#      - name: Upload e2e tests report file
-#        if: always()
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: e2e_tests_report_html
-#          path: ./ui-app/ui-app-e2e-results.html
-#
-#      - name: Run unit tests
-#        if: always()
-#        run: |
-#          cd ui-app
-#          yarn test:ci
-#
-#      - name: Sleep for 5 seconds
-#        run: sleep 5s
-#        shell: bash
-#
-#      - name: Upload unit tests report file
-#        if: always()
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: unint_tests_report_html
-#          path: ./ui-app/ui-app-unit-tests-results.html
+
+      - name: Upload trace files
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: traces_screenshots
+          path: ./ui-app/traces
+
+      - name: Upload e2e tests report file
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: e2e_tests_report_html
+          path: ./ui-app/ui-app-e2e-results.html
+
+      - name: Run unit tests
+        if: always()
+        run: |
+          cd ui-app
+          yarn test:ci
+
+      - name: Sleep for 5 seconds
+        run: sleep 5s
+        shell: bash
+
+      - name: Upload unit tests report file
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: unint_tests_report_html
+          path: ./ui-app/ui-app-unit-tests-results.html
 
 #      - name: Stop testnet
 #        if: always()
