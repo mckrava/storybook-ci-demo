@@ -9,13 +9,17 @@ jobs:
     name: Add artifact links to pull request
     runs-on: ubuntu-latest
     steps:
-      - name: Add artifact links to pull request
-        uses: tonyhallett/artifacts-url-comments@v1.1.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Install Node.js
+        uses: actions/setup-node@v1
         with:
-          prefix: Here are the artifacts
-          suffix: Have a nice day.
-          format: (name)[url]
-          addTo: pull
-          errorNoArtifacts: 'false'
+          node-version: 14.x
+#      - name: Add artifact links to pull request
+#        uses: tonyhallett/artifacts-url-comments@v1.1.0
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+#        with:
+#          prefix: Here are the artifacts
+#          suffix: Have a nice day.
+#          format: (name)[url]
+#          addTo: pull
+#          errorNoArtifacts: 'false'
