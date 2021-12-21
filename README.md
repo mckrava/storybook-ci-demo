@@ -1,46 +1,78 @@
-# Getting Started with Create React App
+# Basilisk UI
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Storybook based front-end for Basilisk parachain employing react-use hooks and Apollo Client for data layer.
 
-## Available Scripts
+## Develop
 
-In the project directory, you can run:
+Use yarn to install dependencies
 
-### `yarn start`
+```
+yarn install
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Start Storybook component development environment.
 
+```
+yarn storybook
+```
+
+Storybook can be opened at [:6006](http://localhost:6006)
+
+Run the app in the development mode locally. 
+
+*Requires to have [Basilisk API](https://github.com/galacticcouncil/Basilisk-api#readme) testnet running and 
+optionally its indexer and processor as well.*
+
+```
+yarn start
+```
+
+Open [:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
-### `yarn test`
+Start tests interactive mode
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```
+yarn test
+```
 
-### `yarn build`
+## Deploy
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+GitHub Actions Workflow is configured for deployment of UI application and Storybooks
+at the same time. Each branch `develop|feat|fix/**` deploys to appropriate folder in `app-builds-gh-pages` branch. 
+Branch folder contains 2 sub-folders: `app` and `storybook` for UI app and Storybook builds
+accordingly.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+App UI builds and Storybooks are hosted in GitHub Pages.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+For access to the builds you can use these paths:
+- **UI app** - `https://galacticcouncil.github.io/basilisk-ui/<folder_name>/<subfolder_name?>/app`
+- **Storybook build** - `https://galacticcouncil.github.io/basilisk-ui/<folder_name>/<subfolder_name?>/storybook`
 
-### `yarn eject`
+Deployment triggers: 
+```yaml
+push:
+    branches:
+        - develop
+        - 'fix/**'
+        - 'feat/**'
+pull_request:
+    branches:
+        - 'fix/**'
+        - 'feat/**'
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+To build optimized production artifacts locally you can run 
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```
+yarn build
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## FAQ
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Why my build fails on `error:03000086:digital envelope routines::initialization error` ?
+You have to use legacy openssl provider in node 17+. Set this to node options
+```
+export NODE_OPTIONS=--openssl-legacy-provider
+```
