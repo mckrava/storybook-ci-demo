@@ -3,9 +3,6 @@ on:
   workflow_run:
     workflows:
       - E2E_and_Unit_Testing_Flow
-    branches:
-      - develop
-      - 'feat/artifacts-testing'
     types:
       - completed
       - requested
@@ -18,7 +15,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 14.x
+          node-version: 16.x
 #      - name: Add artifact links to pull request
 #        uses: tonyhallett/artifacts-url-comments@v1.1.0
 #        env:
