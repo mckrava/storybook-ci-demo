@@ -3,9 +3,6 @@ on:
   workflow_run:
     workflows:
       - E2E_and_Unit_Testing_Flow
-    branches:
-      - develop
-      - 'feat/artifacts-testing'
     types:
       - completed
       - requested
