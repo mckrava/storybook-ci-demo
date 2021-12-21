@@ -8,6 +8,7 @@ on:
       - 'feat/artifacts-testing'
     types:
       - completed
+      - requested
 
 jobs:
   artifacts-url-comments:
