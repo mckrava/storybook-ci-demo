@@ -6,7 +6,6 @@ on:
   push:
     branches:
       - 'feat/add-playwright-e2e-test-flow'
-      - 'feat/artifacts-testing'
 
 jobs:
 #  set_test_env_polkadot_node:
