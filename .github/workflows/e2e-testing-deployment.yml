@@ -5,7 +5,7 @@ on:
       - develop
   push:
     branches:
-      - 'feat/add-playwright-e2e-test-flow'
+      - 'feat/add-playwright-e2e-test-flow2'
 
 jobs:
 #  set_test_env_polkadot_node:
