@@ -18,6 +18,6 @@ jobs:
         with:
           prefix: 'Testing flow artifacts:'
           suffix: Or check GH Actions for more logs.
-          format: 'Artifact item - [{name}]({url})'
+          format: '- [{name}]({url})'
           addTo: pull
           errorNoArtifacts: 'false'
