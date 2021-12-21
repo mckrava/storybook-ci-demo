@@ -1,0 +1,10 @@
+type LastBlock {
+    id: String!
+    # yes, this is correct
+    parachainBlockNumber: String,
+    relaychainBlockNumber: String,
+}
+
+extend type Query {
+    lastBlock: LastBlock
+}

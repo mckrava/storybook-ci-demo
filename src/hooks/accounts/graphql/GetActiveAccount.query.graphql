@@ -1,0 +1,26 @@
+# TODO: fetch only balances for the active fee payment asset
+query GetActiveAccount {
+    lastBlock @client { 
+        parachainBlockNumber,
+        relaychainBlockNumber,
+    }
+    
+    account: accounts(isActive: true) @client {
+        id,
+        name,
+        isActive,
+        balances {
+            assetId,
+            balance
+        },
+        vestingSchedule {
+            # figure out why this fragment doesnt work
+            # ...VestingScheduleFields,
+            remainingVestingAmount,
+            start,
+            period,
+            periodCount,
+            perPeriod
+        }
+    } 
+}
