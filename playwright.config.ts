@@ -12,7 +12,7 @@ const config: PlaywrightTestConfig = {
   expect: {
     timeout: 60 * 1000,
   },
-  retries: 3,
+  retries: 1,
   use: {
     actionTimeout: 10 * 1000,
     navigationTimeout: 60 * 1000,
