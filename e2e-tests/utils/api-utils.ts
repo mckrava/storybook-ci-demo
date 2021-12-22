@@ -3,9 +3,12 @@ import axios, { AxiosResponse } from 'axios';
 export const getBasiliskProcessorIndexerStatus = async () => {
   const graphQlEndpoint = process.env.INDEXER_GRAPHQL_URL;
 
+  console.log('INDEXER_GRAPHQL_URL >> - ' ,process.env.INDEXER_GRAPHQL_URL)
+
   try {
     const procIndStatus: AxiosResponse = await axios({
-      url: graphQlEndpoint,
+      url: 'http://localhost:4010/v1/graphql',
+      // url: graphQlEndpoint,
       method: 'post',
       data: {
         query: `
