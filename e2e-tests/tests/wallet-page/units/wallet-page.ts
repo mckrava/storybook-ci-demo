@@ -12,7 +12,7 @@ const testUnitWalletPage = async (browserContext: ChromiumBrowserContext) => {
 
   const page: Page = await browserContext.newPage();
 
-  await page.goto('http://127.0.0.1:3000/#/wallet');
+  await page.goto('http://127.0.0.1:3030/#/wallet');
 
   await page.waitForLoadState();
 
