@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from 'axios';
 
-const graphQlEndpoint = process.env.INDEXER_GRAPHQL_URL;
-
 export const getBasiliskProcessorIndexerStatus = async () => {
+  const graphQlEndpoint = process.env.INDEXER_GRAPHQL_URL;
+
   try {
     const procIndStatus: AxiosResponse = await axios({
       url: graphQlEndpoint,
