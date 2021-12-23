@@ -159,7 +159,7 @@ jobs:
       # Prepare Basilisk-api
 
       - name: Clone Basilisk-api
-        run: git clone -b develop https://github.com/galacticcouncil/Basilisk-api.git
+        run: git clone -b feature/change-indexer-ws-provider-url https://github.com/galacticcouncil/Basilisk-api.git
 
       - name: Cache Node Modules for Basilisk-api
         id: cache-node-modules-basilisk-api
