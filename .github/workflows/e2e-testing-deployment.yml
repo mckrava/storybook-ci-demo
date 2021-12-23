@@ -150,13 +150,6 @@ jobs:
         with:
           path: 'ui-app'
 
-      - name: Update script file
-        shell: bash
-        run: |
-          chmod -R 777 ./ui-app/scripts
-          cp -v ui-app/scripts/gh-actions-wait-for-log-message.sh Basilisk-api/gh-actions-wait-for-log-message.sh
-          cp -v ui-app/scripts/gh-actions-run-testner-with-waiting.sh Basilisk-api/gh-actions-run-testner-with-waiting.sh
-
       #      - name: Download artifact - UI app build
       #        uses: actions/download-artifact@v2
       #        with:
@@ -182,6 +175,14 @@ jobs:
           yarn
 
       # Prepare UI-app
+    
+      - name: Update script file
+        shell: bash
+        run: |
+          chmod -R 777 ./ui-app/scripts
+          cp -v ui-app/scripts/gh-actions-wait-for-log-message.sh Basilisk-api/gh-actions-wait-for-log-message.sh
+          cp -v ui-app/scripts/gh-actions-run-testner-with-waiting.sh Basilisk-api/gh-actions-run-testner-with-waiting.sh
+
 
       # Install NPM deps for running tests
       - name: Cache Node Modules for ui-app
