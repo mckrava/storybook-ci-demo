@@ -182,6 +182,7 @@ jobs:
           chmod -R 777 ./ui-app/scripts
           cp -v ui-app/scripts/gh-actions-wait-for-log-message.sh Basilisk-api/gh-actions-wait-for-log-message.sh
           cp -v ui-app/scripts/gh-actions-run-testner-with-waiting.sh Basilisk-api/gh-actions-run-testner-with-waiting.sh
+          cp -v ui-app/scripts/gh-actions-run-processor-with-waiting.sh Basilisk-api/gh-actions-run-processor-with-waiting.sh
 
 
       # Install NPM deps for running tests
@@ -212,7 +213,7 @@ jobs:
       - name: Configure Rust Env
         run: curl https://getsubstrate.io -sSf | bash -s -- --fast
 
-      # Run tests
+      # Run testnet
 
       - name: Run testnet
         shell: bash
@@ -228,6 +229,8 @@ jobs:
         run: sleep 5s
         shell: bash
 
+      # Run UI App
+
       - name: Run UI application
         shell: bash
         run: |
@@ -242,6 +245,8 @@ jobs:
         run: sleep 3s
         shell: bash
 
+      # Prepare Playwright env
+      -
       - name: Install OS dependencies for Playwright
         run: npx playwright install-deps
 
@@ -288,11 +293,10 @@ jobs:
         shell: bash
         run: |
           cd Basilisk-api
-          sh ../ui-app/scripts/./gh-actions-wait-for-log-message.sh
-          yarn run processor:start &
+          . ./gh-actions-run-processor-with-waiting.sh
 
-      - name: Sleep for 30 seconds
-        run: sleep 30s
+      - name: Sleep for 5 seconds
+        run: sleep 5s
         shell: bash
 
       - name: Check Docker containers
