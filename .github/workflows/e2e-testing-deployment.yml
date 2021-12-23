@@ -80,47 +80,47 @@ jobs:
           name: basilisk-node-artifacts
           path: ./Basilisk-node
 
-#  build_app:
-#    name: Build UI application
-#    runs-on: macos-11
-#    steps:
-#      - uses: actions/checkout@v2
-#
-#      - name: Install Node.js
-#        uses: actions/setup-node@v1
-#        with:
-#          node-version: 16.x
-#
-#      - name: Cache Node Modules for ui-app
-#        id: cache-node-modules-ui-app
-#        uses: actions/cache@v2
-#        with:
-#          path: node_modules
-#          key: node-modules-ui-app-${{ hashFiles('yarn.lock') }}
-#
-#      - name: Install Dependencies for ui-app
-#        if: steps.cache-node-modules-ui-app.outputs.cache-hit != 'true'
-#        run: rm -rf node_modules && yarn install --frozen-lockfile
-#
-#      - name: Update browserslist
-#        run: npx browserslist@latest --update-db
-#
-#      - name: Build App
-#        run: yarn run build:deployment
-#        env:
-#          CI: false
-#
-#      - name: Upload script files
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: script-files
-#          path: ./scripts
-#
-#      - name: Upload production-ready App build files
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: app-build-files
-#          path: ./build
+  #  build_app:
+  #    name: Build UI application
+  #    runs-on: macos-11
+  #    steps:
+  #      - uses: actions/checkout@v2
+  #
+  #      - name: Install Node.js
+  #        uses: actions/setup-node@v1
+  #        with:
+  #          node-version: 16.x
+  #
+  #      - name: Cache Node Modules for ui-app
+  #        id: cache-node-modules-ui-app
+  #        uses: actions/cache@v2
+  #        with:
+  #          path: node_modules
+  #          key: node-modules-ui-app-${{ hashFiles('yarn.lock') }}
+  #
+  #      - name: Install Dependencies for ui-app
+  #        if: steps.cache-node-modules-ui-app.outputs.cache-hit != 'true'
+  #        run: rm -rf node_modules && yarn install --frozen-lockfile
+  #
+  #      - name: Update browserslist
+  #        run: npx browserslist@latest --update-db
+  #
+  #      - name: Build App
+  #        run: yarn run build:deployment
+  #        env:
+  #          CI: false
+  #
+  #      - name: Upload script files
+  #        uses: actions/upload-artifact@v2
+  #        with:
+  #          name: script-files
+  #          path: ./scripts
+  #
+  #      - name: Upload production-ready App build files
+  #        uses: actions/upload-artifact@v2
+  #        with:
+  #          name: app-build-files
+  #          path: ./build
 
   run_tests:
     name: Run tests
@@ -131,8 +131,8 @@ jobs:
         with:
           node-version: 16.x
 
-      - name: Install Node.js HTTP-Server
-        run: npm install -g http-server
+      - name: Install Node.js HTTP-Server, wait-port
+        run: yarn global add http-server wait-port
 
       - name: Download artifact - Basilisk-node
         uses: actions/download-artifact@v2
@@ -150,11 +150,18 @@ jobs:
         with:
           path: 'ui-app'
 
-#      - name: Download artifact - UI app build
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: app-build-files
-#          path: ./ui-app/build
+      - name: Update script file
+        shell: bash
+        run: |
+          chmod -R 777 ./ui-app/scripts
+          cp -v ui-app/scripts/gh-actions-wait-for-log-message.sh Basilisk-api/gh-actions-wait-for-log-message.sh
+          cp -v ui-app/scripts/gh-actions-run-testner-with-waiting.sh Basilisk-api/gh-actions-run-testner-with-waiting.sh
+
+      #      - name: Download artifact - UI app build
+      #        uses: actions/download-artifact@v2
+      #        with:
+      #          name: app-build-files
+      #          path: ./ui-app/build
 
       # Prepare Basilisk-api
 
@@ -210,10 +217,14 @@ jobs:
         shell: bash
         run: |
           cd Basilisk-api
-          yarn testnet:start &
+          . ./gh-actions-run-testner-with-waiting.sh
 
-      - name: Sleep for 10 seconds
-        run: sleep 10s
+      - name: Wait for Basilisk Node port :9988
+        shell: bash
+        run: wait-port 9988
+
+      - name: Sleep for 5 seconds
+        run: sleep 5s
         shell: bash
 
       - name: Run UI application
@@ -222,8 +233,12 @@ jobs:
           cd ui-app/build
           http-server -s -p 3030 -a 127.0.0.1 &
 
-      - name: Sleep for 10 seconds
-        run: sleep 10s
+      - name: Wait for UI app port :3030
+        shell: bash
+        run: wait-port 3030
+
+      - name: Sleep for 3 seconds
+        run: sleep 3s
         shell: bash
 
       - name: Install OS dependencies for Playwright
@@ -252,11 +267,7 @@ jobs:
         shell: bash
         run: |
           cd Basilisk-api
-          yarn run processor:clean-and-setup &
-
-      - name: Sleep for 30 seconds
-        run: sleep 30s
-        shell: bash
+          yarn run processor:clean-and-setup
 
       - name: Run Indexer
         shell: bash
@@ -264,14 +275,19 @@ jobs:
           cd Basilisk-api
           yarn run indexer:start &
 
-      - name: Sleep for 45 seconds
-        run: sleep 45s
+      - name: Wait for UI app port :4010
+        shell: bash
+        run: wait-port 4010
+
+      - name: Sleep for 5 seconds
+        run: sleep 5s
         shell: bash
 
       - name: Run Processor
         shell: bash
         run: |
           cd Basilisk-api
+          sh ../ui-app/scripts/./gh-actions-wait-for-log-message.sh
           yarn run processor:start &
 
       - name: Sleep for 30 seconds
@@ -282,7 +298,6 @@ jobs:
         if: always()
         run: docker ps
         shell: bash
-
 
       # Run e2e tests
 
