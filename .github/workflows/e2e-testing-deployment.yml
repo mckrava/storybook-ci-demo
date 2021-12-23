@@ -217,12 +217,14 @@ jobs:
 
       - name: Run testnet
         shell: bash
+        timeout-minutes: 10
         run: |
           cd Basilisk-api
           . ./gh-actions-run-testner-with-waiting.sh
 
       - name: Wait for Basilisk Node port :9988
         shell: bash
+        timeout-minutes: 5
         run: wait-port 9988
 
       - name: Sleep for 5 seconds
@@ -239,6 +241,7 @@ jobs:
 
       - name: Wait for UI app port :3030
         shell: bash
+        timeout-minutes: 5
         run: wait-port 3030
 
       - name: Sleep for 3 seconds
@@ -281,8 +284,9 @@ jobs:
           cd Basilisk-api
           yarn run indexer:start &
 
-      - name: Wait for UI app port :4010
+      - name: Wait for Indexer port :4010
         shell: bash
+        timeout-minutes: 5
         run: wait-port 4010
 
       - name: Sleep for 5 seconds
@@ -291,6 +295,7 @@ jobs:
 
       - name: Run Processor
         shell: bash
+        timeout-minutes: 10
         run: |
           cd Basilisk-api
           . ./gh-actions-run-processor-with-waiting.sh
