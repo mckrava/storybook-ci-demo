@@ -124,7 +124,8 @@ jobs:
 
   run_tests:
     name: Run tests
-    runs-on: ubuntu-latest
+#    runs-on: ubuntu-latest
+    runs-on: macos-11
     needs: [set_test_env_polkadot_node, set_test_env_basilisk_node]
     steps:
       - uses: actions/setup-node@v2
