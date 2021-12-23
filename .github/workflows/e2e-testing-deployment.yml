@@ -246,7 +246,7 @@ jobs:
         shell: bash
 
       # Prepare Playwright env
-      -
+
       - name: Install OS dependencies for Playwright
         run: npx playwright install-deps
 
