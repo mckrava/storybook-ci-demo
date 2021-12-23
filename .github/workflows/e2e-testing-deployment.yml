@@ -175,7 +175,7 @@ jobs:
           yarn
 
       # Prepare UI-app
-    
+
       - name: Update script file
         shell: bash
         run: |
