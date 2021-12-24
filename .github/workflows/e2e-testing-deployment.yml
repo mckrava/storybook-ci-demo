@@ -9,13 +9,13 @@ jobs:
     name: Set test environment - Polkadot-node
     runs-on: ubuntu-latest
     steps:
-
-      - name: Find Docker Host IP
-        uses: addnab/docker-run-action@v1
-        with:
-          image: subsquid/hydra-indexer:5
-          run: apk update > /dev/null && apk add iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
-
+#
+#      - name: Find Docker Host IP
+#        uses: addnab/docker-run-action@v1
+#        with:
+#          image: subsquid/hydra-indexer:5
+#          run: apk update > /dev/null && apk add iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
+#
 
       - name: Clone Polkadot-node
         run: |
@@ -296,6 +296,20 @@ jobs:
         shell: bash
         timeout-minutes: 5
         run: wait-port 4010
+
+
+      - name: Sleep for 60 seconds
+        run: sleep 60s
+        shell: bash
+
+      - name: Get host ip
+        shell: bash
+        timeout-minutes: 3
+        run: |
+          ping -c 5 localhost:9988
+          docker exec -it indexer_indexer_1 /bin/sh
+          apk update > /dev/null && apk add iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
+          exit
 
       - name: Sleep for 5 seconds
         run: sleep 5s
