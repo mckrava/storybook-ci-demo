@@ -295,7 +295,7 @@ jobs:
 
       - name: Run Processor
         shell: bash
-        timeout-minutes: 10
+        timeout-minutes: 3
         run: |
           cd Basilisk-api
           . ./gh-actions-run-processor-with-waiting.sh
