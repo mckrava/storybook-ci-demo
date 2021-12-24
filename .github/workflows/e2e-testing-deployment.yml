@@ -9,6 +9,9 @@ jobs:
     name: Set test environment - Polkadot-node
     runs-on: ubuntu-latest
     steps:
+      - name: Check Docker
+        run: docker -v
+
       - name: Clone Polkadot-node
         run: |
           git clone https://github.com/paritytech/polkadot.git
