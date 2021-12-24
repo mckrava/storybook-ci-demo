@@ -306,7 +306,6 @@ jobs:
         shell: bash
         timeout-minutes: 3
         run: |
-          ping -c 5 localhost:9988
           docker exec -it indexer_indexer_1 /bin/sh
           apk update > /dev/null && apk add iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
           exit
