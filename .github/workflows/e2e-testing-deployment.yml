@@ -392,8 +392,19 @@ jobs:
           cd Basilisk-api/indexer
           docker compose exec -T indexer /bin/sh
           sudo apt-get update > /dev/null && sudo apt-get install iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
-          npm install -g wscat
-          wscat -c "ws://10.1.0.1:9988"
+          exit
+
+      - name: Get host ip
+        if: always()
+        shell: bash
+        timeout-minutes: 3
+        run: |
+          cd Basilisk-api/indexer
+          docker compose exec -T indexer /bin/sh
+          ping -c 2 10.1.0.1:3030
+
+#          npm install -g wscat
+#          wscat -c "ws://10.1.0.1:3030"
 
       - name: Sleep for 5 seconds
         run: sleep 5s
