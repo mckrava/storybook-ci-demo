@@ -5,23 +5,80 @@ on:
       - develop
 
 jobs:
+
+  test_docker_compose_network:
+    name: TEST network
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Node.js HTTP-Server, wait-port
+        run: yarn global add wait-port
+
+      - name: Clone Basilisk-api
+        run: git clone -b feature/change-indexer-ws-provider-url https://github.com/galacticcouncil/Basilisk-api.git
+
+      - name: Cache Node Modules for Basilisk-api
+        id: cache-node-modules-basilisk-api
+        uses: actions/cache@v2
+        with:
+          path: Basilisk-api/node_modules
+          key: node-modules-basilisk-api-${{ hashFiles('Basilisk-api/yarn.lock') }}
+
+      - name: Install Dependencies for Basilisk-api
+        if: steps.cache-node-modules-basilisk-api.outputs.cache-hit != 'true'
+        run: |
+          cd Basilisk-api
+          yarn
+
+      - name: Run Indexer
+        shell: bash
+        run: |
+          cd Basilisk-api
+          yarn run indexer:start &
+
+      - name: Wait for Indexer port :4010
+        shell: bash
+        timeout-minutes: 5
+        run: wait-port 4010
+
+
+      - name: Sleep for 30 seconds
+        run: sleep 60s
+        shell: bash
+
+      - name: Get host ip
+        if: always()
+        shell: bash
+        timeout-minutes: 3
+        run: |
+          docker exec -t indexer_indexer_1 /bin/sh
+          apk update > /dev/null && apk add iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
+          exit
+
+      - name: Get ips list
+        if: always()
+        shell: bash
+        timeout-minutes: 3
+        run: |
+          docker exec -t indexer_indexer_1 /bin/sh
+          cat /etc/hosts
+          exit
+
+#      - name: Find Docker Host IP
+#        uses: addnab/docker-run-action@v1
+#        with:
+#          image: subsquid/hydra-indexer:5
+#          run: apk update > /dev/null && apk add iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
+#
+#      - name: Find Docker Host IP
+#        uses: addnab/docker-run-action@v1
+#        with:
+#          image: subsquid/hydra-indexer:5
+#          run: cat /etc/hosts
+
   set_test_env_polkadot_node:
     name: Set test environment - Polkadot-node
     runs-on: ubuntu-latest
     steps:
-
-      - name: Find Docker Host IP
-        uses: addnab/docker-run-action@v1
-        with:
-          image: subsquid/hydra-indexer:5
-          run: apk update > /dev/null && apk add iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
-
-      - name: Find Docker Host IP
-        uses: addnab/docker-run-action@v1
-        with:
-          image: subsquid/hydra-indexer:5
-          run: cat /etc/hosts
-
 
       - name: Clone Polkadot-node
         run: |
