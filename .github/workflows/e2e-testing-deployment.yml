@@ -66,9 +66,10 @@ jobs:
         run: |
           cd Basilisk-api/indexer
           docker compose exec -T indexer /bin/sh
-          apk update > /dev/null && apk add iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
+          apk-get update > /dev/null && apk-get install iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
           exit
 
+  #          apk update > /dev/null && apk add iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
 
 
 #      - name: Find Docker Host IP
