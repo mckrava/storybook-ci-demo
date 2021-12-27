@@ -66,7 +66,7 @@ jobs:
         run: |
           cd Basilisk-api/indexer
           docker compose exec -T indexer /bin/sh
-          apt-get update > /dev/null && apt-get install iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
+          sudo apt-get update > /dev/null && sudo apt-get install iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
           exit
 
   #          apk update > /dev/null && apk add iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
