@@ -42,7 +42,7 @@ jobs:
 
 
       - name: Sleep for 30 seconds
-        run: sleep 60s
+        run: sleep 30s
         shell: bash
 
       - name: Get host ip
@@ -50,7 +50,7 @@ jobs:
         shell: bash
         timeout-minutes: 3
         run: |
-          docker exec -it indexer_indexer_1 /bin/sh
+          docker compose exec -T indexer_indexer_1 sh
           apk update > /dev/null && apk add iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
           exit
 
@@ -59,7 +59,7 @@ jobs:
         shell: bash
         timeout-minutes: 3
         run: |
-          docker exec -it indexer_indexer_1 /bin/sh
+          docker compose exec -T indexer_indexer_1 sh
           cat /etc/hosts
           exit
 
