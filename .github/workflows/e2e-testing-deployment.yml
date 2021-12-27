@@ -362,7 +362,7 @@ jobs:
         shell: bash
         run: |
           cd Basilisk-api
-          yarn run indexer:start &
+          yarn run indexer:start-ci-linux &
 
       - name: Wait for Indexer port :4010
         shell: bash
@@ -370,26 +370,28 @@ jobs:
         run: wait-port 4010
 
 
-      - name: Sleep for 60 seconds
-        run: sleep 60s
+      - name: Sleep for 20 seconds
+        run: sleep 20s
         shell: bash
-
-      - name: Get host ip
-        if: always()
-        shell: bash
-        timeout-minutes: 3
-        run: |
-          docker exec -t indexer_indexer_1 /bin/sh
-          apk update > /dev/null && apk add iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
-          exit
 
       - name: Get ips list
         if: always()
         shell: bash
         timeout-minutes: 3
         run: |
-          docker exec -t indexer_indexer_1 /bin/sh
+          cd Basilisk-api/indexer
+          docker compose exec -T indexer /bin/sh
           cat /etc/hosts
+          exit
+
+      - name: Get host ip
+        if: always()
+        shell: bash
+        timeout-minutes: 3
+        run: |
+          cd Basilisk-api/indexer
+          docker compose exec -T indexer /bin/sh
+          sudo apt-get update > /dev/null && sudo apt-get install iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
           exit
 
       - name: Sleep for 5 seconds
