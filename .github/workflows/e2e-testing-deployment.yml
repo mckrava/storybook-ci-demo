@@ -45,23 +45,29 @@ jobs:
         run: sleep 30s
         shell: bash
 
-      - name: Get host ip
-        if: always()
+      - name: docker ps
+        run: docker ps
         shell: bash
-        timeout-minutes: 3
-        run: |
-          docker compose exec -T indexer_indexer_1 sh
-          apk update > /dev/null && apk add iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
-          exit
 
       - name: Get ips list
         if: always()
         shell: bash
         timeout-minutes: 3
         run: |
-          docker compose exec -T indexer_indexer_1 sh
+          docker exec -it indexer_indexer_1 sh
           cat /etc/hosts
           exit
+
+      - name: Get host ip
+        if: always()
+        shell: bash
+        timeout-minutes: 3
+        run: |
+          docker exec -it indexer_indexer_1 sh
+          apk update > /dev/null && apk add iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
+          exit
+
+
 
 #      - name: Find Docker Host IP
 #        uses: addnab/docker-run-action@v1
