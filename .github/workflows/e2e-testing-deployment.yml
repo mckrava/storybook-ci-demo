@@ -55,7 +55,7 @@ jobs:
         timeout-minutes: 3
         run: |
           cd Basilisk-api/indexer
-          docker compose exec -T indexer_indexer_1 sh
+          docker compose exec -T indexer sh
           cat /etc/hosts
           exit
 
@@ -65,7 +65,7 @@ jobs:
         timeout-minutes: 3
         run: |
           cd Basilisk-api/indexer
-          docker compose exec -T indexer_indexer_1 sh
+          docker compose exec -T indexer sh
           apk update > /dev/null && apk add iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
           exit
 
