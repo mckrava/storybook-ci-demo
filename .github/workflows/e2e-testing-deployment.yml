@@ -9,13 +9,19 @@ jobs:
     name: Set test environment - Polkadot-node
     runs-on: ubuntu-latest
     steps:
-#
-#      - name: Find Docker Host IP
-#        uses: addnab/docker-run-action@v1
-#        with:
-#          image: subsquid/hydra-indexer:5
-#          run: apk update > /dev/null && apk add iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
-#
+
+      - name: Find Docker Host IP
+        uses: addnab/docker-run-action@v1
+        with:
+          image: subsquid/hydra-indexer:5
+          run: apk update > /dev/null && apk add iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
+
+      - name: Find Docker Host IP
+        uses: addnab/docker-run-action@v1
+        with:
+          image: subsquid/hydra-indexer:5
+          run: cat /etc/hosts
+
 
       - name: Clone Polkadot-node
         run: |
