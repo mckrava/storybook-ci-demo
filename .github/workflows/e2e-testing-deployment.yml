@@ -303,18 +303,20 @@ jobs:
         shell: bash
 
       - name: Get host ip
+        if: always()
         shell: bash
         timeout-minutes: 3
         run: |
-          docker exec -T indexer_indexer_1 /bin/sh
+          docker exec -t indexer_indexer_1 /bin/sh
           apk update > /dev/null && apk add iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
           exit
 
       - name: Get ips list
+        if: always()
         shell: bash
         timeout-minutes: 3
         run: |
-          docker exec -T indexer_indexer_1 /bin/sh
+          docker exec -t indexer_indexer_1 /bin/sh
           cat /etc/hosts
           exit
 
