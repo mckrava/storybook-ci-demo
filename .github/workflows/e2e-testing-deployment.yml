@@ -397,7 +397,7 @@ jobs:
       - name: Ping host ip
         if: always()
         shell: bash
-        timeout-minutes: 3
+        timeout-minutes: 5
         run: |
           cd Basilisk-api/indexer
           docker compose exec -T indexer /bin/sh
