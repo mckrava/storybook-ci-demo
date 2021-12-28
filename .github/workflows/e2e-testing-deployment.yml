@@ -33,7 +33,7 @@ jobs:
         shell: bash
         run: |
           cd Basilisk-api
-          yarn run indexer:start &
+          yarn run indexer:start-ci-linux &
 
       - name: Wait for Indexer port :4010
         shell: bash
@@ -393,7 +393,7 @@ jobs:
           docker compose exec -T indexer /bin/sh
           sudo apt-get update > /dev/null && sudo apt-get install iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
           exit
-
+#  apk update > /dev/null && apk add iproute2 > /dev/null && ip -4 route show default | cut -d' ' -f3
       - name: Ping host ip
         if: always()
         shell: bash
