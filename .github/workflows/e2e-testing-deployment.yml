@@ -299,7 +299,6 @@ jobs:
 
       - name: Run testnet
         shell: bash
-        timeout-minutes: 30
         run: |
           cd Basilisk-api
           yarn fullruntime:clean-setup-start
