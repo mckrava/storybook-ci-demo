@@ -299,7 +299,7 @@ jobs:
 
       - name: Run testnet
         shell: bash
-        timeout-minutes: 10
+        timeout-minutes: 30
         run: |
           cd Basilisk-api
           yarn fullruntime:clean-setup-start
@@ -309,7 +309,7 @@ jobs:
 
       - name: Wait for Basilisk Node port :9988
         shell: bash
-        timeout-minutes: 5
+        timeout-minutes: 10
         run: wait-port 9988
 
       - name: Sleep for 5 seconds
