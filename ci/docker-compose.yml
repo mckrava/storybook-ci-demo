@@ -1,0 +1,21 @@
+version: "3.4"
+
+services:
+  basiliisk-ui-app:
+    restart: always
+    build:
+      context: .
+      dockerfile: ci.Dockerfile
+      shm_size: '3gb'
+    image: basilisk-ui-app-ci:0.1.0
+    ports:
+      - 127.0.0.1:3000:3000
+    environment:
+      - REACT_APP_NODE_URL=ws://polkadot_basilisk_testnet:9988
+      - WS_URL=ws://polkadot_basilisk_testnet:9988
+    networks:
+      - default
+networks:
+  default:
+    external: true
+    name: basilisk-wrapper-network
