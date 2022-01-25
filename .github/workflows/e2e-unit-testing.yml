@@ -216,22 +216,22 @@ jobs:
           name: unint_tests_report_html
           path: ./ui-app/ui-app-unit-tests-results.html
 
-      - name: Stop testnet
+      - name: Upload testnet logs
         if: always()
-        shell: bash
-        run: |
-          killall -q -v polkadot
-          killall -q -v testing-basilisk
-
-  purge_testnet_artifacts:
-    name: Purge testnet artifacts
-    if: ${{ always() }}
-    runs-on: ubuntu-latest
-    needs: run_tests
-    steps:
-      - uses: geekyeggo/delete-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
-          name: |
-            basilisk-node-artifacts
-            polkadot-node-artifacts
-          failOnError: false
+          name: testnet_logs
+          path: ./Basilisk-api/testnet-logs
+
+#  purge_testnet_artifacts:
+#    name: Purge testnet artifacts
+#    if: ${{ always() }}
+#    runs-on: ubuntu-latest
+#    needs: run_tests
+#    steps:
+#      - uses: geekyeggo/delete-artifact@v1
+#        with:
+#          name: |
+#            basilisk-node-artifacts
+#            polkadot-node-artifacts
+#          failOnError: false
