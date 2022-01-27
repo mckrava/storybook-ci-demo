@@ -59,7 +59,7 @@ jobs:
           node-version: 17.3
 
       - name: Install Node.js HTTP-Server, wait-port
-        run: yarn global add http-server wait-port
+        run: yarn global add http-server wait-port wscat
 
 #      - uses: actions/checkout@v2
 #        with:
@@ -131,11 +131,17 @@ jobs:
         if: always()
         run: sudo lsof -i -P -n | grep LISTEN
 
+      - name: Check ws
+        shell: bash
+        if: always()
+        timeout-minutes: 1
+        run: wscat -c ws://127.0.0.1:9988
+
       # Double check of testnet status
       - name: Wait for Basilisk Node port :9988
         if: always()
         shell: bash
-        timeout-minutes: 2
+        timeout-minutes: 1
         run: wait-port 9988
 
       # Run UI App
