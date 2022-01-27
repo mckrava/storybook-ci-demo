@@ -61,9 +61,9 @@ jobs:
       - name: Install Node.js HTTP-Server, wait-on
         run: yarn global add http-server wait-on
 
-#      - uses: actions/checkout@v2
-#        with:
-#          path: 'ui-app'
+      - uses: actions/checkout@v2
+        with:
+          path: 'ui-app'
 #
 #      - name: Download artifact - UI app build
 #        uses: actions/download-artifact@v2
@@ -108,11 +108,12 @@ jobs:
 #          cd ui-app
 #          yarn install --frozen-lockfile
 #
-##       Update folders structure
-#      - name: Change folders permissions
-#        run: |
-#          chmod -R 777 Basilisk-api
-#          chmod -R 777 ui-app
+
+#       Update folders structure
+      - name: Change folders permissions
+        run: |
+          chmod -R 777 Basilisk-api
+          chmod -R 777 ui-app
 
       # Run testnet
       - name: Run testnet
@@ -133,7 +134,7 @@ jobs:
         if: always()
         shell: bash
         timeout-minutes: 1
-        run: wait-on -t 30000  tcp:9988 && echo "Connected to 9988!"
+        run: . ./ui-app/scripts/gh-actions-wait-for-port.sh 9988
 
       # Run UI App
       - name: Run UI application
@@ -152,7 +153,7 @@ jobs:
       - name: Wait for UI app port :3030
         shell: bash
         timeout-minutes: 1
-        run: wait-on -t 30000  tcp:3030 && echo "Connected to 3030!"
+        run: . ./ui-app/scripts/gh-actions-wait-for-port.sh 3030
 
       # Prepare Playwright env
       - name: Install OS dependencies for Playwright
