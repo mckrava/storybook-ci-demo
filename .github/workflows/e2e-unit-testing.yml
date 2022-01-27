@@ -126,10 +126,16 @@ jobs:
           cd Basilisk-api
           yarn fullruntime:clean-setup-start
 
+      - name: Check ports
+        shell: bash
+        if: always()
+        run: sudo lsof -i -P -n | grep LISTEN
+
       # Double check of testnet status
       - name: Wait for Basilisk Node port :9988
+        if: always()
         shell: bash
-        timeout-minutes: 5
+        timeout-minutes: 2
         run: wait-port 9988
 
       # Run UI App
@@ -169,7 +175,9 @@ jobs:
       # For debug and monitoring purposes
       - name: Check Docker containers
         if: always()
-        run: docker ps
+        run: |
+          docker ps
+          docker network ls
         shell: bash
 
       # Run e2e tests
