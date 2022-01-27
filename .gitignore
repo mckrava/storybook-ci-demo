@@ -11,7 +11,7 @@
 /traces
 
 # production
-#/build
+/build
 /storybook-static
 
 # misc
