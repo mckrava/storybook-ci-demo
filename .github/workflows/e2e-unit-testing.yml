@@ -52,7 +52,7 @@ jobs:
   run_tests:
     name: Run tests
     runs-on: ubuntu-latest
-    needs: build_app
+    needs: [build_app]
     steps:
       - uses: actions/setup-node@v2
         with:
@@ -108,7 +108,7 @@ jobs:
           cd ui-app
           yarn install --frozen-lockfile
 
-       Update folders structure
+#       Update folders structure
       - name: Change folders permissions
         run: |
           chmod -R 777 Basilisk-api
