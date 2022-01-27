@@ -122,23 +122,18 @@ jobs:
           cd Basilisk-api
           yarn fullruntime:clean-setup-start
 
-      - name: Check ports
-        shell: bash
-        if: always()
-        run: sudo lsof -i -P -n | grep LISTEN
-
-      - name: Check ws
-        shell: bash
-        if: always()
-        timeout-minutes: 1
-        run: wscat -c ws://127.0.0.1:9988
-
-      # Double check of testnet status
-      - name: Wait for Basilisk Node port :9988
-        if: always()
-        shell: bash
-        timeout-minutes: 1
-        run: wait-port 9988
+#      - name: Check ws
+#        shell: bash
+#        if: always()
+#        timeout-minutes: 1
+#        run: wscat -c ws://127.0.0.1:9988
+#
+#      # Double check of testnet status
+#      - name: Wait for Basilisk Node port :9988
+#        if: always()
+#        shell: bash
+#        timeout-minutes: 1
+#        run: wait-port 9988
 
       # Run UI App
       - name: Run UI application
@@ -146,6 +141,12 @@ jobs:
         run: |
           cd ui-app/build
           http-server -s -p 3030 -a 127.0.0.1 &
+
+      - name: Check ports
+        shell: bash
+        if: always()
+        run: sudo lsof -i -P -n | grep LISTEN
+
 
       # Check of UI app status
       - name: Wait for UI app port :3030
