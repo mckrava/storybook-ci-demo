@@ -58,8 +58,8 @@ jobs:
         with:
           node-version: 17.3
 
-      - name: Install Node.js HTTP-Server, wait-port
-        run: yarn global add http-server wait-port wscat
+      - name: Install Node.js HTTP-Server, wait-on
+        run: yarn global add http-server wait-on
 
       - uses: actions/checkout@v2
         with:
@@ -128,12 +128,12 @@ jobs:
 #        timeout-minutes: 1
 #        run: wscat -c ws://127.0.0.1:9988
 #
-#      # Double check of testnet status
-#      - name: Wait for Basilisk Node port :9988
-#        if: always()
-#        shell: bash
-#        timeout-minutes: 1
-#        run: wait-port 9988
+      # Double check of testnet status
+      - name: Wait for Basilisk Node port :9988
+        if: always()
+        shell: bash
+        timeout-minutes: 1
+        run: wait-on -t 30000  tcp:9988 && echo "Connected to 9988!"
 
       # Run UI App
       - name: Run UI application
@@ -151,8 +151,8 @@ jobs:
       # Check of UI app status
       - name: Wait for UI app port :3030
         shell: bash
-        timeout-minutes: 5
-        run: wait-port 3030
+        timeout-minutes: 1
+        run: wait-on -t 30000  tcp:3030 && echo "Connected to 3030!"
 
       # Prepare Playwright env
       - name: Install OS dependencies for Playwright
