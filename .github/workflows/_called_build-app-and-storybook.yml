@@ -31,9 +31,18 @@ jobs:
           path: node_modules
           key: ${{ inputs.app-node-modules-cache-key }}-${{ hashFiles('yarn.lock') }}
 
+      - name: Check gh-pages branch existence
+        shell: bash
+        run: |
+          chmod -R 777 ./scripts
+          echo "##[set-output name=app_node_modules_cache_exists;]steps."$CACHE_KEY".outputs.cache-hit"
+        id: app_node_modules_cache_status
+        env:
+          CACHE_KEY: ${{inputs.app-node-modules-cache-key}}
+
       - name: Install NPM packages
 #        if: steps.cache-node-modules-ui-app-v1.outputs.cache-hit != 'true'
-        if: steps.${{inputs.app-node-modules-cache-key}}.outputs.cache-hit != 'true'
+        if: steps.app_node_modules_cache_status.outputs.app_node_modules_cache_exists != 'true'
         run: rm -rf node_modules && yarn install --frozen-lockfile
 
       - name: Update browserslist
