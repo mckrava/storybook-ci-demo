@@ -1,0 +1,51 @@
+name: Build Test Deploy App and Storybook
+on:
+  pull_request:
+    branches:
+      - develop
+
+env:
+  APP_BUILD_ARTIFACT_NAME: app-build-files
+  STORYBOOK_BUILD_ARTIFACT_NAME: sb-build-files
+  APP_NODE_MODULES_CACHE_KEY: cache-node-modules-ui-app-v1
+
+jobs:
+  build-app-storybook:
+    name: Build App and Storybook
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build
+        uses: mckrava/storybook-ci-demo/.github/workflows/_called_build-app-and-storybook.yml
+        with:
+          app-build-artifact-name: ${{ env.APP_BUILD_ARTIFACT_NAME }}
+          storybook-build-artifact-name: ${{ env.STORYBOOK_BUILD_ARTIFACT_NAME }}
+          app-node-modules-cache-key: ${{ env.APP_NODE_MODULES_CACHE_KEY }}
+
+  unit-tests:
+    name: Run unit tests
+    needs: build-app-storybook
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run unit tests
+        uses: mckrava/storybook-ci-demo/.github/workflows/_called_run-app-unit-tests.yml
+        with:
+          app-build-artifact-name: ${{ env.APP_BUILD_ARTIFACT_NAME }}
+          storybook-build-artifact-name: ${{ env.STORYBOOK_BUILD_ARTIFACT_NAME }}
+          app-node-modules-cache-key: ${{ env.APP_NODE_MODULES_CACHE_KEY }}
+
+  check-artifacts:
+    name: Ceck artifacts
+    runs-on: ubuntu-latest
+    needs: [build-app-storybook, unit-tests]
+    steps:
+      - name: Check app art
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.APP_BUILD_ARTIFACT_NAME }}
+          path: .
+
+      - name: Check SB art
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.STORYBOOK_BUILD_ARTIFACT_NAME }}
+          path: .
