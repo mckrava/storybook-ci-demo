@@ -7,7 +7,7 @@ on:
 env:
   APP_BUILD_ARTIFACT_NAME: app-build-files
   STORYBOOK_BUILD_ARTIFACT_NAME: sb-build-files
-  APP_NODE_MODULES_CACHE_KEY: cache-node-modules-ui-app-v1
+  APP_NODE_MODULES_CACHE_KEY: cache-node-modules-ui-app
 
 jobs:
   build-app-storybook:
