@@ -12,7 +12,7 @@ env:
 jobs:
   build-app-storybook:
     name: Build App and Storybook
-    uses: mckrava/storybook-ci-demo/.github/workflows/_called_build-app-and-storybook.yml
+    uses: ./.github/workflows/_called_build-app-and-storybook.yml
     with:
       app-build-artifact-name: ${{ env.APP_BUILD_ARTIFACT_NAME }}
       storybook-build-artifact-name: ${{ env.STORYBOOK_BUILD_ARTIFACT_NAME }}
@@ -21,7 +21,7 @@ jobs:
   unit-tests:
     name: Run unit tests
     needs: build-app-storybook
-    uses: mckrava/storybook-ci-demo/.github/workflows/_called_run-app-unit-tests.yml
+    uses: ./.github/workflows/_called_run-app-unit-tests.yml
     with:
       app-build-artifact-name: ${{ env.APP_BUILD_ARTIFACT_NAME }}
       storybook-build-artifact-name: ${{ env.STORYBOOK_BUILD_ARTIFACT_NAME }}
