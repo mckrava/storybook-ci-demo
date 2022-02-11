@@ -25,20 +25,11 @@ jobs:
           node-version: 17.3
 
       - name: Cache Node Modules
-        id: inputs.app-node-modules-cache-key
+        id: cache-node-modules-ui-app
         uses: actions/cache@v2
         with:
           path: node_modules
-          key: ${{ inputs.app-node-modules-cache-key }}-${{ hashFiles('yarn.lock') }}
-
-      - name: Check gh-pages branch existence
-        shell: bash
-        run: |
-          chmod -R 777 ./scripts
-          echo "##[set-output name=app_node_modules_cache_exists;]steps."$CACHE_KEY".outputs.cache-hit"
-        id: app_node_modules_cache_status
-        env:
-          CACHE_KEY: ${{inputs.app-node-modules-cache-key}}
+          key: cache-node-modules-ui-app-${{ hashFiles('yarn.lock') }}
 
       - name: Install NPM packages
 #        if: steps.cache-node-modules-ui-app-v1.outputs.cache-hit != 'true'
