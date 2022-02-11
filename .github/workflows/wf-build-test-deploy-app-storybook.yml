@@ -12,26 +12,21 @@ env:
 jobs:
   build-app-storybook:
     name: Build App and Storybook
-    runs-on: ubuntu-latest
-    steps:
-      - name: Build
-        uses: mckrava/storybook-ci-demo/.github/workflows/_called_build-app-and-storybook.yml
-        with:
-          app-build-artifact-name: ${{ env.APP_BUILD_ARTIFACT_NAME }}
-          storybook-build-artifact-name: ${{ env.STORYBOOK_BUILD_ARTIFACT_NAME }}
-          app-node-modules-cache-key: ${{ env.APP_NODE_MODULES_CACHE_KEY }}
+    uses: mckrava/storybook-ci-demo/.github/workflows/_called_build-app-and-storybook.yml
+    with:
+      app-build-artifact-name: ${{ env.APP_BUILD_ARTIFACT_NAME }}
+      storybook-build-artifact-name: ${{ env.STORYBOOK_BUILD_ARTIFACT_NAME }}
+      app-node-modules-cache-key: ${{ env.APP_NODE_MODULES_CACHE_KEY }}
 
   unit-tests:
     name: Run unit tests
     needs: build-app-storybook
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run unit tests
-        uses: mckrava/storybook-ci-demo/.github/workflows/_called_run-app-unit-tests.yml
-        with:
-          app-build-artifact-name: ${{ env.APP_BUILD_ARTIFACT_NAME }}
-          storybook-build-artifact-name: ${{ env.STORYBOOK_BUILD_ARTIFACT_NAME }}
-          app-node-modules-cache-key: ${{ env.APP_NODE_MODULES_CACHE_KEY }}
+    uses: mckrava/storybook-ci-demo/.github/workflows/_called_run-app-unit-tests.yml
+    with:
+      app-build-artifact-name: ${{ env.APP_BUILD_ARTIFACT_NAME }}
+      storybook-build-artifact-name: ${{ env.STORYBOOK_BUILD_ARTIFACT_NAME }}
+      app-node-modules-cache-key: ${{ env.APP_NODE_MODULES_CACHE_KEY }}
+
 
   check-artifacts:
     name: Ceck artifacts
