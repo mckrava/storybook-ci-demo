@@ -62,7 +62,7 @@ jobs:
           yarn run build
           yarn run build-storybook -- -o sb-build-files
         env:
-          CI: true
+          CI: false
           REACT_APP_GIT_BRANCH: ${{ steps.extract_branch.outputs.branch }}
           NODE_OPTIONS: --openssl-legacy-provider
 
