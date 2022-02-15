@@ -12,6 +12,10 @@ on:
       app-node-modules-cache-key:
         required: true
         type: string
+    outputs:
+      codecove_app_unit:
+        description: "Tests code coverage value"
+        value: ${{ jobs.unit_testing.outputs.codecove_output }}
 
 jobs:
   base_branch_coverage_check:
@@ -51,6 +55,8 @@ jobs:
     name: Build UI application
     runs-on: macos-11
     needs: base_branch_coverage_check
+    outputs:
+      codecove_output: ${{ steps.run_unit_tests.outputs.codecove_value }}
     steps:
       - name: Install Node.js
         uses: actions/setup-node@v1
@@ -77,6 +83,7 @@ jobs:
         run: rm -rf node_modules && yarn install --frozen-lockfile
 
       - name: Run unit tests
+        id: run_unit_tests
         run: yarn test:ci
 
       - name: Upload unit tests report file
