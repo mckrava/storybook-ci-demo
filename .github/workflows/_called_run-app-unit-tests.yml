@@ -32,7 +32,7 @@ jobs:
           node-version: 17.3
 
       - name: Cache Node Modules for ui-app
-        id: cache-node-modules-base-ui-app-v1
+        id: cache-node-modules-ui-app
         uses: actions/cache@v2
         with:
           path: node_modules
@@ -72,7 +72,7 @@ jobs:
           name: ref-lcov.info
 
       - name: Cache Node Modules for ui-app
-        id: cache-node-modules-ui-app-v1
+        id: cache-node-modules-ui-app
         uses: actions/cache@v2
         with:
           path: node_modules
