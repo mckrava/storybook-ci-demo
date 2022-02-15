@@ -1,8 +1,15 @@
 import { gql } from '@apollo/client';
 export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type InputMaybe<T> = Maybe<T>;
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -26,10 +33,17 @@ export type Asset = {
   id: Scalars['String'];
 };
 
+export type AssetIds = {
+  __typename?: 'AssetIds';
+  a: Scalars['String'];
+  b?: Maybe<Scalars['String']>;
+};
+
 export type Balance = {
   __typename?: 'Balance';
   assetId: Scalars['String'];
   balance: Scalars['String'];
+  id?: Maybe<Scalars['String']>;
 };
 
 export type Config = {
@@ -42,7 +56,8 @@ export type Config = {
 
 export type Extension = {
   __typename?: 'Extension';
-  isAvailable?: Maybe<Scalars['Boolean']>;
+  id: Scalars['String'];
+  isAvailable: Scalars['Boolean'];
 };
 
 export type Fee = {
@@ -89,11 +104,13 @@ export type Pool = LbpPool | XykPool;
 
 export type Query = {
   __typename?: 'Query';
+  _assetIds?: Maybe<AssetIds>;
   _empty?: Maybe<Scalars['String']>;
   _tradeType?: Maybe<TradeType>;
   account?: Maybe<Account>;
   accounts: Array<Account>;
   assets?: Maybe<Array<Asset>>;
+  balances: Array<Balance>;
   config: Config;
   extension: Extension;
   feePaymentAssets?: Maybe<Array<FeePaymentAsset>>;
@@ -103,7 +120,7 @@ export type Query = {
 
 export enum TradeType {
   Buy = 'Buy',
-  Sell = 'Sell'
+  Sell = 'Sell',
 }
 
 export type VestingSchedule = {
