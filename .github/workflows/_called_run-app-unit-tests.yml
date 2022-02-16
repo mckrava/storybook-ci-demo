@@ -32,7 +32,7 @@ jobs:
           node-version: 17.3
 
       - name: Cache Node Modules for ui-app
-        id: ${{ inputs.app-node-modules-cache-key }}
+        id: inputs.app-node-modules-cache-key
         uses: actions/cache@v2
         with:
           path: node_modules
