@@ -14,9 +14,9 @@ jobs:
     name: Build App and Storybook
     uses: ./.github/workflows/_called_build-app-and-storybook.yml
     with:
-      app-build-artifact-name: ${{ $APP_BUILD_ARTIFACT_NAME }}
-      storybook-build-artifact-name: ${{ $STORYBOOK_BUILD_ARTIFACT_NAME }}
-      app-node-modules-cache-key: ${{ $APP_NODE_MODULES_CACHE_KEY }}
+      app-build-artifact-name: ${{ env.APP_BUILD_ARTIFACT_NAME }}
+      storybook-build-artifact-name: ${{ env.STORYBOOK_BUILD_ARTIFACT_NAME }}
+      app-node-modules-cache-key: ${{ env.APP_NODE_MODULES_CACHE_KEY }}
 
   unit-tests:
     name: Run unit tests
@@ -24,9 +24,9 @@ jobs:
     uses: ./.github/workflows/_called_run-app-unit-tests.yml
     if: ${{ needs.build-app-storybook.result=='success' }}
     with:
-      app-build-artifact-name: ${{ $APP_BUILD_ARTIFACT_NAME }}
-      storybook-build-artifact-name: ${{ $STORYBOOK_BUILD_ARTIFACT_NAME }}
-      app-node-modules-cache-key: ${{ $APP_NODE_MODULES_CACHE_KEY }}
+      app-build-artifact-name: ${{ env.APP_BUILD_ARTIFACT_NAME }}
+      storybook-build-artifact-name: ${{ env.STORYBOOK_BUILD_ARTIFACT_NAME }}
+      app-node-modules-cache-key: ${{ env.APP_NODE_MODULES_CACHE_KEY }}
 
   unit-tests-simulation:
     name: Run pseudo-unit tests
@@ -34,9 +34,9 @@ jobs:
     uses: ./.github/workflows/_called_run-app-unit-tests.yml
     if: ${{ needs.build-app-storybook.result=='success' }}
     with:
-      app-build-artifact-name: ${{ $APP_BUILD_ARTIFACT_NAME }}
-      storybook-build-artifact-name: ${{ $STORYBOOK_BUILD_ARTIFACT_NAME }}
-      app-node-modules-cache-key: ${{ $APP_NODE_MODULES_CACHE_KEY }}
+      app-build-artifact-name: ${{ env.APP_BUILD_ARTIFACT_NAME }}
+      storybook-build-artifact-name: ${{ env.STORYBOOK_BUILD_ARTIFACT_NAME }}
+      app-node-modules-cache-key: ${{ env.APP_NODE_MODULES_CACHE_KEY }}
 
   deploy-app-storybook-builds:
     name: Deploy App&Storybook builds
@@ -44,8 +44,8 @@ jobs:
     uses: ./.github/workflows/_called_deploy-app-and-storybook.yml
     if: ${{ needs.build-app-storybook.result=='success' }}
     with:
-      app-build-artifact-name: ${{ $APP_BUILD_ARTIFACT_NAME }}
-      storybook-build-artifact-name: ${{ $STORYBOOK_BUILD_ARTIFACT_NAME }}
+      app-build-artifact-name: ${{ env.APP_BUILD_ARTIFACT_NAME }}
+      storybook-build-artifact-name: ${{ env.STORYBOOK_BUILD_ARTIFACT_NAME }}
 
 
   check-artifacts:
@@ -56,11 +56,11 @@ jobs:
       - name: Check app art
         uses: actions/download-artifact@v2
         with:
-          name: ${{ $APP_BUILD_ARTIFACT_NAME }}
+          name: ${{ env.APP_BUILD_ARTIFACT_NAME }}
           path: .
 
       - name: Check SB art
         uses: actions/download-artifact@v2
         with:
-          name: ${{ $STORYBOOK_BUILD_ARTIFACT_NAME }}
+          name: ${{ env.STORYBOOK_BUILD_ARTIFACT_NAME }}
           path: .
