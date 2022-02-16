@@ -8,15 +8,16 @@ env:
   APP_BUILD_ARTIFACT_NAME: app-build-files
   STORYBOOK_BUILD_ARTIFACT_NAME: sb-build-files
   APP_NODE_MODULES_CACHE_KEY: cache-node-modules-ui-app
+#  Why we cannot use envs globally within workflow - https://github.com/actions/runner/issues/480
 
 jobs:
   build-app-storybook:
     name: Build App and Storybook
     uses: ./.github/workflows/_called_build-app-and-storybook.yml
     with:
-      app-build-artifact-name: ${{ env.APP_BUILD_ARTIFACT_NAME }}
-      storybook-build-artifact-name: ${{ env.STORYBOOK_BUILD_ARTIFACT_NAME }}
-      app-node-modules-cache-key: ${{ env.APP_NODE_MODULES_CACHE_KEY }}
+      app-build-artifact-name: app-build-files
+      storybook-build-artifact-name: sb-build-files
+      app-node-modules-cache-key: cache-node-modules-ui-app
 
   unit-tests:
     name: Run unit tests
@@ -24,9 +25,9 @@ jobs:
     uses: ./.github/workflows/_called_run-app-unit-tests.yml
     if: ${{ needs.build-app-storybook.result=='success' }}
     with:
-      app-build-artifact-name: ${{ env.APP_BUILD_ARTIFACT_NAME }}
-      storybook-build-artifact-name: ${{ env.STORYBOOK_BUILD_ARTIFACT_NAME }}
-      app-node-modules-cache-key: ${{ env.APP_NODE_MODULES_CACHE_KEY }}
+      app-build-artifact-name: app-build-files
+      storybook-build-artifact-name: sb-build-files
+      app-node-modules-cache-key: cache-node-modules-ui-app
 
   unit-tests-simulation:
     name: Run pseudo-unit tests
@@ -34,9 +35,9 @@ jobs:
     uses: ./.github/workflows/_called_run-app-unit-tests.yml
     if: ${{ needs.build-app-storybook.result=='success' }}
     with:
-      app-build-artifact-name: ${{ env.APP_BUILD_ARTIFACT_NAME }}
-      storybook-build-artifact-name: ${{ env.STORYBOOK_BUILD_ARTIFACT_NAME }}
-      app-node-modules-cache-key: ${{ env.APP_NODE_MODULES_CACHE_KEY }}
+      app-build-artifact-name: app-build-files
+      storybook-build-artifact-name: sb-build-files
+      app-node-modules-cache-key: cache-node-modules-ui-app
 
   deploy-app-storybook-builds:
     name: Deploy App&Storybook builds
@@ -44,8 +45,8 @@ jobs:
     uses: ./.github/workflows/_called_deploy-app-and-storybook.yml
     if: ${{ needs.build-app-storybook.result=='success' }}
     with:
-      app-build-artifact-name: ${{ env.APP_BUILD_ARTIFACT_NAME }}
-      storybook-build-artifact-name: ${{ env.STORYBOOK_BUILD_ARTIFACT_NAME }}
+      app-build-artifact-name: app-build-files
+      storybook-build-artifact-name: sb-build-files
 
 
   check-artifacts:
