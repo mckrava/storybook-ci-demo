@@ -24,9 +24,9 @@ jobs:
     uses: ./.github/workflows/_called_run-app-unit-tests.yml
     if: ${{ needs.build-app-storybook.result=='success' }}
     with:
-      app-build-artifact-name: ${{ env.APP_BUILD_ARTIFACT_NAME }}
-      storybook-build-artifact-name: ${{ env.STORYBOOK_BUILD_ARTIFACT_NAME }}
-      app-node-modules-cache-key: ${{ env.APP_NODE_MODULES_CACHE_KEY }}
+      app-build-artifact-name: ${{ github.env.APP_BUILD_ARTIFACT_NAME }}
+      storybook-build-artifact-name: ${{ github.env.STORYBOOK_BUILD_ARTIFACT_NAME }}
+      app-node-modules-cache-key: ${{ github.env.APP_NODE_MODULES_CACHE_KEY }}
 
   unit-tests-simulation:
     name: Run pseudo-unit tests
@@ -34,9 +34,9 @@ jobs:
     uses: ./.github/workflows/_called_run-app-unit-tests.yml
     if: ${{ needs.build-app-storybook.result=='success' }}
     with:
-      app-build-artifact-name: ${{ env.APP_BUILD_ARTIFACT_NAME }}
-      storybook-build-artifact-name: ${{ env.STORYBOOK_BUILD_ARTIFACT_NAME }}
-      app-node-modules-cache-key: ${{ env.APP_NODE_MODULES_CACHE_KEY }}
+      app-build-artifact-name: ${{ github.env.APP_BUILD_ARTIFACT_NAME }}
+      storybook-build-artifact-name: ${{ github.env.STORYBOOK_BUILD_ARTIFACT_NAME }}
+      app-node-modules-cache-key: ${{ github.env.APP_NODE_MODULES_CACHE_KEY }}
 
   deploy-app-storybook-builds:
     name: Deploy App&Storybook builds
@@ -44,8 +44,8 @@ jobs:
     uses: ./.github/workflows/_called_run-app-unit-tests.yml
     if: ${{ needs.build-app-storybook.result=='success' }}
     with:
-      app-build-artifact-name: ${{ env.APP_BUILD_ARTIFACT_NAME }}
-      storybook-build-artifact-name: ${{ env.STORYBOOK_BUILD_ARTIFACT_NAME }}
+      app-build-artifact-name: ${{ github.env.APP_BUILD_ARTIFACT_NAME }}
+      storybook-build-artifact-name: ${{ github.env.STORYBOOK_BUILD_ARTIFACT_NAME }}
 
   check-artifacts:
     name: Ceck artifacts
