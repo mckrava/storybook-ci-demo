@@ -46,7 +46,7 @@ jobs:
     with:
       app-build-artifact-name: ${{ github.env.APP_BUILD_ARTIFACT_NAME }}
       storybook-build-artifact-name: ${{ github.env.STORYBOOK_BUILD_ARTIFACT_NAME }}
-      app-node-modules-cache-key: ${{ github.env.APP_NODE_MODULES_CACHE_KEY }}
+
 
   check-artifacts:
     name: Ceck artifacts
