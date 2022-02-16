@@ -79,7 +79,7 @@ jobs:
 
   deploy:
     name: Deploy new builds
-    if: ${{ always() && needs.build.result=='success' }}
+    if: ${{ always() }}
     needs: clear_build
     runs-on: ubuntu-latest
     steps:
