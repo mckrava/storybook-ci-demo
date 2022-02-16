@@ -31,15 +31,18 @@ jobs:
         with:
           node-version: 17.3
 
+      - name: Test inputs
+        run: echo ${{ inputs.app-node-modules-cache-key }}
+
       - name: Cache Node Modules for ui-app
-        id: inputs.app-node-modules-cache-key
+        id: cache-node-modules-ui-app
         uses: actions/cache@v2
         with:
           path: node_modules
-          key: ${{ inputs.app-node-modules-cache-key }}-${{ hashFiles('yarn.lock') }}
+          key: cache-node-modules-ui-app-${{ hashFiles('yarn.lock') }}
 
       - name: Install Dependencies for ui-app
-        if: steps.${{ inputs.app-node-modules-cache-key }}.outputs.cache-hit != 'true'
+        if: steps.cache-node-modules-ui-app.outputs.cache-hit != 'true'
         run: rm -rf node_modules && yarn install --frozen-lockfile
 
       - name: Run unit tests
