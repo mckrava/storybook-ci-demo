@@ -28,6 +28,8 @@ jobs:
       app-build-artifact-name: app-build-files
       storybook-build-artifact-name: sb-build-files
       app-node-modules-cache-key: cache-node-modules-ui-app
+    secrets:
+      gh_token: ${{ secrets.GH_TOKEN }}
 
   unit-tests-simulation:
     name: Run pseudo-unit tests
@@ -38,6 +40,8 @@ jobs:
       app-build-artifact-name: app-build-files
       storybook-build-artifact-name: sb-build-files
       app-node-modules-cache-key: cache-node-modules-ui-app
+    secrets:
+      gh_token: ${{ secrets.GH_TOKEN }}
 
   deploy-app-storybook-builds:
     name: Deploy App&Storybook builds
@@ -47,6 +51,9 @@ jobs:
     with:
       app-build-artifact-name: app-build-files
       storybook-build-artifact-name: sb-build-files
+    secrets:
+      gh_token: ${{ secrets.GH_TOKEN }}
+      gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
 
 
   check-artifacts:

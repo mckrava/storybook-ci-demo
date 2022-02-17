@@ -12,6 +12,9 @@ on:
       app-node-modules-cache-key:
         required: true
         type: string
+    secrets:
+      gh_token:
+        required: true
     outputs:
       codecove_app_unit:
         description: "Tests code coverage value"
@@ -101,7 +104,7 @@ jobs:
         continue-on-error: true
         uses: barecheck/code-coverage-action@v0.5.1
         with:
-          github-token: ${{ secrets.GH_TOKEN }}
+          github-token: ${{ secrets.gh_token }}
           lcov-file: "./coverage/lcov.info"
           base-lcov-file: "./lcov.info"
           send-summary-comment: true
