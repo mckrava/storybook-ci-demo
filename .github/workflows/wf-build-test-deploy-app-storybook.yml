@@ -68,10 +68,12 @@ jobs:
     uses: ./.github/workflows/_called_report-statuses.yml
     if: ${{ always() }}
     with:
-      app-build-artifact-name: app-build-files
-      storybook-build-artifact-name: sb-build-files
-      publish-discord-alert: true
-      publish-pr-comment: true
+#      app-build-artifact-name: app-build-files
+#      storybook-build-artifact-name: sb-build-files
+#      publish-discord-alert: true
+#      publish-pr-comment: true
+      base-branch-codecov-artifact-name: ref-lcov.info
+      working-branch-codecov-artifact-name: working-lcov.info
       publish-cov-report-in-pr: true
     secrets:
       gh_token: ${{ secrets.GH_TOKEN }}
