@@ -15,6 +15,10 @@ on:
     secrets:
       gh_token:
         required: true
+      gh_pages_full_branch:
+        required: true
+      discord_alert_ui_web_hook:
+        required: true
 
 jobs:
   publish-unit-tests-codecov-report:
