@@ -55,3 +55,15 @@ jobs:
           base-lcov-file: './ref-report/lcov.info'
           send-summary-comment: true
           show-annotations: 'warning'
+
+  publish-summary-report-discord:
+    name: Publish summary report to Discord
+    runs-on: ubuntu-latest
+    steps:
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.discord_alert_ui_web_hook }}
+          DISCORD_USERNAME: Basilisk-UI GH Bot
+        uses: Ilshidur/action-discord@master
+        with:
+          args: 'Woohoo!!! The project {{ EVENT_PAYLOAD.repository.full_name }} has been deployed.'
