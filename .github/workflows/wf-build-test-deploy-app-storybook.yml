@@ -27,7 +27,10 @@ jobs:
     with:
       app-build-artifact-name: app-build-files
       storybook-build-artifact-name: sb-build-files
+      base-branch-codecov-artifact-name: ref-lcov.info
+      working-branch-codecov-artifact-name: working-lcov.info
       app-node-modules-cache-key: cache-node-modules-ui-app
+      publish-cov-report-in-pr: false
     secrets:
       gh_token: ${{ secrets.GH_TOKEN }}
 
@@ -39,7 +42,10 @@ jobs:
     with:
       app-build-artifact-name: app-build-files
       storybook-build-artifact-name: sb-build-files
+      base-branch-codecov-artifact-name: ref-lcov.info
+      working-branch-codecov-artifact-name: working-lcov.info
       app-node-modules-cache-key: cache-node-modules-ui-app
+      publish-cov-report-in-pr: false
     secrets:
       gh_token: ${{ secrets.GH_TOKEN }}
 
@@ -56,19 +62,18 @@ jobs:
       gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
 
 
-  check-artifacts:
-    name: Ceck artifacts
-    runs-on: ubuntu-latest
-    needs: [build-app-storybook, unit-tests, unit-tests-simulation]
-    steps:
-      - name: Check app art
-        uses: actions/download-artifact@v2
-        with:
-          name: ${{ env.APP_BUILD_ARTIFACT_NAME }}
-          path: .
-
-      - name: Check SB art
-        uses: actions/download-artifact@v2
-        with:
-          name: ${{ env.STORYBOOK_BUILD_ARTIFACT_NAME }}
-          path: .
+  report-statuses:
+    name: Report
+    needs: [build-app-storybook, unit-tests, unit-tests-simulation, deploy-app-storybook-builds]
+    uses: ./.github/workflows/_called_report-statuses.yml
+    if: ${{ always() }}
+    with:
+      app-build-artifact-name: app-build-files
+      storybook-build-artifact-name: sb-build-files
+      publish-discord-alert: true
+      publish-pr-comment: true
+      publish-cov-report-in-pr: true
+    secrets:
+      gh_token: ${{ secrets.GH_TOKEN }}
+      gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
+      discord_alert_ui_web_hook: ${{ secrets.DISCORD_ALERT_UI_WEB_HOOK }}

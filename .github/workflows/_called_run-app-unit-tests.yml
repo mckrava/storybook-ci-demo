@@ -9,15 +9,24 @@ on:
       storybook-build-artifact-name:
         required: true
         type: string
+      base-branch-codecov-artifact-name:
+        required: false
+        type: string
+      working-branch-codecov-artifact-name:
+        required: false
+        type: string
       app-node-modules-cache-key:
         required: true
         type: string
+      publish-cov-report-in-pr:
+        required: true
+        type: boolean
     secrets:
       gh_token:
         required: true
     outputs:
       codecove_app_unit:
-        description: "Tests code coverage value"
+        description: 'Tests code coverage value'
         value: ${{ jobs.unit_testing.outputs.codecove_output }}
 
 jobs:
@@ -54,7 +63,7 @@ jobs:
       - name: Upload code coverage for ref branch
         uses: actions/upload-artifact@v2
         with:
-          name: ref-lcov.info
+          name: ${{inputs.base-branch-codecov-artifact-name}}
           path: ./coverage/lcov.info
 
   unit_testing:
@@ -75,7 +84,7 @@ jobs:
         continue-on-error: true
         uses: actions/download-artifact@v2
         with:
-          name: ref-lcov.info
+          name: ${{inputs.base-branch-codecov-artifact-name}}
 
       - name: Cache Node Modules for ui-app
         id: cache-node-modules-ui-app
@@ -99,13 +108,20 @@ jobs:
           name: ci-unit-tests-results
           path: ./ui-app-unit-tests-results.html
 
+      - name: Upload code coverage info
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{inputs.working-branch-codecov-artifact-name}}
+          path: ./coverage/lcov.info
+
       - name: Post coverage report in PR
+        if: inputs.publish-cov-report-in-pr == true
         id: code-coverage
         continue-on-error: true
         uses: barecheck/code-coverage-action@v0.5.1
         with:
           github-token: ${{ secrets.gh_token }}
-          lcov-file: "./coverage/lcov.info"
-          base-lcov-file: "./lcov.info"
+          lcov-file: './coverage/lcov.info'
+          base-lcov-file: './lcov.info'
           send-summary-comment: true
-          show-annotations: "warning"
+          show-annotations: 'warning'

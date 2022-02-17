@@ -1,0 +1,53 @@
+name: Deploy App and Storybook
+
+on:
+  workflow_call:
+    inputs:
+      base-branch-codecov-artifact-name:
+        required: false
+        type: string
+      working-branch-codecov-artifact-name:
+        required: false
+        type: string
+      publish-cov-report-in-pr:
+        required: true
+        type: boolean
+    secrets:
+      gh_token:
+        required: true
+
+jobs:
+  publish-unit-tests-codecov-report:
+    name: Publish App unit test codecov reports
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download code coverage report from base branch
+        uses: actions/download-artifact@v2
+        id: download-ref
+        with:
+          name: ${{inputs.base-branch-codecov-artifact-name}}
+          path: ./ref-report
+
+      - name: Download code coverage report from working branch
+        uses: actions/download-artifact@v2
+        id: download-working
+        with:
+          name: ${{inputs.working-branch-codecov-artifact-name}}
+          path: ./working-report
+
+      - name: 'Echo download path'
+        run: |
+          echo ${{steps.download-ref.outputs.download-path}}
+          echo ${{steps.download-working.outputs.download-path}}
+
+      - name: Post coverage report in PR
+        if: inputs.publish-cov-report-in-pr == true
+        id: code-coverage
+        continue-on-error: true
+        uses: barecheck/code-coverage-action@v0.5.1
+        with:
+          github-token: ${{ secrets.gh_token }}
+          lcov-file: './working-report/lcov.info'
+          base-lcov-file: './ref-report/lcov.info'
+          send-summary-comment: true
+          show-annotations: 'warning'
