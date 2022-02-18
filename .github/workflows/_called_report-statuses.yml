@@ -9,9 +9,25 @@ on:
       working-branch-codecov-artifact-name:
         required: false
         type: string
-      pub-app-unit-cov-report-in-pr:
+
+      app-build-pub-in-discord:
+        required: true
+        type: boolean
+      app-build-status:
         required: false
         type: boolean
+
+      app-unit-test-pub-report-in-pr:
+        required: false
+        type: boolean
+      app-unit-test-pub-report-in-discord:
+        required: false
+        type: boolean
+      app-unit-test-successful:
+        required: false
+        type: boolean
+
+
       publish-pr-comment:
         required: true
         type: boolean
@@ -25,12 +41,16 @@ on:
         required: true
       discord_alert_ui_web_hook:
         required: true
+      barecheck_github_app_token:
+        required: true
 
 jobs:
-  publish-unit-tests-codecov-report:
+  app-unit-tests-codecov-pub-report:
     name: Publish App unit test codecov reports
-    if: ${{ inputs.publish-pr-comment && inputs.pub-app-unit-cov-report-in-pr == true }}
     runs-on: ubuntu-latest
+    outputs:
+      codecov_output_percentage: ${{ steps.code-coverage.outputs.percentage }}
+      codecov_output_diff: ${{ steps.code-coverage.outputs.diff }}
     steps:
       - name: Download code coverage report from base branch
         uses: actions/download-artifact@v2
@@ -46,24 +66,26 @@ jobs:
           name: ${{inputs.working-branch-codecov-artifact-name}}
           path: ./working-report
 
-      - name: 'Echo download path'
-        run: |
-          echo ${{steps.download-ref.outputs.download-path}}
-          echo ${{steps.download-working.outputs.download-path}}
-
       - name: Post coverage report in PR
         id: code-coverage
         continue-on-error: true
         uses: barecheck/code-coverage-action@v0.5.1
         with:
-          github-token: ${{ secrets.gh_token }}
+          barecheck-github-app-token: ${{ secrets.barecheck_github_app_token }}
           lcov-file: './working-report/lcov.info'
           base-lcov-file: './ref-report/lcov.info'
-          send-summary-comment: true
+          send-summary-comment: ${{ inputs.app-unit-test-pub-report-in-pr == true }}
           show-annotations: 'warning'
+
+      - name: Echo cov report
+        run: |
+          echo sum - ${{ toJson(steps.code-coverage.outputs) }}
+          echo percentage - ${{ steps.code-coverage.outputs.percentage }}
+          echo diff - ${{ steps.code-coverage.outputs.diff }}
 
   publish-summary-report-discord:
     name: Publish summary report to Discord
+    needs: [app-unit-tests-codecov-pub-report]
     if: ${{ inputs.publish-discord-alert == true }}
     runs-on: ubuntu-latest
     steps:
@@ -71,6 +93,8 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.discord_alert_ui_web_hook }}
           DISCORD_USERNAME: Basilisk-UI GH Bot
+          app-unit-test-percentage: ${{ needs.app-unit-tests-codecov-pub-report.outputs.codecov_output_percentage }}
+          app-unit-test-diff: ${{ needs.app-unit-tests-codecov-pub-report.outputs.codecov_output_diff }}
         uses: Ilshidur/action-discord@master
         with:
-          args: 'Woohoo!!! The project {{ EVENT_PAYLOAD.repository.full_name }} has been deployed.'
+          args: 'Woohoo!!! The project {{ EVENT_PAYLOAD.repository.full_name }} has been deployed. App unit tests code coverage - {{ app-unit-test-percentage }}%. Code coverage difference with ref branch - {{app-unit-test-diff}}%.'

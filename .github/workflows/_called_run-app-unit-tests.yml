@@ -18,18 +18,13 @@ on:
       app-node-modules-cache-key:
         required: true
         type: string
-      publish-cov-report-in-pr:
-        required: true
-        type: boolean
-    secrets:
-      gh_token:
-        required: true
-      barecheck_github_app_token:
-        required: true
     outputs:
-      codecove_app_unit:
-        description: 'Tests code coverage value'
-        value: ${{ jobs.unit_testing.outputs.codecove_output }}
+      codecov_app_unit_percentage:
+        description: "Total Percentage coverage"
+        value: ${{ jobs.unit_testing.outputs.codecov_output_percentage }}
+      codecov_app_unit_diff:
+        description: "Percentage difference between head branch"
+        value: ${{ jobs.unit_testing.outputs.codecov_output_diff }}
 
 jobs:
   base_branch_coverage_check:
@@ -73,7 +68,8 @@ jobs:
     runs-on: macos-11
     needs: base_branch_coverage_check
     outputs:
-      codecove_output: ${{ steps.run_unit_tests.outputs.codecove_value }}
+      codecov_output_percentage: ${{ steps.code-coverage.outputs.percentage }}
+      codecov_output_diff: ${{ steps.code-coverage.outputs.diff }}
     steps:
       - name: Install Node.js
         uses: actions/setup-node@v1
