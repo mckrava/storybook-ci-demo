@@ -10,6 +10,12 @@ jobs:
   echo-input:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+
+      - run: |
+          pwd
+          ls
+
       - uses: actions/github-script@v6
         id: discord_embed_report
         env:
