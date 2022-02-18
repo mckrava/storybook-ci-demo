@@ -31,7 +31,7 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_ALERT_UI_WEB_HOOK }}
           DISCORD_USERNAME: Basilisk-UI GH Bot
-          DISCORD_EMBEDS: ${{ steps.discord_embed_report.outputs.result }}
+          DISCORD_EMBEDS: ${{ toJson(steps.discord_embed_report.outputs.result) }}
         uses: Ilshidur/action-discord@master
 
 #  build-app-storybook:
