@@ -24,7 +24,7 @@ jobs:
         with:
           script: |
             const script = require('./scripts/ci/create-discord-report-embed-body.js')
-            await script({github, context, core})
+            return await script({github, context, core})
 
       - name: Discord notification
         env:
