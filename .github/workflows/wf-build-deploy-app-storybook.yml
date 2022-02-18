@@ -21,6 +21,7 @@ jobs:
         env:
           app_unit_test_percentage: 5.5
           app_unit_test_diff: 0.0
+        result-encoding: string
         with:
           script: |
             const script = require('./scripts/ci/create-discord-report-embed-body.js')
