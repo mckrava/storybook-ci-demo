@@ -123,7 +123,6 @@ jobs:
         uses: barecheck/code-coverage-action@v0.5.1
         with:
           barecheck-github-app-token: ${{ secrets.barecheck_github_app_token }}
-          github-token: ${{ secrets.gh_token }}
           lcov-file: './coverage/lcov.info'
           base-lcov-file: './lcov.info'
           send-summary-comment: true

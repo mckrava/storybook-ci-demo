@@ -30,7 +30,7 @@ jobs:
       base-branch-codecov-artifact-name: ref-lcov.info
       working-branch-codecov-artifact-name: working-lcov.info
       app-node-modules-cache-key: cache-node-modules-ui-app
-      publish-cov-report-in-pr: false
+      publish-cov-report-in-pr: true
     secrets:
       gh_token: ${{ secrets.GH_TOKEN }}
       barecheck_github_app_token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
