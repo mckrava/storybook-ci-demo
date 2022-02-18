@@ -22,6 +22,7 @@ jobs:
           app_unit_test_percentage: 5.5
           app_unit_test_diff: 0.0
         with:
+          result-encoding: string
           script: |
             const script = require('./scripts/ci/create-discord-report-embed-body.js')
             return await script({github, context, core})
@@ -30,7 +31,7 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_ALERT_UI_WEB_HOOK }}
           DISCORD_USERNAME: Basilisk-UI GH Bot
-          DISCORD_EMBEDS: ${{ toJson(steps.discord_embed_report.outputs.result) }}
+          DISCORD_EMBEDS: ${{ steps.discord_embed_report.outputs.result }}
         uses: Ilshidur/action-discord@master
 
 #  build-app-storybook:

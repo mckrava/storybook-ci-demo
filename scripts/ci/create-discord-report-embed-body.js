@@ -7,5 +7,5 @@ module.exports = async ({ github, context, core }) => {
     },
   ];
 
-  return embedBody;
+  return JSON.stringify(embedBody);
 };
