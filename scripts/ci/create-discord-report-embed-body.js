@@ -7,9 +7,8 @@ module.exports = async ({ github, context, core }) => {
         color: 1127128,
       },
       {
-        title: 'Meow-meow!',
-        color: 14177041,
-        description: `Hi! :grinning: .Commit hash - ${SHA}`,
+        description:
+          '*Hi!* **Wow!** I can __open__ action workflow [here](https://discord.com).',
       },
     ],
   };
