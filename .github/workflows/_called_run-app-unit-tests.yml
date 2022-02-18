@@ -130,7 +130,6 @@ jobs:
           show-annotations: 'warning'
 
       - name: Run unit tests
-        id: run_unit_tests
         run: |
           echo sum - ${{ toJson(steps.code-coverage.outputs) }}
           echo percentage - ${{ toJson(steps.code-coverage.outputs.percentage) }}
