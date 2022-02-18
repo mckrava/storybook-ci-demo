@@ -3,12 +3,6 @@ name: Build App and Storybook
 on:
   workflow_call:
     inputs:
-      app-build-artifact-name:
-        required: true
-        type: string
-      storybook-build-artifact-name:
-        required: true
-        type: string
       base-branch-codecov-artifact-name:
         required: false
         type: string
@@ -40,9 +34,6 @@ jobs:
         with:
           node-version: 17.3
 
-      - name: Test inputs
-        run: echo ${{ inputs.app-node-modules-cache-key }}
-
       - name: Cache Node Modules for ui-app
         id: cache-node-modules-ui-app
         uses: actions/cache@v2
@@ -66,7 +57,6 @@ jobs:
   unit_testing:
     name: Build UI application
     runs-on: macos-11
-    needs: base_branch_coverage_check
     outputs:
       codecov_output_percentage: ${{ steps.code-coverage.outputs.percentage }}
       codecov_output_diff: ${{ steps.code-coverage.outputs.diff }}
@@ -77,12 +67,6 @@ jobs:
           node-version: 17.3
 
       - uses: actions/checkout@v2
-
-      - name: Download code coverage report from base branch
-        continue-on-error: true
-        uses: actions/download-artifact@v2
-        with:
-          name: ${{inputs.base-branch-codecov-artifact-name}}
 
       - name: Cache Node Modules for ui-app
         id: cache-node-modules-ui-app
@@ -111,21 +95,3 @@ jobs:
         with:
           name: ${{inputs.working-branch-codecov-artifact-name}}
           path: ./coverage/lcov.info
-
-      - name: Post coverage report in PR
-        if: inputs.publish-cov-report-in-pr == true
-        id: code-coverage
-        continue-on-error: true
-        uses: barecheck/code-coverage-action@v0.5.1
-        with:
-          barecheck-github-app-token: ${{ secrets.barecheck_github_app_token }}
-          lcov-file: './coverage/lcov.info'
-          base-lcov-file: './lcov.info'
-          send-summary-comment: true
-          show-annotations: 'warning'
-
-      - name: Run unit tests
-        run: |
-          echo sum - ${{ toJson(steps.code-coverage.outputs) }}
-          echo percentage - ${{ toJson(steps.code-coverage.outputs.percentage) }}
-          echo diff - ${{ toJson(steps.code-coverage.outputs.diff) }}

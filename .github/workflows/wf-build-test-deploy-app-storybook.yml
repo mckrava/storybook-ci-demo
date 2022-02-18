@@ -25,8 +25,6 @@ jobs:
     uses: ./.github/workflows/_called_run-app-unit-tests.yml
     if: ${{ needs.build-app-storybook.result=='success' }}
     with:
-      app-build-artifact-name: app-build-files
-      storybook-build-artifact-name: sb-build-files
       base-branch-codecov-artifact-name: ref-lcov.info
       working-branch-codecov-artifact-name: working-lcov.info
       app-node-modules-cache-key: cache-node-modules-ui-app

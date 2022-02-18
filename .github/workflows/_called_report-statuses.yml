@@ -97,4 +97,4 @@ jobs:
           app-unit-test-diff: ${{ needs.app-unit-tests-codecov-pub-report.outputs.codecov_output_diff }}
         uses: Ilshidur/action-discord@master
         with:
-          args: 'Woohoo!!! The project {{ EVENT_PAYLOAD.repository.full_name }} has been deployed. App unit tests code coverage - {{ app-unit-test-percentage }}%. Code coverage difference with ref branch - {{app-unit-test-diff}}%.'
+          args: 'Woohoo!!! The project {{ EVENT_PAYLOAD.repository.full_name }} has been deployed. App unit tests code coverage - {{ env.app-unit-test-percentage }}%. Code coverage difference with ref branch - {{env.app-unit-test-diff}}%.'
