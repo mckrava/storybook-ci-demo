@@ -3,12 +3,28 @@ module.exports = async ({ github, context, core }) => {
   const embedBody = {
     embeds: [
       {
-        title: 'Meow!',
-        color: 1127128,
-      },
-      {
-        description:
-          '*Hi!* **Wow!** I can __open__ action workflow [here](https://discord.com).',
+        author: {
+          name: 'Bot Tester',
+        },
+        title: 'Title',
+        color: '51281',
+        fields: [
+          {
+            name: 'Label',
+            value: 648,
+            inline: true,
+          },
+          {
+            name: 'Percentage',
+            value: app_unit_test_percentage,
+            inline: true,
+          },
+          {
+            name: 'Diff',
+            value: app_unit_test_diff,
+            inline: true,
+          },
+        ],
       },
     ],
   };
