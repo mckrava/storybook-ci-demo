@@ -15,6 +15,9 @@ on:
       publish-pr-comment:
         required: true
         type: boolean
+      publish-discord-alert:
+        required: true
+        type: boolean
     secrets:
       gh_token:
         required: true
