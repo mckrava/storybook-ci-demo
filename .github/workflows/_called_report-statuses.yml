@@ -9,7 +9,10 @@ on:
       working-branch-codecov-artifact-name:
         required: false
         type: string
-      publish-cov-report-in-pr:
+      pub-app-unit-cov-report-in-pr:
+        required: false
+        type: boolean
+      publish-pr-comment:
         required: true
         type: boolean
     secrets:
@@ -23,6 +26,7 @@ on:
 jobs:
   publish-unit-tests-codecov-report:
     name: Publish App unit test codecov reports
+    if: ${{ inputs.publish-pr-comment && inputs.pub-app-unit-cov-report-in-pr == true }}
     runs-on: ubuntu-latest
     steps:
       - name: Download code coverage report from base branch
@@ -45,7 +49,6 @@ jobs:
           echo ${{steps.download-working.outputs.download-path}}
 
       - name: Post coverage report in PR
-        if: inputs.publish-cov-report-in-pr == true
         id: code-coverage
         continue-on-error: true
         uses: barecheck/code-coverage-action@v0.5.1
@@ -58,6 +61,7 @@ jobs:
 
   publish-summary-report-discord:
     name: Publish summary report to Discord
+    if: ${{ inputs.publish-discord-alert == true }}
     runs-on: ubuntu-latest
     steps:
       - name: Discord notification
