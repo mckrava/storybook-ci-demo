@@ -77,11 +77,11 @@ jobs:
           send-summary-comment: ${{ inputs.app-unit-test-pub-report-in-pr == true }}
           show-annotations: 'warning'
 
-      - name: Echo cov report
-        run: |
-          echo sum - ${{ toJson(steps.code-coverage.outputs) }}
-          echo percentage - ${{ steps.code-coverage.outputs.percentage }}
-          echo diff - ${{ steps.code-coverage.outputs.diff }}
+#      - name: Echo cov report
+#        run: |
+#          echo sum - ${{ toJson(steps.code-coverage.outputs) }}
+#          echo percentage - ${{ steps.code-coverage.outputs.percentage }}
+#          echo diff - ${{ steps.code-coverage.outputs.diff }}
 
   publish-summary-report-discord:
     name: Publish summary report to Discord
