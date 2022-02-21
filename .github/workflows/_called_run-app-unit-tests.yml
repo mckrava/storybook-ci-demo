@@ -87,7 +87,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: ci-unit-tests-results
+          name: ci-app-unit-tests-results
           path: ./ui-app-unit-tests-results.html
 
       - name: Upload code coverage info

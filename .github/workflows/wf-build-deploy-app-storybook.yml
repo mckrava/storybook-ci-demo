@@ -12,19 +12,24 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - run: |
-          pwd
-          ls
 
       - uses: actions/github-script@v6
         id: discord_embed_report
         env:
-          app_unit_test_percentage: 5.5
-          app_unit_test_diff: 0.0
+          IS_APP_SB_BUILD_REPORT: true
+          IS_APP_UNIT_TEST_REPORT: true
+          IS_APP_E2E_TEST_REPORT: false
+          IS_SB_UNIT_TEST_REPORT: false
+          IS_SB_E2E_TEST_REPORT: false
+
+          APP_UNIT_TEST_PERCENTAGE: 5.5
+          APP_UNIT_TEST_DIFF: 0.0
+          APP_BUILD_STATUS: true
+          APP_UNIT_TEST_SUCCESSFUL: true
         with:
           result-encoding: string
           script: |
-            const script = require('./scripts/ci/create-discord-report-embed-body.js')
+            const script = require('./scripts/ci/github-script-src/create-discord-report-embed-body.js')
             return await script({github, context, core})
 
       - name: Discord notification
