@@ -45,7 +45,7 @@ module.exports = async ({ github, context, core }) => {
   }
 
   embedBody.push({
-    description: `Check workflow execution results and artifacts [here](${context.repository.html_url}/actions/runs/${context.repository.runId})`,
+    description: `Check workflow execution results and artifacts [here](${context.payload.repository.html_url}/actions/runs/${context.runId})`,
   });
 
   return JSON.stringify(embedBody);

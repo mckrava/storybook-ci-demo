@@ -5,7 +5,8 @@ module.exports = ({
   APP_UNIT_TEST_SUCCESSFUL,
 }) => {
   const appUnitTestsData = {
-    title: 'App Unit tests.',
+    title: 'App Unit tests',
+    color: APP_UNIT_TEST_SUCCESSFUL ? '65280' : '16711680',
     fields: [
       {
         name: 'Status',
