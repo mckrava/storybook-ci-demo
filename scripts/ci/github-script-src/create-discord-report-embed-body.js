@@ -2,10 +2,10 @@ const getAppUnitTestReportData = require('./_app-unit-test-report');
 const getAppSbBuildReportData = require('./_app-sb-build-report');
 
 module.exports = async ({ github, context, core }) => {
-
   console.log('context - ', context);
   console.log('github - ', github);
   console.log('core - ', core);
+
 
   const {
     SHA,
@@ -39,12 +39,13 @@ module.exports = async ({ github, context, core }) => {
     embedBody.push(
       getAppSbBuildReportData({
         APP_BUILD_STATUS,
+        context: context,
       })
     );
   }
 
   embedBody.push({
-    description: `Check workflow execution results and artifacts [here](https://github.com/mckrava/storybook-ci-demo/actions/runs/1859137413)`
+    description: `Check workflow execution results and artifacts [here](${context.repository.html_url}/actions/runs/${context.repository.runId})`,
   });
 
   return JSON.stringify(embedBody);
