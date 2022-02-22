@@ -34,6 +34,7 @@ module.exports = async ({ github, context, core }) => {
         APP_UNIT_TEST_DIFF,
         APP_UNIT_TEST_REF_BRANCH,
         APP_UNIT_TEST_STATUS,
+        context,
       })
     );
   }
@@ -42,7 +43,7 @@ module.exports = async ({ github, context, core }) => {
     embedBody.fields.push(
       ...getAppSbBuildReportData({
         APP_BUILD_STATUS,
-        context: context,
+        context,
       })
     );
   }
