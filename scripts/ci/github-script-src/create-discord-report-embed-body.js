@@ -28,7 +28,7 @@ module.exports = async ({ github, context, core }) => {
   ];
 
   if (IS_APP_UNIT_TEST_REPORT) {
-    embedBody.fields.push(
+    embedBody.push(
       ...getAppUnitTestReportData({
         APP_UNIT_TEST_PERCENTAGE,
         APP_UNIT_TEST_DIFF,
@@ -39,14 +39,13 @@ module.exports = async ({ github, context, core }) => {
   }
 
   if (IS_APP_SB_BUILD_REPORT) {
-    embedBody.fields.push(
+    embedBody.push(
       ...getAppSbBuildReportData({
         APP_BUILD_STATUS,
         context: context,
       })
     );
   }
-
 
   return JSON.stringify(embedBody);
 };
