@@ -25,7 +25,7 @@ jobs:
           APP_UNIT_TEST_PERCENTAGE: 5.5
           APP_UNIT_TEST_DIFF: 0.0
           APP_BUILD_STATUS: true
-          APP_UNIT_TEST_SUCCESSFUL: true
+          APP_UNIT_TEST_STATUS: true
         with:
           result-encoding: string
           script: |
