@@ -18,17 +18,15 @@ module.exports = async ({ github, context, core }) => {
     REPORT_MSG_TITLE = 'Basilisk-UI APP/Storybook build | testing | deployment',
   } = process.env;
 
-  const embedBody = [
-    {
-      title: REPORT_MSG_TITLE,
-      description: `Check workflow execution results and artifacts [here](${context.payload.repository.html_url}/actions/runs/${context.runId})`,
-      color: !APP_BUILD_STATUS || !APP_UNIT_TEST_STATUS ? '16711680' : '65280',
-      fields: [],
-    },
-  ];
+  const embedBody = {
+    title: REPORT_MSG_TITLE,
+    description: `Check workflow execution results and artifacts [here](${context.payload.repository.html_url}/actions/runs/${context.runId})`,
+    color: !APP_BUILD_STATUS || !APP_UNIT_TEST_STATUS ? '16711680' : '65280',
+    fields: [],
+  };
 
   if (IS_APP_UNIT_TEST_REPORT) {
-    embedBody.push(
+    embedBody.fields.push(
       ...getAppUnitTestReportData({
         APP_UNIT_TEST_PERCENTAGE,
         APP_UNIT_TEST_DIFF,
@@ -39,7 +37,7 @@ module.exports = async ({ github, context, core }) => {
   }
 
   if (IS_APP_SB_BUILD_REPORT) {
-    embedBody.push(
+    embedBody.fields.push(
       ...getAppSbBuildReportData({
         APP_BUILD_STATUS,
         context: context,
@@ -47,5 +45,5 @@ module.exports = async ({ github, context, core }) => {
     );
   }
 
-  return JSON.stringify(embedBody);
+  return JSON.stringify([embedBody]);
 };
