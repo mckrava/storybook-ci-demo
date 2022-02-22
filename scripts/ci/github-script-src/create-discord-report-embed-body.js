@@ -18,6 +18,8 @@ module.exports = async ({ github, context, core }) => {
     REPORT_MSG_TITLE = 'Basilisk-UI APP/Storybook build | testing | deployment',
   } = process.env;
 
+  console.log('context - ', context);
+
   const embedBody = {
     title: REPORT_MSG_TITLE,
     description: `Check workflow execution results and artifacts [here](${context.payload.repository.html_url}/actions/runs/${context.runId})`,
