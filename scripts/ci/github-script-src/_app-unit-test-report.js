@@ -7,7 +7,7 @@ module.exports = ({
 }) => {
   const appUnitTestsData = [
     {
-      name: 'App Unit tests',
+      name: ':small_blue_diamond:  App Unit tests',
       value: APP_UNIT_TEST_STATUS
         ? ':white_check_mark: Passed'
         : ':no_entry_sign: Failed',

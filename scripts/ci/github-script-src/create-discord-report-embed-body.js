@@ -1,10 +1,12 @@
 const getAppUnitTestReportData = require('./_app-unit-test-report');
 const getAppSbBuildReportData = require('./_app-sb-build-report');
+const getAppSbDeploymentReportData = require('./_app-sb-deployment-report');
 
 module.exports = async ({ github, context, core }) => {
   const {
     SHA,
     IS_APP_SB_BUILD_REPORT,
+    IS_APP_SB_DEPLOYMENT_REPORT,
     IS_APP_UNIT_TEST_REPORT,
     IS_APP_E2E_TEST_REPORT,
     IS_SB_UNIT_TEST_REPORT,
@@ -15,10 +17,18 @@ module.exports = async ({ github, context, core }) => {
     APP_BUILD_STATUS,
     APP_UNIT_TEST_REF_BRANCH,
     APP_UNIT_TEST_STATUS,
+    APP_DEPLOYMENT_STATUS,
     REPORT_MSG_TITLE = 'Basilisk-UI APP/Storybook build | testing | deployment',
+
+    GITHUB_HEAD_REF,
+    GITHUB_REF,
+    GITHUB_REF_NAME,
   } = process.env;
 
   console.log('context - ', context);
+  console.log('GITHUB_HEAD_REF - ', GITHUB_HEAD_REF);
+  console.log('GITHUB_REF - ', GITHUB_REF);
+  console.log('GITHUB_REF_NAME - ', GITHUB_REF_NAME);
 
   const embedBody = {
     title: REPORT_MSG_TITLE,
@@ -26,6 +36,15 @@ module.exports = async ({ github, context, core }) => {
     color: !APP_BUILD_STATUS || !APP_UNIT_TEST_STATUS ? '16711680' : '65280',
     fields: [],
   };
+
+  if (IS_APP_SB_BUILD_REPORT) {
+    embedBody.fields.push(
+      ...getAppSbBuildReportData({
+        APP_BUILD_STATUS,
+        context,
+      })
+    );
+  }
 
   if (IS_APP_UNIT_TEST_REPORT) {
     embedBody.fields.push(
@@ -39,10 +58,10 @@ module.exports = async ({ github, context, core }) => {
     );
   }
 
-  if (IS_APP_SB_BUILD_REPORT) {
+  if (IS_APP_SB_DEPLOYMENT_REPORT) {
     embedBody.fields.push(
-      ...getAppSbBuildReportData({
-        APP_BUILD_STATUS,
+      ...getAppSbDeploymentReportData({
+        APP_DEPLOYMENT_STATUS,
         context,
       })
     );
