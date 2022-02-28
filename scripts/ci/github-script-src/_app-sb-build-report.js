@@ -11,7 +11,7 @@ module.exports = ({ APP_BUILD_STATUS, context }) => {
     {
       name: ':small_blue_diamond:  App / Storybook build',
       value: `${
-        APP_BUILD_STATUS
+        APP_BUILD_STATUS === 'true'
           ? ':white_check_mark: Built.'
           : ':no_entry_sign: Failed'
       }\n Build of codebase in branch [${workingBranch}](${repoUrl}/tree/${workingBranch}) from commit [${

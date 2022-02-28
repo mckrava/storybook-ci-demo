@@ -26,22 +26,25 @@ module.exports = async ({ github, context, core }) => {
   } = process.env;
 
   console.log('context - ', context);
-  console.log('GITHUB_HEAD_REF - ', GITHUB_HEAD_REF);
-  console.log('GITHUB_REF - ', GITHUB_REF);
-  console.log('GITHUB_REF_NAME - ', GITHUB_REF_NAME);
   console.log('process.env - ', process.env);
+  console.log(
+    'IS_APP_SB_BUILD_REPORT typeof - ',
+    typeof IS_APP_SB_BUILD_REPORT
+  );
 
   const embedBody = {
     title: REPORT_MSG_TITLE,
     description: `Check workflow execution results and artifacts [here](${context.payload.repository.html_url}/actions/runs/${context.runId})`,
     color:
-      APP_BUILD_STATUS && APP_UNIT_TEST_STATUS && APP_DEPLOYMENT_STATUS
+      APP_BUILD_STATUS === 'true' &&
+      APP_UNIT_TEST_STATUS === 'true' &&
+      APP_DEPLOYMENT_STATUS === 'true'
         ? '65280'
         : '16711680',
     fields: [],
   };
 
-  if (IS_APP_SB_BUILD_REPORT) {
+  if (IS_APP_SB_BUILD_REPORT === 'true') {
     embedBody.fields.push(
       ...getAppSbBuildReportData({
         APP_BUILD_STATUS,
@@ -50,7 +53,7 @@ module.exports = async ({ github, context, core }) => {
     );
   }
 
-  if (IS_APP_UNIT_TEST_REPORT) {
+  if (IS_APP_UNIT_TEST_REPORT === 'true') {
     embedBody.fields.push(
       ...getAppUnitTestReportData({
         APP_UNIT_TEST_PERCENTAGE,
@@ -62,7 +65,7 @@ module.exports = async ({ github, context, core }) => {
     );
   }
 
-  if (IS_APP_SB_DEPLOYMENT_REPORT) {
+  if (IS_APP_SB_DEPLOYMENT_REPORT === 'true') {
     embedBody.fields.push(
       ...getAppSbDeploymentReportData({
         APP_DEPLOYMENT_STATUS,

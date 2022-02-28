@@ -8,7 +8,8 @@ trigger events (`pull_request`, `push`) and reusable modules/workflows which can
 combinations/sequence in root workflow. 
 
 ### Files naming/structure convention
-- __root workflow file__ - (`.github/workflows/wf_*.yml`) has prefix `wf_`. Consists of 
+- __root workflow file__ - (`.github/workflows/wf_*.yml`) has prefix `wf_`. Consists of reusable 
+  workflow calls
 - __reusable workflow file__ - (`.github/workflows/_called_*.yml`) has prefix `_called_`
 - __github scripts root module__ - (`scripts/ci/github-script-src/*.js`)
 - __github scripts imported module__ - (`scripts/ci/github-script-src/_*.js`)
