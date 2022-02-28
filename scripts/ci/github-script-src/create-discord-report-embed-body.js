@@ -34,7 +34,10 @@ module.exports = async ({ github, context, core }) => {
   const embedBody = {
     title: REPORT_MSG_TITLE,
     description: `Check workflow execution results and artifacts [here](${context.payload.repository.html_url}/actions/runs/${context.runId})`,
-    color: !APP_BUILD_STATUS || !APP_UNIT_TEST_STATUS || !APP_DEPLOYMENT_STATUS ? '16711680' : '65280',
+    color:
+      APP_BUILD_STATUS && APP_UNIT_TEST_STATUS && APP_DEPLOYMENT_STATUS
+        ? '65280'
+        : '16711680',
     fields: [],
   };
 

@@ -5,11 +5,13 @@
 GitHub Actions are configured with using ["Reusing workflows"](https://docs.github.com/en/actions/using-workflows/reusing-workflows).
 We have root workflows which are configured for specific purposes with different 
 trigger events (`pull_request`, `push`) and reusable modules/workflows which can be reused in different 
-combinations/sequence in root workflow.
+combinations/sequence in root workflow. 
 
 ### Files naming/structure convention
-- __root workflow file__ - has prefix `wf_`. Consists of  
-- __reusable workflow file__ - has prefix `_called_`
+- __root workflow file__ - (`.github/workflows/wf_*.yml`) has prefix `wf_`. Consists of 
+- __reusable workflow file__ - (`.github/workflows/_called_*.yml`) has prefix `_called_`
+- __github scripts root module__ - (`scripts/ci/github-script-src/*.js`)
+- __github scripts imported module__ - (`scripts/ci/github-script-src/_*.js`)
 
 
 ## Deployment
