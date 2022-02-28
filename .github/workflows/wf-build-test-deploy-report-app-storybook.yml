@@ -57,9 +57,12 @@ jobs:
       app-build-pub-in-discord: true
       app-build-status: ${{ needs.build-app-storybook.result == 'success' }}
 
+      app-sb-deploy-pub-report-in-discord: true
+      app-sb-deploy-status: ${{ needs.deploy-app-storybook-builds.result == 'success' }}
+
       app-unit-test-pub-report-in-pr: true
       app-unit-test-pub-report-in-discord: true
-      app-unit-test-successful: ${{ needs.unit-tests.result == 'success' }}
+      app-unit-test-status: ${{ needs.unit-tests.result == 'success' }}
 
       base-branch-codecov-artifact-name: ref-lcov.info
       working-branch-codecov-artifact-name: working-lcov.info
