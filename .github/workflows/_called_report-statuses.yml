@@ -105,9 +105,9 @@ jobs:
           APP_BUILD_STATUS: ${{ inputs.app-build-status }}
           APP_UNIT_TEST_STATUS: ${{ inputs.app-unit-test-successful }}
 
-          GITHUB_HEAD_REF: ${{ GITHUB_HEAD_REF }}
-          GITHUB_REF: ${{ GITHUB_REF }}
-          GITHUB_REF_NAME: ${{ GITHUB_REF_NAME }}
+          GITHUB_HEAD_REF: ${{ secrets.GITHUB_HEAD_REF }}
+          GITHUB_REF: ${{ secrets.GITHUB_REF }}
+          GITHUB_REF_NAME: ${{ secrets.GITHUB_REF_NAME }}
         with:
           result-encoding: string
           script: |
