@@ -29,6 +29,7 @@ module.exports = async ({ github, context, core }) => {
   console.log('GITHUB_HEAD_REF - ', GITHUB_HEAD_REF);
   console.log('GITHUB_REF - ', GITHUB_REF);
   console.log('GITHUB_REF_NAME - ', GITHUB_REF_NAME);
+  console.log('process.env - ', process.env);
 
   const embedBody = {
     title: REPORT_MSG_TITLE,
