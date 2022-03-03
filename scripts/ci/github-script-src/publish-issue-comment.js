@@ -25,7 +25,7 @@ module.exports = async ({ github, context, core }) => {
     gh_token,
   } = process.env;
 
-  process.env.token = gh_token;
+  process.env.GITHUB_TOKEN = gh_token;
 
   const githubActions = require('@tonyhallett/github-actions');
 
