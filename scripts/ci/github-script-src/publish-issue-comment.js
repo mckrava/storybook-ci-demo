@@ -27,6 +27,8 @@ module.exports = async ({ github, context, core }) => {
   const artifactClient = artifact.create();
   const downloadResponse = await artifactClient.downloadAllArtifacts();
 
+  console.log('downloadResponse - ', downloadResponse)
+
   for (const response in downloadResponse) {
     console.log(
       `response - ${response.artifactName} - ${response.downloadPath}`
