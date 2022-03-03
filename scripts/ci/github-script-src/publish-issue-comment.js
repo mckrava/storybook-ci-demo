@@ -1,5 +1,4 @@
 const getComment = require('./_find-issue-comment');
-const artifact = require('@actions/artifact');
 
 module.exports = async ({ github, context, core }) => {
   const {
@@ -22,18 +21,17 @@ module.exports = async ({ github, context, core }) => {
     GITHUB_HEAD_REF,
     GITHUB_REF,
     GITHUB_REF_NAME,
+    gh_token,
   } = process.env;
 
-  const artifactClient = artifact.create();
-  const downloadResponse = await artifactClient.downloadAllArtifacts();
+  process.env.GITHUB_TOKEN = gh_token;
 
-  console.log('downloadResponse - ', downloadResponse)
-
-  for (const response in downloadResponse) {
-    console.log(
-      `response - ${response.artifactName} - ${response.downloadPath}`
-    );
-  }
+  // const githubActions = require('@tonyhallett/github-actions');
+  //
+  // console.log(
+  //   'githubActions - ',
+  //   await githubActions.getWorkflowArtifactDetails()
+  // );
 
   console.log('context - ', context);
   // console.log('process.env - ', process.env);
@@ -50,7 +48,7 @@ module.exports = async ({ github, context, core }) => {
 
   await new Promise((res, rej) => {
     setTimeout(async () => {
-      console.log('context.runId - ', context.runId);
+      console.log('context.runId - ', context.runId)
       const runArtifactsList =
         await github.rest.actions.listWorkflowRunArtifacts({
           owner,
@@ -60,7 +58,14 @@ module.exports = async ({ github, context, core }) => {
           page: 1,
         });
 
-      console.log('runArtifactsList - ', runArtifactsList); //1929009502
+      const iterator = octokit.paginate.iterator(github.rest.actions.listWorkflowRunArtifacts, {
+        owner,
+        repo,
+        run_id: context.runId,
+        per_page: 100,
+      });
+
+      console.log('runArtifactsList iterator - ', iterator); //1929009502
 
       if (!existingIssueComment) {
         github.rest.issues.createComment({

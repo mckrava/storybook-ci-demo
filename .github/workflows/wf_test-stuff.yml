@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - run: yarn add @actions/artifact
+#      - run: yarn add @tonyhallett/github-actions
 
       - uses: actions/github-script@v6
         env:
