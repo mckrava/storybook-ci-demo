@@ -42,7 +42,7 @@ module.exports = async ({ github, context, core }) => {
     run_id: context.runId,
   });
 
-  console.log('runArtifactsList - ', runArtifactsList)
+  console.log('runArtifactsList - ', runArtifactsList) //1929009502
 
   if (!existingIssueComment) {
     github.rest.issues.createComment({
