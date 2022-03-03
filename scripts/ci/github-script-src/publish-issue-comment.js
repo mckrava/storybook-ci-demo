@@ -1,4 +1,3 @@
-
 const getComment = require('./_find-issue-comment');
 
 module.exports = async ({ github, context, core }) => {
@@ -27,12 +26,12 @@ module.exports = async ({ github, context, core }) => {
 
   process.env.GITHUB_TOKEN = gh_token;
 
-  const githubActions = require('@tonyhallett/github-actions');
-
-  console.log(
-    'githubActions - ',
-    await githubActions.getWorkflowArtifactDetails()
-  );
+  // const githubActions = require('@tonyhallett/github-actions');
+  //
+  // console.log(
+  //   'githubActions - ',
+  //   await githubActions.getWorkflowArtifactDetails()
+  // );
 
   console.log('context - ', context);
   // console.log('process.env - ', process.env);
@@ -47,27 +46,34 @@ module.exports = async ({ github, context, core }) => {
     bodyIncludes: 'Basilisk-reporter message.',
   });
 
-  const runArtifactsList = await github.rest.actions.listWorkflowRunArtifacts({
-    owner,
-    repo,
-    run_id: context.runId,
+  await new Promise((res, rej) => {
+    setTimeout(async () => {
+      console.log('context.runId - ', context.runId)
+      const runArtifactsList =
+        await github.rest.actions.listWorkflowRunArtifacts({
+          owner,
+          repo,
+          run_id: context.runId,
+        });
+
+      console.log('runArtifactsList - ', runArtifactsList); //1929009502
+
+      if (!existingIssueComment) {
+        github.rest.issues.createComment({
+          issue_number: context.payload.number,
+          owner,
+          repo,
+          body: commentBody,
+        });
+      } else {
+        github.rest.issues.updateComment({
+          owner,
+          repo,
+          comment_id: existingIssueComment.id,
+          body: commentBody,
+        });
+      }
+      res();
+    }, 5000);
   });
-
-  console.log('runArtifactsList - ', runArtifactsList); //1929009502
-
-  if (!existingIssueComment) {
-    github.rest.issues.createComment({
-      issue_number: context.payload.number,
-      owner,
-      repo,
-      body: commentBody,
-    });
-  } else {
-    github.rest.issues.updateComment({
-      owner,
-      repo,
-      comment_id: existingIssueComment.id,
-      body: commentBody,
-    });
-  }
 };
