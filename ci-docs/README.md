@@ -29,13 +29,25 @@ combinations/sequence in root workflow.
 
 ## Existing reusing workflows
 
-#### :chains:  Build App and Storybook (`.github/workflows/_called_build-app-and-storybook.yml`)
+#### :chains:  Build App and Storybook ([.github/workflows/_called_build-app-and-storybook.yml](.github/workflows/_called_build-app-and-storybook.yml))
+Build application and storybook.
+
+:inbox_tray: ***Inputs***:
+- `app-build-artifact-name`: _String, required_
+- `storybook-build-artifact-name`: _String, required_
+- `app-node-modules-cache-key`: _String, required_
+
+:outbox_tray: ***Outputs***: -//-
+
+:lock: ***Secrets***: -//-
+
+<hr />
+
+#### :chains:  Deploy App and Storybook ([.github/workflows/_called_deploy-app-and-storybook.yml](.github/workflows/_called_deploy-app-and-storybook.yml))
+Deploy application and storybook to github pages.
 
 
-
-### Deployment
-
-GitHub Actions Workflow is configured for deployment of UI application and Storybooks
+This workflow is configured for deployment of UI application and Storybooks
 at the same time. Each branch `develop|feat|fix/**` deploys to appropriate folder in `app-builds-gh-pages` branch.
 Branch folder contains 2 sub-folders: `app` and `storybook` for UI app and Storybook builds
 accordingly.
@@ -60,13 +72,17 @@ pull_request:
     - 'fix/**'
     - 'feat/**'
 ```
+<hr />
 
-To build optimized production artifacts locally you can run
+#### :chains:  Run unit tests on UI app ([.github/workflows/_called_run-app-unit-tests.yml](.github/workflows/_called_run-app-unit-tests.yml))
+Run unit tests in UI application.
 
-```
-yarn build
-```
+<hr />
 
+#### :chains:  Publish reports in PR and Discord ([.github/workflows/_called_report-statuses.yml](.github/workflows/_called_report-statuses.yml))
+Publish statuses and reports from different steps of root workflow.
+
+<hr />
 
 #FAQ
 

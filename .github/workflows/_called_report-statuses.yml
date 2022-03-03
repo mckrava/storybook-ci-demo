@@ -1,4 +1,4 @@
-name: Deploy App and Storybook
+name: Publish reports in PR and Discord
 
 on:
   workflow_call:
