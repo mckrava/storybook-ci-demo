@@ -1,4 +1,4 @@
-name: Build Deploy App and Storybook
+name: Report demo
 #name: Report demo
 on:
   pull_request:

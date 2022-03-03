@@ -1,10 +1,10 @@
 name: Build Deploy App and Storybook
 #name: Report demo
-on:
-  push:
-    branches:
-      - 'fix/**'
-      - 'feat/**'
+#on:
+#  push:
+#    branches:
+#      - 'fix/**'
+#      - 'feat/**'
 
 jobs:
 #  echo-input:
@@ -47,7 +47,6 @@ jobs:
   build-app-storybook:
     name: Build App and Storybook
     uses: ./.github/workflows/_called_build-app-and-storybook.yml
-    runs-on: macos-11
     with:
       app-build-artifact-name: app-build-files
       storybook-build-artifact-name: sb-build-files
@@ -57,7 +56,6 @@ jobs:
     name: Deploy App&Storybook builds
     needs: build-app-storybook
     uses: ./.github/workflows/_called_deploy-app-and-storybook.yml
-    runs-on: ubuntu-latest
     if: ${{ needs.build-app-storybook.result=='success' }}
     with:
       app-build-artifact-name: app-build-files
