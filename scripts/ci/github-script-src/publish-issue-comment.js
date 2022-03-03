@@ -65,6 +65,12 @@ module.exports = async ({ github, context, core }) => {
         per_page: 100,
       });
 
+      for await (const { data: artifacts } of iterator) {
+        for (const artifact of artifacts) {
+          console.log("artifact - ", artifact);
+        }
+      }
+
       console.log('runArtifactsList iterator - ', iterator); //1929009502
 
       if (!existingIssueComment) {
