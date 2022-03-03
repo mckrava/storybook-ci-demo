@@ -23,6 +23,8 @@ module.exports = async ({
     issue_number: context.issueNumber,
   };
 
+  console.log('parameters - ', parameters)
+
   for await (const { data: comments } of github.paginate.iterator(
     github.rest.issues.listComments,
     parameters
