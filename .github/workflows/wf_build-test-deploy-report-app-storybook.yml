@@ -12,7 +12,6 @@ env:
 
 jobs:
 
-
   build-app-storybook:
     name: Build App and Storybook
     uses: ./.github/workflows/_called_build-app-and-storybook.yml

@@ -55,6 +55,7 @@ jobs:
   app-unit-tests-codecov-pub-report:
     name: Publish App unit test codecov reports
     runs-on: ubuntu-latest
+    if: ${{ inputs.publish-pr-comment == true }}
     outputs:
       codecov_output_percentage: ${{ steps.code-coverage.outputs.percentage }}
       codecov_output_diff: ${{ steps.code-coverage.outputs.diff }}

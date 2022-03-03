@@ -4,10 +4,10 @@ on:
   workflow_call:
     inputs:
       base-branch-codecov-artifact-name:
-        required: false
+        required: true
         type: string
       working-branch-codecov-artifact-name:
-        required: false
+        required: true
         type: string
       app-node-modules-cache-key:
         required: true
