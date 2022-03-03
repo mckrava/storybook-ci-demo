@@ -27,10 +27,10 @@ module.exports = async ({ github, context, core }) => {
 
   console.log('context - ', context);
   console.log('process.env - ', process.env);
-  console.log(
-    'IS_APP_SB_BUILD_REPORT typeof - ',
-    typeof IS_APP_SB_BUILD_REPORT
-  );
+  // console.log(
+  //   'IS_APP_SB_BUILD_REPORT typeof - ',
+  //   typeof IS_APP_SB_BUILD_REPORT
+  // );
 
   const embedBody = {
     title: REPORT_MSG_TITLE,
