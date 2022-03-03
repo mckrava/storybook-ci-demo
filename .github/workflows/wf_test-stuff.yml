@@ -14,6 +14,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Upload script files
+        uses: actions/upload-artifact@v2
+        with:
+          name: script-files
+          path: ./scripts
+
       - uses: actions/github-script@v6
 #        env:
 #          IS_APP_SB_BUILD_REPORT: ${{ inputs.app-build-pub-in-discord }}

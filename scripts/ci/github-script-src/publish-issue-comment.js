@@ -24,9 +24,10 @@ module.exports = async ({ github, context, core }) => {
   } = process.env;
 
   console.log('context - ', context);
-  console.log('process.env - ', process.env);
+  // console.log('process.env - ', process.env);
 
   const commentBody = `## Basilisk-reporter message. \n :small_blue_diamond: Testing is fine! UPDATED`;
+  const [owner, repo] = context.payload.repository.full_name.split('/');
 
   const existingIssueComment = await getComment({
     github,
@@ -34,9 +35,14 @@ module.exports = async ({ github, context, core }) => {
     issueNumber: context.payload.number,
     bodyIncludes: 'Basilisk-reporter message.',
   });
-  const [owner, repo] = context.payload.repository.full_name.split('/');
 
-  console.log('existingIssueComment1 - ', existingIssueComment);
+  const runArtifactsList = await github.rest.actions.listWorkflowRunArtifacts({
+    owner,
+    repo,
+    run_id: context.runId,
+  });
+
+  console.log('runArtifactsList - ', runArtifactsList)
 
   if (!existingIssueComment) {
     github.rest.issues.createComment({
