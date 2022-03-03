@@ -58,7 +58,7 @@ module.exports = async ({ github, context, core }) => {
           page: 1,
         });
 
-      const iterator = octokit.paginate.iterator(github.rest.actions.listWorkflowRunArtifacts, {
+      const iterator = github.paginate.iterator(github.rest.actions.listWorkflowRunArtifacts, {
         owner,
         repo,
         run_id: context.runId,
