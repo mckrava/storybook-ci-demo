@@ -1,8 +1,6 @@
 const githubActions = require('@tonyhallett/github-actions');
 const getComment = require('./_find-issue-comment');
 
-console.log('githubActions - ', await githubActions.getWorkflowArtifactDetails())
-
 module.exports = async ({ github, context, core }) => {
   const {
     SHA,
@@ -25,6 +23,9 @@ module.exports = async ({ github, context, core }) => {
     GITHUB_REF,
     GITHUB_REF_NAME,
   } = process.env;
+
+  console.log('githubActions - ', await githubActions.getWorkflowArtifactDetails())
+
 
   console.log('context - ', context);
   // console.log('process.env - ', process.env);
