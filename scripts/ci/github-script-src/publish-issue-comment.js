@@ -26,7 +26,7 @@ module.exports = async ({ github, context, core }) => {
   console.log('context - ', context);
   console.log('process.env - ', process.env);
 
-  const commentBody = `## Basilisk-reporter message. \n :small_blue_diamond: Testing is fine!`;
+  const commentBody = `## Basilisk-reporter message. \n :small_blue_diamond: Testing is fine! UPDATED`;
 
   const existingIssueComment = await getComment({
     github,
