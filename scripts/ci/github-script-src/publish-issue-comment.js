@@ -66,6 +66,7 @@ module.exports = async ({ github, context, core }) => {
       });
 
       for await (const { data: artifacts } of iterator) {
+        console.log('---artifacts - ', artifacts)
         for (const artifact of artifacts) {
           console.log("artifact - ", artifact);
         }
