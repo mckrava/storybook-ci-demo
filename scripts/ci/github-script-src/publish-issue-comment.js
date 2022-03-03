@@ -1,4 +1,4 @@
-const githubActions = require('@tonyhallett/github-actions');
+
 const getComment = require('./_find-issue-comment');
 
 module.exports = async ({ github, context, core }) => {
@@ -26,6 +26,8 @@ module.exports = async ({ github, context, core }) => {
   } = process.env;
 
   process.env.token = gh_token;
+
+  const githubActions = require('@tonyhallett/github-actions');
 
   console.log(
     'githubActions - ',
