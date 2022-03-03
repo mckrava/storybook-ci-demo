@@ -46,9 +46,9 @@ module.exports = async ({ github, context, core }) => {
       body: commentBody,
     });
   } else {
-    github.rest.issues.createComment({
-      issue_number: context.payload.number,
+    github.rest.issues.updateComment({
       owner,
+      repo,
       comment_id: existingIssueComment.id,
       body: commentBody,
     });
