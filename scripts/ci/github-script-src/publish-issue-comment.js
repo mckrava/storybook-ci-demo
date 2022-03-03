@@ -36,7 +36,7 @@ module.exports = async ({ github, context, core }) => {
     bodyIncludes: 'Basilisk-reporter message.',
   });
 
-  const runArtifactsList = await github.rest.actions.listWorkflowRunArtifacts({
+  const runArtifactsList = await github.actions.listWorkflowRunArtifacts({
     owner,
     repo,
     run_id: context.runId,
