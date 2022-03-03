@@ -31,7 +31,8 @@ jobs:
       - run: yarn add @tonyhallett/github-actions
 
       - uses: actions/github-script@v6
-#        env:
+        env:
+          gh_token: ${{ secrets.GH_TOKEN }}
 #          IS_APP_SB_BUILD_REPORT: ${{ inputs.app-build-pub-in-discord }}
 #          IS_APP_UNIT_TEST_REPORT: ${{ inputs.app-unit-test-pub-report-in-discord }}
 #          IS_APP_E2E_TEST_REPORT: false

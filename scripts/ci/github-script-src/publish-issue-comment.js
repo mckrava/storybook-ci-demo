@@ -22,10 +22,15 @@ module.exports = async ({ github, context, core }) => {
     GITHUB_HEAD_REF,
     GITHUB_REF,
     GITHUB_REF_NAME,
+    gh_token,
   } = process.env;
 
-  console.log('githubActions - ', await githubActions.getWorkflowArtifactDetails())
+  process.env.token = gh_token;
 
+  console.log(
+    'githubActions - ',
+    await githubActions.getWorkflowArtifactDetails()
+  );
 
   console.log('context - ', context);
   // console.log('process.env - ', process.env);
