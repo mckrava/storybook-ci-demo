@@ -13,6 +13,7 @@ module.exports = async ({
   github,
   context,
   bodyIncludes,
+  issueNumber,
   commentAuthor = null,
 }) => {
   const [owner, repo] = context.payload.repository.full_name.split('/');
@@ -20,10 +21,10 @@ module.exports = async ({
   const parameters = {
     owner: owner,
     repo: repo,
-    issue_number: context.issueNumber,
+    issue_number: issueNumber,
   };
 
-  console.log('parameters - ', parameters)
+  console.log('parameters - ', parameters);
 
   for await (const { data: comments } of github.paginate.iterator(
     github.rest.issues.listComments,

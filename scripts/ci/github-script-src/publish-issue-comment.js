@@ -29,11 +29,13 @@ module.exports = async ({ github, context, core }) => {
   const existingIssueComment1 = await getComment({
     github,
     context,
+    issueNumber: context.payload.number,
     bodyIncludes: 'Basilisk-reporter message.',
   });
   const existingIssueComment2 = await getComment({
     github,
     context,
+    issueNumber: context.payload.number,
     bodyIncludes: 'Barecheck - Code coverage report',
   });
 
