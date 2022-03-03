@@ -26,19 +26,31 @@ module.exports = async ({ github, context, core }) => {
   console.log('context - ', context);
   console.log('process.env - ', process.env);
 
-  const existingIssueComment1 = await getComment({
+  const commentBody = `## Basilisk-reporter message. \n :small_blue_diamond: Testing is fine!`;
+
+  const existingIssueComment = await getComment({
     github,
     context,
     issueNumber: context.payload.number,
     bodyIncludes: 'Basilisk-reporter message.',
   });
-  const existingIssueComment2 = await getComment({
-    github,
-    context,
-    issueNumber: context.payload.number,
-    bodyIncludes: 'Barecheck - Code coverage report',
-  });
+  const [owner, repo] = context.payload.repository.full_name.split('/');
 
-  console.log('existingIssueComment1 - ', existingIssueComment1);
-  console.log('existingIssueComment2 - ', existingIssueComment2);
+  console.log('existingIssueComment1 - ', existingIssueComment);
+
+  if (!existingIssueComment) {
+    github.rest.issues.createComment({
+      issue_number: context.payload.number,
+      owner,
+      repo,
+      body: commentBody,
+    });
+  } else {
+    github.rest.issues.createComment({
+      issue_number: context.payload.number,
+      owner,
+      comment_id: existingIssueComment.id,
+      body: commentBody,
+    });
+  }
 };
