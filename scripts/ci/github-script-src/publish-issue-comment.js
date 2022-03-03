@@ -55,6 +55,7 @@ module.exports = async ({ github, context, core }) => {
           repo,
           run_id: context.runId,
           per_page: 100,
+          page: 1,
         });
 
       console.log('runArtifactsList - ', runArtifactsList); //1929009502
