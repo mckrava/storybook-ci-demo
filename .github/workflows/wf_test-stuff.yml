@@ -28,6 +28,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - run: yarn add @tonyhallett/github-actions
+
       - uses: actions/github-script@v6
 #        env:
 #          IS_APP_SB_BUILD_REPORT: ${{ inputs.app-build-pub-in-discord }}

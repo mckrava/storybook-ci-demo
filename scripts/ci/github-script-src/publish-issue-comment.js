@@ -1,4 +1,7 @@
+const githubActions = require('@tonyhallett/github-actions');
 const getComment = require('./_find-issue-comment');
+
+console.log('githubActions - ', githubActions)
 
 module.exports = async ({ github, context, core }) => {
   const {
@@ -36,13 +39,13 @@ module.exports = async ({ github, context, core }) => {
     bodyIncludes: 'Basilisk-reporter message.',
   });
 
-  const runArtifactsList = await github.actions.listWorkflowRunArtifacts({
+  const runArtifactsList = await github.rest.actions.listWorkflowRunArtifacts({
     owner,
     repo,
     run_id: context.runId,
   });
 
-  console.log('runArtifactsList - ', runArtifactsList) //1929009502
+  console.log('runArtifactsList - ', runArtifactsList); //1929009502
 
   if (!existingIssueComment) {
     github.rest.issues.createComment({
