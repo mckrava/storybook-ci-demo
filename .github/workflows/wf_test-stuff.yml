@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - uses: actions/github-script@v6
-        env:
+#        env:
 #          IS_APP_SB_BUILD_REPORT: ${{ inputs.app-build-pub-in-discord }}
 #          IS_APP_UNIT_TEST_REPORT: ${{ inputs.app-unit-test-pub-report-in-discord }}
 #          IS_APP_E2E_TEST_REPORT: false
