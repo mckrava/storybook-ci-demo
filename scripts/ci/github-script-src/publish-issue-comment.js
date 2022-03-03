@@ -76,6 +76,6 @@ module.exports = async ({ github, context, core }) => {
         });
       }
       res();
-    }, 5000);
+    }, 10000);
   });
 };
