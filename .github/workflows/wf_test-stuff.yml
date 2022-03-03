@@ -24,6 +24,7 @@ jobs:
   publish-summary-report-issue-comment:
     name: test scriipts
     runs-on: ubuntu-latest
+    needs: add-dummy-artifcats
     steps:
       - uses: actions/checkout@v2
 
