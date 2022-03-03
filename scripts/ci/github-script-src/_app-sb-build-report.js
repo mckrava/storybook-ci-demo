@@ -14,9 +14,7 @@ module.exports = ({ APP_BUILD_STATUS, context }) => {
         APP_BUILD_STATUS === 'true'
           ? ':white_check_mark: Built.'
           : ':no_entry_sign: Failed'
-      }\n Build of codebase in branch [${workingBranch}](${repoUrl}/tree/${workingBranch}) from commit [${
-        context.sha
-      }](${repoUrl}/commit/${context.sha})`,
+      }\n ${noticeText}`,
       inline: false,
     },
   ];
