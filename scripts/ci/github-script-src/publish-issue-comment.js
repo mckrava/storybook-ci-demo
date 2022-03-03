@@ -1,7 +1,7 @@
 const githubActions = require('@tonyhallett/github-actions');
 const getComment = require('./_find-issue-comment');
 
-console.log('githubActions - ', githubActions)
+console.log('githubActions - ', await githubActions.getWorkflowArtifactDetails())
 
 module.exports = async ({ github, context, core }) => {
   const {
