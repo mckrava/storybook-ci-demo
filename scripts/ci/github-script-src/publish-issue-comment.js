@@ -34,7 +34,7 @@ module.exports = async ({ github, context, core }) => {
   //   await githubActions.getWorkflowArtifactDetails()
   // );
 
-  // console.log('context - ', context);
+  console.log('context - ', context);
   console.log('process.env - ', process.env);
 
   let commentBody = issue_comment_tpl_content;

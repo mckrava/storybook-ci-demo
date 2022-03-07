@@ -32,7 +32,7 @@ jobs:
       - name: Read and assign
         id: issue-comment-tpl-content
         run: |
-          input_file="new.txt"
+          input_file="issue-comment-tpl.txt"
           while read line
           do
             file_text=$line
