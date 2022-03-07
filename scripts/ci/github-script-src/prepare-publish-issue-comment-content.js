@@ -27,12 +27,12 @@ module.exports = async ({ github, context, core }) => {
   process.env.GITHUB_TOKEN = gh_token;
   const [owner, repo] = context.payload.repository.full_name.split('/');
 
-  // const githubActions = require('@tonyhallett/github-actions');
-  //
-  // console.log(
-  //   'githubActions - ',
-  //   await githubActions.getWorkflowArtifactDetails()
-  // );
+  const githubActions = require('@tonyhallett/github-actions');
+
+  console.log(
+    'githubActions - ',
+    await githubActions.getWorkflowArtifactDetails()
+  );
 
   console.log('context - ', context);
   // console.log('process.env - ', process.env);
