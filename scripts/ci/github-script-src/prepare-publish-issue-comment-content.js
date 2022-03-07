@@ -53,12 +53,12 @@ module.exports = async ({ github, context, core }) => {
     bodyIncludes: 'Basilisk-reporter message.',
   });
 
-  console.log('context.payload - ', context.payload.head)
+  console.log('context.payload - ', context.payload.pull_request.head)
 
   const suites = await github.rest.checks.createSuite({
     owner,
     repo,
-    head_sha: context.payload.sha,
+    head_sha: context.payload.pull_request.head.sha,
   });
 
   console.log('suitesv - ', suites)
