@@ -26,7 +26,7 @@ module.exports = async ({ github, context, core }) => {
     GITHUB_REF,
     GITHUB_REF_NAME,
     gh_token,
-    issue_comment_data = {},
+    issue_comment_data = '{}',
   } = process.env;
 
   process.env.GITHUB_TOKEN = gh_token;
@@ -41,7 +41,9 @@ module.exports = async ({ github, context, core }) => {
   // );
 
   console.log('context - ', context);
-  // console.log('process.env - ', process.env);
+  console.log('process.env - ', process.env);
+
+  console.log(JSON.parse(issue_comment_data))
 
   let {
     owner,
@@ -52,7 +54,7 @@ module.exports = async ({ github, context, core }) => {
     repoUrl,
     existingIssueCommentId,
     commentBody,
-  } = issue_comment_data;
+  } = JSON.parse(issue_comment_data);
 
   const iterator = github.paginate.iterator(
     github.rest.actions.listWorkflowRunArtifacts,
@@ -64,7 +66,7 @@ module.exports = async ({ github, context, core }) => {
     }
   );
 
-  commentBody += `\n Available artifacts:`
+  commentBody += `\n Available artifacts:`;
 
   for await (const { data: artifacts } of iterator) {
     console.log('---artifacts - ', artifacts);

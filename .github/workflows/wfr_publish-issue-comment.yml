@@ -26,13 +26,13 @@ jobs:
         with:
 #          github_token: ${{secrets.GITHUB_TOKEN}}
           workflow: wf_test-stuff.yml
-          name: issue-comment-tpl
+          name: issue-comment-data
           path: .
 
       - name: Read and assign
-        id: issue-comment-tpl-content
+        id: issue-comment-data-content
         run: |
-          input_file="issue-comment-tpl.txt"
+          input_file="issue-comment-data.txt"
           while read line
           do
             file_text=$line
@@ -44,7 +44,7 @@ jobs:
       - uses: actions/github-script@v6
         env:
           gh_token: ${{ secrets.GH_TOKEN }}
-          issue_comment_data: ${{steps.issue-comment-tpl-content.outputs.value}}
+          issue_comment_data: ${{steps.issue-comment-data-content.outputs.value}}
         with:
           script: |
             const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')

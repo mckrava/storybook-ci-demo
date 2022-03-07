@@ -62,12 +62,12 @@ jobs:
 
       - name: Save issue comment prepared content into file
         run: |
-          echo ${{ steps.issue-comment-tpl-prepare.outputs.result }} > issue-comment-tpl.txt
+          echo ${{ steps.issue-comment-tpl-prepare.outputs.result }} > issue-comment-data.txt
           ls
           pwd
 
       - name: Upload issue-comment-tpl
         uses: actions/upload-artifact@v2
         with:
-          name: issue-comment-tpl
-          path: ./issue-comment-tpl.txt
+          name: issue-comment-data
+          path: ./issue-comment-data.txt
