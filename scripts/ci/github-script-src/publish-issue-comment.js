@@ -27,7 +27,7 @@ module.exports = async ({ github, context, core }) => {
 
   process.env.GITHUB_TOKEN = gh_token;
 
-  if (!context.eventName !== 'pull_request') return;
+  // if (!context.eventName !== 'pull_request') return;
 
   // const githubActions = require('@tonyhallett/github-actions');
   //
