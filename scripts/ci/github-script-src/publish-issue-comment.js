@@ -1,11 +1,7 @@
 const getComment = require('./_find-issue-comment');
 
-function getArtifactUrl(
-  repoHtmlUrl,
-  checkSuiteNumber,
-  artifactId
-) {
-  return `${repoHtmlUrl}/suites/${checkSuiteNumber}/artifacts/${artifactId.toString()}`
+function getArtifactUrl(repoHtmlUrl, checkSuiteNumber, artifactId) {
+  return `${repoHtmlUrl}/suites/${checkSuiteNumber}/artifacts/${artifactId.toString()}`;
 }
 
 module.exports = async ({ github, context, core }) => {
@@ -47,8 +43,16 @@ module.exports = async ({ github, context, core }) => {
   console.log('context - ', context);
   // console.log('process.env - ', process.env);
 
-  let { owner, repo, runId, issueNumber, existingIssueCommentId, commentBody } =
-    issue_comment_data;
+  let {
+    owner,
+    repo,
+    runId,
+    issueNumber,
+    suiteId,
+    repoUrl,
+    existingIssueCommentId,
+    commentBody,
+  } = issue_comment_data;
 
   const iterator = github.paginate.iterator(
     github.rest.actions.listWorkflowRunArtifacts,
@@ -60,15 +64,21 @@ module.exports = async ({ github, context, core }) => {
     }
   );
 
+  commentBody += `\n Available artifacts:`
+
   for await (const { data: artifacts } of iterator) {
     console.log('---artifacts - ', artifacts);
     for (const artifact of artifacts) {
       console.log('artifact - ', artifact);
-      commentBody += `\n - Artifact ID - ${artifact.id}`;
+      commentBody += `\n - [${artifact.name}](${getArtifactUrl(
+        repoUrl,
+        suiteId,
+        artifact.id
+      )})`;
     }
   }
 
-  if (!existingIssueComment) {
+  if (!existingIssueCommentId) {
     github.rest.issues.createComment({
       issue_number: context.payload.number,
       owner,

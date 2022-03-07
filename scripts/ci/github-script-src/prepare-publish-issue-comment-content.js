@@ -55,18 +55,20 @@ module.exports = async ({ github, context, core }) => {
 
   console.log('context.payload - ', context.payload.pull_request.head)
 
-  const suites = await github.rest.checks.createSuite({
+  const suite = await github.rest.checks.createSuite({
     owner,
     repo,
     head_sha: context.payload.pull_request.head.sha,
   });
 
-  console.log('suitesv - ', suites)
+  console.log('suitesv - ', suite)
 
   return JSON.stringify({
     commentBody,
     owner,
     repo,
+    suiteId: suite.data.id,
+    repoUrl: context.payload.repository.html_url,
     issueNumber: context.payload.number,
     runId: context.runId,
     existingIssueCommentId: existingIssueComment
