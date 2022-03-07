@@ -55,19 +55,19 @@ module.exports = async ({ github, context, core }) => {
 
   console.log('context.payload - ', context.payload.pull_request.head);
 
-  const newSuiteResp = await github.rest.checks.createSuite({
-    owner,
-    repo,
-    head_sha: context.payload.pull_request.head.sha,
-  });
-
-  console.log('newSuiteResp - ', newSuiteResp);
-
-  const suite = await github.rest.checks.getSuite({
-    owner,
-    repo,
-    check_suite_id: newSuiteResp.data.id,
-  });
+  // const newSuiteResp = await github.rest.checks.createSuite({
+  //   owner,
+  //   repo,
+  //   head_sha: context.payload.pull_request.head.sha,
+  // });
+  //
+  // console.log('newSuiteResp - ', newSuiteResp);
+  //
+  // const suite = await github.rest.checks.getSuite({
+  //   owner,
+  //   repo,
+  //   check_suite_id: newSuiteResp.data.id,
+  // });
 
   const suitesList = await github.request(
     `GET /repos/${owner}/${repo}/commits/${context.payload.pull_request.head.sha}/check-suites`,
@@ -78,13 +78,17 @@ module.exports = async ({ github, context, core }) => {
     }
   );
 
+  for (let suiteItem of suitesList.data.check_suites) {
+    console.log('suiteItem - ', suiteItem);
+  }
+
   console.log('suitesList - ', suitesList);
 
   return JSON.stringify({
     commentBody,
     owner,
     repo,
-    suiteId: suite.data.id,
+    suiteId: 'suite.data.id',
     repoUrl: context.payload.repository.html_url,
     issueNumber: context.payload.number,
     runId: context.runId,
