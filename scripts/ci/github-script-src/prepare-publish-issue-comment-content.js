@@ -25,6 +25,7 @@ module.exports = async ({ github, context, core }) => {
   } = process.env;
 
   process.env.GITHUB_TOKEN = gh_token;
+  const [owner, repo] = context.payload.repository.full_name.split('/');
 
   // const githubActions = require('@tonyhallett/github-actions');
   //
@@ -45,5 +46,21 @@ module.exports = async ({ github, context, core }) => {
   Application tests code coverage: **${APP_UNIT_TEST_PERCENTAGE}**
   `;
 
-  return commentBody;
+  const existingIssueComment = await getComment({
+    github,
+    context,
+    issueNumber: context.payload.number,
+    bodyIncludes: 'Basilisk-reporter message.',
+  });
+
+  return JSON.stringify({
+    commentBody,
+    owner,
+    repo,
+    issueNumber: context.payload.number,
+    runId: context.runId,
+    existingIssueCommentId: existingIssueComment
+      ? existingIssueComment.id
+      : null,
+  });
 };

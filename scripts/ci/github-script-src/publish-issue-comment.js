@@ -78,7 +78,7 @@ module.exports = async ({ github, context, core }) => {
           commentBody += `\n - Artifact ID - ${artifact.id}`;
         }
       }
-      
+
       if (!existingIssueComment) {
         github.rest.issues.createComment({
           issue_number: context.payload.number,
