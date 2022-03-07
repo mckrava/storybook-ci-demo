@@ -72,6 +72,13 @@ module.exports = async ({ github, context, core }) => {
         }
       }
 
+      const restResp = await github.request(`GET /repos/${owner}/${repo}/actions/runs/${context.runId}/artifacts`, {
+        owner,
+        repo,
+        run_id: context.runId
+      })
+
+      console.log('restResp - ', restResp); //1929009502
       console.log('runArtifactsList iterator - ', iterator); //1929009502
 
       if (!existingIssueComment) {
