@@ -7,17 +7,37 @@ on:
       - completed
 
 jobs:
-  artifacts-url-comments:
-    name: Add artifact links to pull request
+  issue-comment-publish:
+    name: Publish issue comment
     runs-on: ubuntu-latest
     steps:
-      - name: Add artifact links to pull request
-        uses: tonyhallett/artifacts-url-comments@v1.1.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      - uses: actions/checkout@v2
+
+      - name: Download code coverage report from base branch
+        uses: actions/download-artifact@v2
+        id: download-ref
         with:
-          prefix: 'Testing flow artifacts: '
-          suffix: Or check GH Actions for more logs.
-          format: '- [{name}]({url});'
-          addTo: pull
-          errorNoArtifacts: 'false'
+          name: issue-comment-tpl
+          path: .
+
+      - name: Read and assign
+        id: issue-comment-tpl-content
+        run: |
+          input_file="new.txt"
+          while read line
+          do
+            file_text=$line
+          done < "$input_file"
+          echo ::set-output name=value::$file_text
+
+      - run: yarn add @tonyhallett/github-actions
+
+      - uses: actions/github-script@v6
+        env:
+          gh_token: ${{ secrets.GH_TOKEN }}
+          issue_comment_tpl_content: ${{steps.issue-comment-tpl-content.outputs.value}}
+        with:
+          script: |
+            const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')
+            await script({github, context, core})
+

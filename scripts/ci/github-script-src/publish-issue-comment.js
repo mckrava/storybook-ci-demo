@@ -22,6 +22,7 @@ module.exports = async ({ github, context, core }) => {
     GITHUB_REF,
     GITHUB_REF_NAME,
     gh_token,
+    issue_comment_tpl_content,
   } = process.env;
 
   process.env.GITHUB_TOKEN = gh_token;
@@ -33,10 +34,10 @@ module.exports = async ({ github, context, core }) => {
   //   await githubActions.getWorkflowArtifactDetails()
   // );
 
-  console.log('context - ', context);
-  // console.log('process.env - ', process.env);
+  // console.log('context - ', context);
+  console.log('process.env - ', process.env);
 
-  const commentBody = `## Basilisk-reporter message. \n :small_blue_diamond: Testing is fine! UPDATED`;
+  let commentBody = issue_comment_tpl_content;
   const [owner, repo] = context.payload.repository.full_name.split('/');
 
   const existingIssueComment = await getComment({
@@ -49,14 +50,14 @@ module.exports = async ({ github, context, core }) => {
   await new Promise((res, rej) => {
     setTimeout(async () => {
       console.log('context.runId - ', context.runId)
-      const runArtifactsList =
-        await github.rest.actions.listWorkflowRunArtifacts({
-          owner,
-          repo,
-          run_id: context.runId,
-          per_page: 100,
-          page: 1,
-        });
+      // const runArtifactsList =
+      //   await github.rest.actions.listWorkflowRunArtifacts({
+      //     owner,
+      //     repo,
+      //     run_id: context.runId,
+      //     per_page: 100,
+      //     page: 1,
+      //   });
 
       const iterator = github.paginate.iterator(github.rest.actions.listWorkflowRunArtifacts, {
         owner,
@@ -69,17 +70,18 @@ module.exports = async ({ github, context, core }) => {
         console.log('---artifacts - ', artifacts)
         for (const artifact of artifacts) {
           console.log("artifact - ", artifact);
+          commentBody += `\n - Artifact ID - ${artifact.id}`
         }
       }
 
-      const restResp = await github.request(`GET /repos/${owner}/${repo}/actions/runs/${context.runId}/artifacts`, {
-        owner,
-        repo,
-        run_id: context.runId
-      })
-
-      console.log('restResp - ', restResp); //1929009502
-      console.log('runArtifactsList iterator - ', iterator); //1929009502
+      // const restResp = await github.request(`GET /repos/${owner}/${repo}/actions/runs/${context.runId}/artifacts`, {
+      //   owner,
+      //   repo,
+      //   run_id: context.runId
+      // })
+      //
+      // console.log('restResp - ', restResp); //1929009502
+      // console.log('runArtifactsList iterator - ', iterator); //1929009502
 
       if (!existingIssueComment) {
         github.rest.issues.createComment({
