@@ -54,7 +54,7 @@ jobs:
         #          GITHUB_REF_NAME: ${{ secrets.GITHUB_REF_NAME }}
         with:
           script: |
-            const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')
+            const script = require('./scripts/ci/github-script-src/prepare-publish-issue-comment-content.js')
             return await script({github, context, core})
 
       - name: Save issue comment prepared content into file
