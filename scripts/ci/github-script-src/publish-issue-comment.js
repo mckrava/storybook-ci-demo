@@ -37,7 +37,7 @@ module.exports = async ({ github, context, core }) => {
   // );
 
   console.log('context - ', context);
-  console.log('process.env - ', process.env);
+  // console.log('process.env - ', process.env);
 
   let commentBody = issue_comment_tpl_content;
   const [owner, repo] = context.payload.repository.full_name.split('/');
