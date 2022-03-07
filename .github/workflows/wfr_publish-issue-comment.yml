@@ -44,7 +44,7 @@ jobs:
       - uses: actions/github-script@v6
         env:
           gh_token: ${{ secrets.GH_TOKEN }}
-          issue_comment_tpl_content: ${{steps.issue-comment-tpl-content.outputs.value}}
+          issue_comment_data: ${{steps.issue-comment-tpl-content.outputs.value}}
         with:
           script: |
             const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')
