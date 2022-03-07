@@ -53,7 +53,7 @@ module.exports = async ({ github, context, core }) => {
     bodyIncludes: 'Basilisk-reporter message.',
   });
 
-  console.log('context.payload - ', context.payload.pull_request.head)
+  console.log('context.payload - ', context.payload.pull_request.head);
 
   const newSuiteResp = await github.rest.checks.createSuite({
     owner,
@@ -61,7 +61,7 @@ module.exports = async ({ github, context, core }) => {
     head_sha: context.payload.pull_request.head.sha,
   });
 
-  console.log('newSuiteResp - ', newSuiteResp)
+  console.log('newSuiteResp - ', newSuiteResp);
 
   const suite = await github.rest.checks.getSuite({
     owner,
@@ -69,7 +69,16 @@ module.exports = async ({ github, context, core }) => {
     check_suite_id: newSuiteResp.data.id,
   });
 
-  console.log('222333suite - ', suite)
+  const suitesList = await github.request(
+    `GET /repos/${owner}/${repo}/commits/${context.payload.pull_request.head.sha}/check-suites`,
+    {
+      owner,
+      repo,
+      ref: context.payload.pull_request.head.sha,
+    }
+  );
+
+  console.log('suitesList - ', suitesList);
 
   return JSON.stringify({
     commentBody,
