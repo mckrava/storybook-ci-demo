@@ -1,5 +1,13 @@
 const getComment = require('./_find-issue-comment');
 
+function getArtifactUrl(
+  repoHtmlUrl,
+  checkSuiteNumber,
+  artifactId
+) {
+  return `${repoHtmlUrl}/suites/${checkSuiteNumber}/artifacts/${artifactId.toString()}`
+}
+
 module.exports = async ({ github, context, core }) => {
   const {
     SHA,
@@ -22,7 +30,7 @@ module.exports = async ({ github, context, core }) => {
     GITHUB_REF,
     GITHUB_REF_NAME,
     gh_token,
-    issue_comment_tpl_content,
+    issue_comment_data = {},
   } = process.env;
 
   process.env.GITHUB_TOKEN = gh_token;
@@ -39,62 +47,40 @@ module.exports = async ({ github, context, core }) => {
   console.log('context - ', context);
   // console.log('process.env - ', process.env);
 
-  let commentBody = issue_comment_tpl_content;
-  const [owner, repo] = context.payload.repository.full_name.split('/');
+  let { owner, repo, runId, issueNumber, existingIssueCommentId, commentBody } =
+    issue_comment_data;
 
-  const existingIssueComment = await getComment({
-    github,
-    context,
-    issueNumber: context.payload.number,
-    bodyIncludes: 'Basilisk-reporter message.',
-  });
+  const iterator = github.paginate.iterator(
+    github.rest.actions.listWorkflowRunArtifacts,
+    {
+      owner,
+      repo,
+      run_id: runId,
+      per_page: 100,
+    }
+  );
 
-  await new Promise((res, rej) => {
-    setTimeout(async () => {
-      console.log('context.runId - ', context.runId);
-      // const runArtifactsList =
-      //   await github.rest.actions.listWorkflowRunArtifacts({
-      //     owner,
-      //     repo,
-      //     run_id: context.runId,
-      //     per_page: 100,
-      //     page: 1,
-      //   });
+  for await (const { data: artifacts } of iterator) {
+    console.log('---artifacts - ', artifacts);
+    for (const artifact of artifacts) {
+      console.log('artifact - ', artifact);
+      commentBody += `\n - Artifact ID - ${artifact.id}`;
+    }
+  }
 
-      const iterator = github.paginate.iterator(
-        github.rest.actions.listWorkflowRunArtifacts,
-        {
-          owner,
-          repo,
-          run_id: context.runId,
-          per_page: 100,
-        }
-      );
-
-      for await (const { data: artifacts } of iterator) {
-        console.log('---artifacts - ', artifacts);
-        for (const artifact of artifacts) {
-          console.log('artifact - ', artifact);
-          commentBody += `\n - Artifact ID - ${artifact.id}`;
-        }
-      }
-
-      if (!existingIssueComment) {
-        github.rest.issues.createComment({
-          issue_number: context.payload.number,
-          owner,
-          repo,
-          body: commentBody,
-        });
-      } else {
-        github.rest.issues.updateComment({
-          owner,
-          repo,
-          comment_id: existingIssueComment.id,
-          body: commentBody,
-        });
-      }
-      res();
-    }, 10000);
-  });
+  if (!existingIssueComment) {
+    github.rest.issues.createComment({
+      issue_number: context.payload.number,
+      owner,
+      repo,
+      body: commentBody,
+    });
+  } else {
+    github.rest.issues.updateComment({
+      owner,
+      repo,
+      comment_id: existingIssueCommentId,
+      body: commentBody,
+    });
+  }
 };
