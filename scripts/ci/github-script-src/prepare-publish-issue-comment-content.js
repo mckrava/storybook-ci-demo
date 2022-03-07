@@ -61,7 +61,7 @@ module.exports = async ({ github, context, core }) => {
     head_sha: context.payload.pull_request.head.sha,
   });
 
-  console.log('suitesv - ', suite)
+  console.log('suites - ', suite)
 
   return JSON.stringify({
     commentBody,
