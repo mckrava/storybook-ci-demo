@@ -13,10 +13,19 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Download code coverage report from base branch
-        uses: actions/download-artifact@v2
-        id: download-ref
+#      - name: Download code coverage report from base branch
+#        uses: actions/download-artifact@v2
+#        id: download-ref
+#        with:
+#          name: issue-comment-tpl
+#          path: .
+
+
+      - name: Download artifact
+        uses: dawidd6/action-download-artifact@v2
         with:
+#          github_token: ${{secrets.GITHUB_TOKEN}}
+          workflow: wf_test-stuff.yml
           name: issue-comment-tpl
           path: .
 
