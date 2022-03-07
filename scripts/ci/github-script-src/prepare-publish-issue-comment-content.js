@@ -69,7 +69,7 @@ module.exports = async ({ github, context, core }) => {
     check_suite_id: newSuiteResp.data.id,
   });
 
-  console.log('222suite - ', suite)
+  console.log('222333suite - ', suite)
 
   return JSON.stringify({
     commentBody,
