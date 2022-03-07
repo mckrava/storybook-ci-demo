@@ -6,6 +6,9 @@ on:
       - 'fix/**'
       - 'feat/**'
       - develop
+  push:
+    branches:
+      - develop
 
 jobs:
   add-dummy-artifcats:

@@ -27,6 +27,8 @@ module.exports = async ({ github, context, core }) => {
 
   process.env.GITHUB_TOKEN = gh_token;
 
+  if (!context.eventName !== 'pull_request') return;
+
   // const githubActions = require('@tonyhallett/github-actions');
   //
   // console.log(
@@ -34,7 +36,7 @@ module.exports = async ({ github, context, core }) => {
   //   await githubActions.getWorkflowArtifactDetails()
   // );
 
-  // console.log('context - ', context);
+  console.log('context - ', context);
   console.log('process.env - ', process.env);
 
   let commentBody = issue_comment_tpl_content;
@@ -49,7 +51,7 @@ module.exports = async ({ github, context, core }) => {
 
   await new Promise((res, rej) => {
     setTimeout(async () => {
-      console.log('context.runId - ', context.runId)
+      console.log('context.runId - ', context.runId);
       // const runArtifactsList =
       //   await github.rest.actions.listWorkflowRunArtifacts({
       //     owner,
@@ -59,18 +61,21 @@ module.exports = async ({ github, context, core }) => {
       //     page: 1,
       //   });
 
-      const iterator = github.paginate.iterator(github.rest.actions.listWorkflowRunArtifacts, {
-        owner,
-        repo,
-        run_id: context.runId,
-        per_page: 100,
-      });
+      const iterator = github.paginate.iterator(
+        github.rest.actions.listWorkflowRunArtifacts,
+        {
+          owner,
+          repo,
+          run_id: context.runId,
+          per_page: 100,
+        }
+      );
 
       for await (const { data: artifacts } of iterator) {
-        console.log('---artifacts - ', artifacts)
+        console.log('---artifacts - ', artifacts);
         for (const artifact of artifacts) {
-          console.log("artifact - ", artifact);
-          commentBody += `\n - Artifact ID - ${artifact.id}`
+          console.log('artifact - ', artifact);
+          commentBody += `\n - Artifact ID - ${artifact.id}`;
         }
       }
 

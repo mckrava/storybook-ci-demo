@@ -13,24 +13,33 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Download code coverage report from base branch
-        uses: actions/download-artifact@v2
-        id: download-ref
+#      - name: Download code coverage report from base branch
+#        uses: actions/download-artifact@v2
+#        id: download-ref
+#        with:
+#          name: issue-comment-tpl
+#          path: .
+
+
+      - name: Download artifact
+        uses: dawidd6/action-download-artifact@v2
         with:
+#          github_token: ${{secrets.GITHUB_TOKEN}}
+          workflow: wf_test-stuff.yml
           name: issue-comment-tpl
           path: .
 
       - name: Read and assign
         id: issue-comment-tpl-content
         run: |
-          input_file="new.txt"
+          input_file="issue-comment-tpl.txt"
           while read line
           do
             file_text=$line
           done < "$input_file"
           echo ::set-output name=value::$file_text
 
-      - run: yarn add @tonyhallett/github-actions
+#      - run: yarn add @tonyhallett/github-actions
 
       - uses: actions/github-script@v6
         env:
