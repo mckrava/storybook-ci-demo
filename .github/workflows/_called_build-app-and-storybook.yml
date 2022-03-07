@@ -32,8 +32,8 @@ jobs:
           key: cache-node-modules-ui-app-${{ hashFiles('yarn.lock') }}
 
       - name: Install NPM packages
-#        if: steps.cache-node-modules-ui-app-v1.outputs.cache-hit != 'true'
-        if: steps.app_node_modules_cache_status.outputs.app_node_modules_cache_exists != 'true'
+        if: steps.cache-node-modules-ui-app.outputs.cache-hit != 'true'
+#        if: steps.app_node_modules_cache_status.outputs.app_node_modules_cache_exists != 'true'
         run: rm -rf node_modules && yarn install --frozen-lockfile
 
       - name: Update browserslist
