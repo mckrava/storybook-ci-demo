@@ -30,7 +30,7 @@ jobs:
           done < "$input_file"
           echo ::set-output name=value::$file_text
 
-      - run: yarn add @tonyhallett/github-actions
+#      - run: yarn add @tonyhallett/github-actions
 
       - uses: actions/github-script@v6
         env:
