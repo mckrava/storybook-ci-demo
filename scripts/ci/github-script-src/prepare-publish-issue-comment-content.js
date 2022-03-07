@@ -77,9 +77,11 @@ module.exports = async ({ github, context, core }) => {
       ref: context.payload.pull_request.head.sha,
     }
   );
+  let suiteId = '';
 
-  for (let suiteItem of suitesList.data.check_suites) {
+  for (let suiteItem of suitesList.data.check_suites.filter(item => item.status === 'in_progress')) {
     console.log('suiteItem - ', suiteItem);
+    suiteId = suiteItem.id
   }
 
   console.log('suitesList - ', suitesList);
@@ -88,7 +90,7 @@ module.exports = async ({ github, context, core }) => {
     commentBody,
     owner,
     repo,
-    suiteId: 'suite.data.id',
+    suiteId,
     repoUrl: context.payload.repository.html_url,
     issueNumber: context.payload.number,
     runId: context.runId,
