@@ -43,7 +43,7 @@ module.exports = async ({ github, context, core }) => {
   console.log('context - ', context);
   console.log('process.env - ', process.env);
 
-  console.log(JSON.parse(issue_comment_data))
+  console.log(JSON.parse(issue_comment_data));
 
   let {
     owner,
@@ -55,6 +55,11 @@ module.exports = async ({ github, context, core }) => {
     existingIssueCommentId,
     commentBody,
   } = JSON.parse(issue_comment_data);
+
+  console.log(
+    'existingIssueCommentId typeof - ',
+    typeof existingIssueCommentId
+  );
 
   const iterator = github.paginate.iterator(
     github.rest.actions.listWorkflowRunArtifacts,
@@ -80,7 +85,7 @@ module.exports = async ({ github, context, core }) => {
     }
   }
 
-  if (!existingIssueCommentId) {
+  if (!existingIssueCommentId || existingIssueCommentId === 'null') {
     github.rest.issues.createComment({
       issue_number: context.payload.number,
       owner,
