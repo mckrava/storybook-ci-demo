@@ -1,5 +1,5 @@
 name: Report demo
-#name: Report demo
+
 on:
   pull_request:
     branches:
@@ -31,6 +31,7 @@ jobs:
 #      - run: yarn add @tonyhallett/github-actions
 
       - uses: actions/github-script@v6
+        id: issue-comment-tpl-prepare
         env:
           gh_token: ${{ secrets.GH_TOKEN }}
 #          IS_APP_SB_BUILD_REPORT: ${{ inputs.app-build-pub-in-discord }}
@@ -40,11 +41,11 @@ jobs:
 #          IS_SB_E2E_TEST_REPORT: false
 #          IS_APP_SB_DEPLOYMENT_REPORT: ${{ inputs.app-sb-deploy-pub-report-in-discord }}
 #
-#          APP_UNIT_TEST_PERCENTAGE: ${{ needs.app-unit-tests-codecov-pub-report.outputs.codecov_output_percentage }}
+          APP_UNIT_TEST_PERCENTAGE: 5.5
 #          APP_UNIT_TEST_DIFF: ${{ needs.app-unit-tests-codecov-pub-report.outputs.codecov_output_diff }}
 #
 #          APP_BUILD_STATUS: ${{ inputs.app-build-status }}
-#          APP_UNIT_TEST_STATUS: ${{ inputs.app-unit-test-status }}
+          APP_UNIT_TEST_STATUS: true
 #
 #          APP_DEPLOYMENT_STATUS: ${{ inputs.app-sb-deploy-status }}
 
@@ -54,4 +55,16 @@ jobs:
         with:
           script: |
             const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')
-            await script({github, context, core})
+            return await script({github, context, core})
+
+      - name: Save issue comment prepared content into file
+        run: |
+          echo ${{ steps.issue-comment-tpl-prepare.outputs.result }} > issue-comment-tpl.txt
+          ls
+          pwd
+
+      - name: Upload issue-comment-tpl
+        uses: actions/upload-artifact@v2
+        with:
+          name: issue-comment-tpl
+          path: ./issue-comment-tpl.txt
