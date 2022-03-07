@@ -87,7 +87,7 @@ module.exports = async ({ github, context, core }) => {
 
   if (!existingIssueCommentId || existingIssueCommentId === 'null') {
     github.rest.issues.createComment({
-      issue_number: context.payload.number,
+      issue_number: issueNumber,
       owner,
       repo,
       body: commentBody,
