@@ -71,17 +71,17 @@ module.exports = async ({ github, context, core }) => {
     }
   );
 
-  commentBody += `\n :small_blue_diamond: #### Available artifacts:`;
+  commentBody += `:small_blue_diamond: **Available artifacts:** <br />`;
 
   for await (const { data: artifacts } of iterator) {
     console.log('---artifacts - ', artifacts);
     for (const artifact of artifacts) {
       console.log('artifact - ', artifact);
-      commentBody += `\n - [${artifact.name}](${getArtifactUrl(
+      commentBody += `- [${artifact.name}](${getArtifactUrl(
         repoUrl,
         suiteId,
         artifact.id
-      )})`;
+      )}) <br />`;
     }
   }
 

@@ -69,11 +69,11 @@ module.exports = async ({ github, context, core }) => {
         ? ':white_check_mark: _Built_ '
         : ':no_entry_sign: _Failed_ '
     } <br />
-    - [Application build](https://${GH_PAGES_CUSTOM_DOMAIN}/${GITHUB_HEAD_REF}/app) <br />
-    - [Storybook build](https://${GH_PAGES_CUSTOM_DOMAIN}/${GITHUB_HEAD_REF}/storybook)
+    - [Application build page](https://${GH_PAGES_CUSTOM_DOMAIN}/${GITHUB_HEAD_REF}/app) <br />
+    - [Storybook build page](https://${GH_PAGES_CUSTOM_DOMAIN}/${GITHUB_HEAD_REF}/storybook)
 `;
 
-  commentBody += `<br /><br />`;
+  commentBody += `<br />`;
 
   commentBody = commentBody.replace(/(\r\n|\n|\r)/gm, '');
 
