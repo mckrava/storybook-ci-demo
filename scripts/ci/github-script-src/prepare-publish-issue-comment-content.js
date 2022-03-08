@@ -37,14 +37,14 @@ module.exports = async ({ github, context, core }) => {
   console.log('context - ', context);
   // console.log('process.env - ', process.env);
 
-  const commentBody = `## Basilisk-reporter message. \n ---
+  const commentBody = `### Basilisk-reporter message.\
   :small_blue_diamond: Application unit tests: ${
     APP_UNIT_TEST_STATUS === 'true'
       ? ':white_check_mark: Passed'
       : ':no_entry_sign: Failed'
-  }\n
-  Application tests code coverage: **${APP_UNIT_TEST_PERCENTAGE}**
-  `;
+  }\
+  Application unit tests code coverage: **${APP_UNIT_TEST_PERCENTAGE}**
+  \ ----\ `;
 
   const existingIssueComment = await getComment({
     github,
@@ -79,9 +79,11 @@ module.exports = async ({ github, context, core }) => {
   );
   let suiteId = '';
 
-  for (let suiteItem of suitesList.data.check_suites.filter(item => item.status === 'in_progress')) {
+  for (let suiteItem of suitesList.data.check_suites.filter(
+    (item) => item.status === 'in_progress'
+  )) {
     console.log('suiteItem - ', suiteItem);
-    suiteId = suiteItem.id
+    suiteId = suiteItem.id;
   }
 
   console.log('suitesList - ', suitesList);
