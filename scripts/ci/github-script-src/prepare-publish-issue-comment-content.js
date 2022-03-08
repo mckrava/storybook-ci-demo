@@ -46,7 +46,7 @@ module.exports = async ({ github, context, core }) => {
   //   repo,
   // });
   const ghPagesInfo = await github.request(
-    `GET /repos/${owner}/${repo}/pages`,
+    `GET /repos/${owner}/${repo}/pages/builds/latest`,
     {
       owner,
       repo,
