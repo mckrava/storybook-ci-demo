@@ -26,6 +26,7 @@ module.exports = async ({ github, context, core }) => {
 
   process.env.GITHUB_TOKEN = gh_token;
   const [owner, repo] = context.payload.repository.full_name.split('/');
+  const commentTopTitle = 'Basilisk-UI workflows reporter';
 
   // const githubActions = require('@tonyhallett/github-actions');
   //
@@ -44,23 +45,24 @@ module.exports = async ({ github, context, core }) => {
   console.log('context - ', context);
   console.log('process.env - ', process.env);
 
-  let commentBody = `<h3>Basilisk-reporter.</h3>`;
+  let commentBody = `**${commentTopTitle}**. <br />`;
 
-  commentBody += `_Report has been triggered by commit [${triggerCommit.data.message}/${triggerCommit.data.sha}](${triggerCommit.data.html_url})_`;
-  commentBody += `<br />`;
+  commentBody += ` _Report has been triggered by commit [${triggerCommit.data.message} (${triggerCommit.data.sha})](${triggerCommit.data.html_url})_ `;
+  commentBody += `<br /><br />`;
 
-  commentBody += `<strong>:small_blue_diamond: Application unit tests:</strong> ${
+  commentBody += `:small_blue_diamond: **Application unit tests:** <br /> 
+    - Status: ${
     APP_UNIT_TEST_STATUS === 'true'
-      ? ':white_check_mark: Passed'
-      : ':no_entry_sign: Failed'
+      ? ':white_check_mark: _Passed_ '
+      : ':no_entry_sign: _Failed_ '
   } <br />
-  Application unit tests code coverage: **${APP_UNIT_TEST_PERCENTAGE}**`;
+    - Application unit tests code coverage: _${APP_UNIT_TEST_PERCENTAGE}_`;
 
   const existingIssueComment = await getComment({
     github,
     context,
     issueNumber: context.payload.number,
-    bodyIncludes: 'Basilisk-reporter.',
+    bodyIncludes: commentTopTitle,
   });
 
   // const newSuiteResp = await github.rest.checks.createSuite({
