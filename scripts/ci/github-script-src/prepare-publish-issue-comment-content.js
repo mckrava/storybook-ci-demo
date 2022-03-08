@@ -21,6 +21,7 @@ module.exports = async ({ github, context, core }) => {
     GITHUB_HEAD_REF,
     GITHUB_REF,
     GITHUB_REF_NAME,
+    GH_PAGES_CUSTOM_DOMAIN,
     gh_token,
   } = process.env;
 
@@ -68,8 +69,8 @@ module.exports = async ({ github, context, core }) => {
         ? ':white_check_mark: _Built_ '
         : ':no_entry_sign: _Failed_ '
     } <br />
-    - [Application build]()
-    - [Storybook build]()
+    - [Application build](https://${GH_PAGES_CUSTOM_DOMAIN}/${GITHUB_HEAD_REF}/app) <br />
+    - [Storybook build](https://${GH_PAGES_CUSTOM_DOMAIN}/${GITHUB_HEAD_REF}/storybook)
 `;
 
   commentBody += `<br /><br />`;
