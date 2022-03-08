@@ -41,22 +41,29 @@ module.exports = async ({ github, context, core }) => {
     commit_sha: context.payload.after,
   });
 
-  console.log('triggerCommit - ', triggerCommit);
+  const ghPagesInfo = await github.rest.repos.getPages({
+    owner,
+    repo,
+  });
+
+  console.log('ghPagesInfo - ', ghPagesInfo);
   console.log('context - ', context);
   console.log('process.env - ', process.env);
 
-  let commentBody = `**${commentTopTitle}**. <br />`;
+  let commentBody = `:page_with_curl: **${commentTopTitle}**. <br />`;
 
   commentBody += ` _Report has been triggered by commit [${triggerCommit.data.message} (${triggerCommit.data.sha})](${triggerCommit.data.html_url})_ `;
   commentBody += `<br /><br />`;
 
-  commentBody += `:small_blue_diamond: **Application unit tests:** <br /> 
+  commentBody += `:small_blue_diamond: **Application/Storybook build:** <br /> 
     - Status: ${
-      APP_UNIT_TEST_STATUS === 'true'
-        ? ':white_check_mark: _Passed_ '
+      APP_BUILD_STATUS === 'true'
+        ? ':white_check_mark: _Built_ '
         : ':no_entry_sign: _Failed_ '
     } <br />
-    - Application unit tests code coverage: _${APP_UNIT_TEST_PERCENTAGE}_`;
+    - [Application build]()
+    - [Storybook build]()
+`;
 
   commentBody += `<br /><br />`;
 
