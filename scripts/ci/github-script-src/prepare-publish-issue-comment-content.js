@@ -44,24 +44,21 @@ module.exports = async ({ github, context, core }) => {
   console.log('context - ', context);
   console.log('process.env - ', process.env);
 
-  let commentBody = `### Basilisk-reporter message.&nbsp;&nbsp;`;
+  let commentBody = `<h3>Basilisk-reporter.</h3>`;
 
-  commentBody += `:small_blue_diamond: Application unit tests: ${
+  commentBody += `<strong>:small_blue_diamond: Application unit tests:</strong> ${
     APP_UNIT_TEST_STATUS === 'true'
       ? ':white_check_mark: Passed'
       : ':no_entry_sign: Failed'
-  }  &nbsp;&nbsp;
-  Application unit tests code coverage: **${APP_UNIT_TEST_PERCENTAGE}**
-  &nbsp;&nbsp;  ----  &nbsp;&nbsp;  `;
+  } <br />
+  Application unit tests code coverage: **${APP_UNIT_TEST_PERCENTAGE}**`;
 
   const existingIssueComment = await getComment({
     github,
     context,
     issueNumber: context.payload.number,
-    bodyIncludes: 'Basilisk-reporter message.',
+    bodyIncludes: 'Basilisk-reporter.',
   });
-
-  console.log('context.payload - ', context.payload.pull_request.head);
 
   const newSuiteResp = await github.rest.checks.createSuite({
     owner,
