@@ -46,7 +46,8 @@ module.exports = async ({ github, context, core }) => {
 
   let commentBody = `<h3>Basilisk-reporter.</h3>`;
 
-  commentBody += `__Report has been triggered by commit [${triggerCommit.data.message}/${triggerCommit.data.sha}](${triggerCommit.data.html_url})__ <br />`;
+  commentBody += `_Report has been triggered by commit [${triggerCommit.data.message}/${triggerCommit.data.sha}](${triggerCommit.data.html_url})_`;
+  commentBody += `<br />`;
 
   commentBody += `<strong>:small_blue_diamond: Application unit tests:</strong> ${
     APP_UNIT_TEST_STATUS === 'true'
