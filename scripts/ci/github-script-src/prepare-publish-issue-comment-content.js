@@ -26,6 +26,11 @@ module.exports = async ({ github, context, core }) => {
   } = process.env;
 
   process.env.GITHUB_TOKEN = gh_token;
+
+  console.log('context - ', context);
+  console.log('process.env - ', process.env);
+
+
   const [owner, repo] = context.payload.repository.full_name.split('/');
   const commentTopTitle = 'Basilisk-UI workflows reporter';
 
@@ -55,8 +60,6 @@ module.exports = async ({ github, context, core }) => {
   );
 
   console.log('ghPagesInfo - ', ghPagesInfo);
-  console.log('context - ', context);
-  console.log('process.env - ', process.env);
 
   let commentBody = `:page_with_curl: **${commentTopTitle}**. <br />`;
 
@@ -84,7 +87,7 @@ module.exports = async ({ github, context, core }) => {
     bodyIncludes: commentTopTitle,
   });
 
-  
+
   // const newSuiteResp = await github.rest.checks.createSuite({
   //   owner,
   //   repo,
