@@ -71,7 +71,7 @@ module.exports = async ({ github, context, core }) => {
     }
   );
 
-  commentBody += `\n Available artifacts:`;
+  commentBody += `\n :small_blue_diamond: #### Available artifacts:`;
 
   for await (const { data: artifacts } of iterator) {
     console.log('---artifacts - ', artifacts);

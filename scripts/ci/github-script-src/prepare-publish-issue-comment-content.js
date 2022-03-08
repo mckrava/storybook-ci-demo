@@ -37,7 +37,7 @@ module.exports = async ({ github, context, core }) => {
   console.log('context - ', context);
   // console.log('process.env - ', process.env);
 
-  let commentBody = `### Basilisk-reporter message.  `;
+  let commentBody = `### Basilisk-reporter message. <br />`;
 
   commentBody += `:small_blue_diamond: Application unit tests: ${
     APP_UNIT_TEST_STATUS === 'true'
