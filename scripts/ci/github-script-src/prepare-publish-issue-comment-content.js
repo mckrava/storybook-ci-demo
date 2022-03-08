@@ -27,7 +27,7 @@ module.exports = async ({ github, context, core }) => {
 
   process.env.GITHUB_TOKEN = gh_token;
 
-  console.log('context - ', context);
+  console.log('context 1 - ', context);
   console.log('process.env - ', process.env);
 
 
