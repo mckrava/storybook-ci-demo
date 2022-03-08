@@ -21,11 +21,13 @@ module.exports = async ({ github, context, core }) => {
     GITHUB_HEAD_REF,
     GITHUB_REF,
     GITHUB_REF_NAME,
+    GH_PAGES_CUSTOM_DOMAIN,
     gh_token,
   } = process.env;
 
   process.env.GITHUB_TOKEN = gh_token;
   const [owner, repo] = context.payload.repository.full_name.split('/');
+  const commentTopTitle = 'Basilisk-UI workflows reporter';
 
   // const githubActions = require('@tonyhallett/github-actions');
   //
@@ -34,48 +36,92 @@ module.exports = async ({ github, context, core }) => {
   //   await githubActions.getWorkflowArtifactDetails()
   // );
 
-  console.log('context - ', context);
-  // console.log('process.env - ', process.env);
+  const triggerCommit = await github.rest.git.getCommit({
+    owner,
+    repo,
+    commit_sha: context.payload.after,
+  });
 
-  const commentBody = `## Basilisk-reporter message. \n ---
-  :small_blue_diamond: Application unit tests: ${
-    APP_UNIT_TEST_STATUS === 'true'
-      ? ':white_check_mark: Passed'
-      : ':no_entry_sign: Failed'
-  }\n
-  Application tests code coverage: **${APP_UNIT_TEST_PERCENTAGE}**
-  `;
+  // const ghPagesInfo = await github.rest.repos.getPages({
+  //   owner,
+  //   repo,
+  // });
+  const ghPagesInfo = await github.request(
+    `GET /repos/${owner}/${repo}/pages/builds/latest`,
+    {
+      owner,
+      repo,
+    }
+  );
+
+  console.log('ghPagesInfo - ', ghPagesInfo);
+  console.log('context - ', context);
+  console.log('process.env - ', process.env);
+
+  let commentBody = `:page_with_curl: **${commentTopTitle}**. <br />`;
+
+  commentBody += ` _Report has been triggered by commit [${triggerCommit.data.message} (${triggerCommit.data.sha})](${triggerCommit.data.html_url})_ `;
+  commentBody += `<br /><br />`;
+
+  commentBody += `:small_blue_diamond: **Application/Storybook build:** <br /> 
+    - Status: ${
+      APP_BUILD_STATUS === 'true'
+        ? ':white_check_mark: _Built_ '
+        : ':no_entry_sign: _Failed_ '
+    } <br />
+    - [Application build page](https://${GH_PAGES_CUSTOM_DOMAIN}/${GITHUB_HEAD_REF}/app) <br />
+    - [Storybook build page](https://${GH_PAGES_CUSTOM_DOMAIN}/${GITHUB_HEAD_REF}/storybook)
+`;
+
+  commentBody += `<br />`;
+
+  commentBody = commentBody.replace(/(\r\n|\n|\r)/gm, '');
 
   const existingIssueComment = await getComment({
     github,
     context,
     issueNumber: context.payload.number,
-    bodyIncludes: 'Basilisk-reporter message.',
+    bodyIncludes: commentTopTitle,
   });
 
-  console.log('context.payload - ', context.payload.pull_request.head)
+  // const newSuiteResp = await github.rest.checks.createSuite({
+  //   owner,
+  //   repo,
+  //   head_sha: context.payload.pull_request.head.sha,
+  // });
+  //
+  // console.log('newSuiteResp - ', newSuiteResp);
+  //
+  // const suite = await github.rest.checks.getSuite({
+  //   owner,
+  //   repo,
+  //   check_suite_id: newSuiteResp.data.id,
+  // });
 
-  const newSuiteResp = await github.rest.checks.createSuite({
-    owner,
-    repo,
-    head_sha: context.payload.pull_request.head.sha,
-  });
+  const suitesList = await github.request(
+    `GET /repos/${owner}/${repo}/commits/${context.payload.pull_request.head.sha}/check-suites`,
+    {
+      owner,
+      repo,
+      ref: context.payload.pull_request.head.sha,
+    }
+  );
+  let suiteId = '';
 
-  console.log('newSuiteResp - ', newSuiteResp)
+  for (let suiteItem of suitesList.data.check_suites.filter(
+    (item) => item.status === 'in_progress'
+  )) {
+    console.log('suiteItem - ', suiteItem);
+    suiteId = suiteItem.id;
+  }
 
-  const suite = await github.rest.checks.getSuite({
-    owner,
-    repo,
-    check_suite_id: newSuiteResp.data.id,
-  });
-
-  console.log('222suite - ', suite)
+  console.log('commentBody - ', commentBody);
 
   return JSON.stringify({
     commentBody,
     owner,
     repo,
-    suiteId: suite.data.id,
+    suiteId,
     repoUrl: context.payload.repository.html_url,
     issueNumber: context.payload.number,
     runId: context.runId,

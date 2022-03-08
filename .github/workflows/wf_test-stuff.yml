@@ -47,8 +47,9 @@ jobs:
           APP_UNIT_TEST_PERCENTAGE: 5.5
 #          APP_UNIT_TEST_DIFF: ${{ needs.app-unit-tests-codecov-pub-report.outputs.codecov_output_diff }}
 #
-#          APP_BUILD_STATUS: ${{ inputs.app-build-status }}
+          APP_BUILD_STATUS: true
           APP_UNIT_TEST_STATUS: true
+          GH_PAGES_CUSTOM_DOMAIN: ${{ secrets.GH_PAGES_CUSTOM_DOMAIN }}
 #
 #          APP_DEPLOYMENT_STATUS: ${{ inputs.app-sb-deploy-status }}
 
