@@ -34,8 +34,14 @@ module.exports = async ({ github, context, core }) => {
   //   await githubActions.getWorkflowArtifactDetails()
   // );
 
+  // const lastCommit = await github.rest.git.getCommit({
+  //   owner,
+  //   repo,
+  //   commit_sha,
+  // });
+
   console.log('context - ', context);
-  // console.log('process.env - ', process.env);
+  console.log('process.env - ', process.env);
 
   let commentBody = `### Basilisk-reporter message.&nbsp;&nbsp;`;
 
