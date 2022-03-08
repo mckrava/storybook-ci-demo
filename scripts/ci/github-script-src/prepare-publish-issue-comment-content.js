@@ -63,13 +63,13 @@ module.exports = async ({ github, context, core }) => {
     bodyIncludes: 'Basilisk-reporter.',
   });
 
-  const newSuiteResp = await github.rest.checks.createSuite({
-    owner,
-    repo,
-    head_sha: context.payload.pull_request.head.sha,
-  });
-
-  console.log('newSuiteResp - ', newSuiteResp);
+  // const newSuiteResp = await github.rest.checks.createSuite({
+  //   owner,
+  //   repo,
+  //   head_sha: context.payload.pull_request.head.sha,
+  // });
+  //
+  // console.log('newSuiteResp - ', newSuiteResp);
   //
   // const suite = await github.rest.checks.getSuite({
   //   owner,
@@ -94,7 +94,7 @@ module.exports = async ({ github, context, core }) => {
     suiteId = suiteItem.id;
   }
 
-  console.log('suitesList - ', suitesList);
+  console.log('commentBody - ', commentBody);
 
   return JSON.stringify({
     commentBody,
