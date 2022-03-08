@@ -34,12 +34,13 @@ module.exports = async ({ github, context, core }) => {
   //   await githubActions.getWorkflowArtifactDetails()
   // );
 
-  // const lastCommit = await github.rest.git.getCommit({
-  //   owner,
-  //   repo,
-  //   commit_sha,
-  // });
+  const lastCommit = await github.rest.git.getCommit({
+    owner,
+    repo,
+    commit_sha: context.payload.after,
+  });
 
+  console.log('lastCommit - ', lastCommit);
   console.log('context - ', context);
   console.log('process.env - ', process.env);
 
