@@ -55,13 +55,13 @@ module.exports = async ({ github, context, core }) => {
 
   console.log('context.payload - ', context.payload.pull_request.head);
 
-  // const newSuiteResp = await github.rest.checks.createSuite({
-  //   owner,
-  //   repo,
-  //   head_sha: context.payload.pull_request.head.sha,
-  // });
-  //
-  // console.log('newSuiteResp - ', newSuiteResp);
+  const newSuiteResp = await github.rest.checks.createSuite({
+    owner,
+    repo,
+    head_sha: context.payload.pull_request.head.sha,
+  });
+
+  console.log('newSuiteResp - ', newSuiteResp);
   //
   // const suite = await github.rest.checks.getSuite({
   //   owner,
