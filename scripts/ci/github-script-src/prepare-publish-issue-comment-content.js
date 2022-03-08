@@ -26,6 +26,11 @@ module.exports = async ({ github, context, core }) => {
   } = process.env;
 
   process.env.GITHUB_TOKEN = gh_token;
+
+  console.log('context - ', context);
+  console.log('process.env - ', process.env);
+
+
   const [owner, repo] = context.payload.repository.full_name.split('/');
   const commentTopTitle = 'Basilisk-UI workflows reporter';
 
@@ -55,10 +60,8 @@ module.exports = async ({ github, context, core }) => {
   );
 
   console.log('ghPagesInfo - ', ghPagesInfo);
-  console.log('context - ', context);
-  console.log('process.env - ', process.env);
 
-  let commentBody = `:page_with_curl: **${commentTopTitle}**. <br />`;
+  let commentBody = `:page_with_curl: **${commentTopTitle}** <br />`;
 
   commentBody += ` _Report has been triggered by commit [${triggerCommit.data.message} (${triggerCommit.data.sha})](${triggerCommit.data.html_url})_ `;
   commentBody += `<br /><br />`;
@@ -73,7 +76,7 @@ module.exports = async ({ github, context, core }) => {
     - [Storybook build page](https://${GH_PAGES_CUSTOM_DOMAIN}/${GITHUB_HEAD_REF}/storybook)
 `;
 
-  commentBody += `<br />`;
+  commentBody += `<br /><br />`;
 
   commentBody = commentBody.replace(/(\r\n|\n|\r)/gm, '');
 
@@ -83,6 +86,7 @@ module.exports = async ({ github, context, core }) => {
     issueNumber: context.payload.number,
     bodyIncludes: commentTopTitle,
   });
+
 
   // const newSuiteResp = await github.rest.checks.createSuite({
   //   owner,
