@@ -37,14 +37,15 @@ module.exports = async ({ github, context, core }) => {
   console.log('context - ', context);
   // console.log('process.env - ', process.env);
 
-  const commentBody = `### Basilisk-reporter message.\
-  :small_blue_diamond: Application unit tests: ${
+  let commentBody = `### Basilisk-reporter message.  `;
+
+  commentBody += `:small_blue_diamond: Application unit tests: ${
     APP_UNIT_TEST_STATUS === 'true'
       ? ':white_check_mark: Passed'
       : ':no_entry_sign: Failed'
-  }\
+  }  \
   Application unit tests code coverage: **${APP_UNIT_TEST_PERCENTAGE}**
-  \ ----\ `;
+  \  ----  \  `;
 
   const existingIssueComment = await getComment({
     github,
