@@ -31,15 +31,6 @@ module.exports = async ({ github, context, core }) => {
 
   process.env.GITHUB_TOKEN = gh_token;
 
-  // if (!context.eventName !== 'pull_request') return;
-
-  // const githubActions = require('@tonyhallett/github-actions');
-  //
-  // console.log(
-  //   'githubActions - ',
-  //   await githubActions.getWorkflowArtifactDetails()
-  // );
-
   console.log('context - ', context);
   console.log('process.env - ', process.env);
 
@@ -56,10 +47,7 @@ module.exports = async ({ github, context, core }) => {
     commentBody,
   } = JSON.parse(issue_comment_data);
 
-  console.log(
-    'existingIssueCommentId typeof - ',
-    typeof existingIssueCommentId
-  );
+  if (!owner || !repo || !runId) return;
 
   const iterator = github.paginate.iterator(
     github.rest.actions.listWorkflowRunArtifacts,

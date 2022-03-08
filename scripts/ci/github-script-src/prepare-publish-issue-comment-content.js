@@ -61,7 +61,7 @@ module.exports = async ({ github, context, core }) => {
 
   console.log('ghPagesInfo - ', ghPagesInfo);
 
-  let commentBody = `:page_with_curl: **${commentTopTitle}**. <br />`;
+  let commentBody = `:page_with_curl: **${commentTopTitle}** <br />`;
 
   commentBody += ` _Report has been triggered by commit [${triggerCommit.data.message} (${triggerCommit.data.sha})](${triggerCommit.data.html_url})_ `;
   commentBody += `<br /><br />`;
@@ -76,7 +76,7 @@ module.exports = async ({ github, context, core }) => {
     - [Storybook build page](https://${GH_PAGES_CUSTOM_DOMAIN}/${GITHUB_HEAD_REF}/storybook)
 `;
 
-  commentBody += `<br />`;
+  commentBody += `<br /><br />`;
 
   commentBody = commentBody.replace(/(\r\n|\n|\r)/gm, '');
 
