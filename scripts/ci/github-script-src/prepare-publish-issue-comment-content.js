@@ -34,17 +34,19 @@ module.exports = async ({ github, context, core }) => {
   //   await githubActions.getWorkflowArtifactDetails()
   // );
 
-  const lastCommit = await github.rest.git.getCommit({
+  const triggerCommit = await github.rest.git.getCommit({
     owner,
     repo,
     commit_sha: context.payload.after,
   });
 
-  console.log('lastCommit - ', lastCommit);
+  console.log('triggerCommit - ', triggerCommit);
   console.log('context - ', context);
   console.log('process.env - ', process.env);
 
   let commentBody = `<h3>Basilisk-reporter.</h3>`;
+
+  commentBody += `__Report has been triggered by commit [${triggerCommit.data.message}/${triggerCommit.data.sha}](${triggerCommit.data.html_url})__ <br />`;
 
   commentBody += `<strong>:small_blue_diamond: Application unit tests:</strong> ${
     APP_UNIT_TEST_STATUS === 'true'
