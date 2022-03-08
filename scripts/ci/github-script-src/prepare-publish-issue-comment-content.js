@@ -52,11 +52,15 @@ module.exports = async ({ github, context, core }) => {
 
   commentBody += `:small_blue_diamond: **Application unit tests:** <br /> 
     - Status: ${
-    APP_UNIT_TEST_STATUS === 'true'
-      ? ':white_check_mark: _Passed_ '
-      : ':no_entry_sign: _Failed_ '
-  } <br />
+      APP_UNIT_TEST_STATUS === 'true'
+        ? ':white_check_mark: _Passed_ '
+        : ':no_entry_sign: _Failed_ '
+    } <br />
     - Application unit tests code coverage: _${APP_UNIT_TEST_PERCENTAGE}_`;
+
+  commentBody += `<br /><br />`;
+
+  commentBody = commentBody.replace(/(\r\n|\n|\r)/gm, '');
 
   const existingIssueComment = await getComment({
     github,
