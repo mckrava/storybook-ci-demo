@@ -41,10 +41,17 @@ module.exports = async ({ github, context, core }) => {
     commit_sha: context.payload.after,
   });
 
-  const ghPagesInfo = await github.rest.repos.getPages({
-    owner,
-    repo,
-  });
+  // const ghPagesInfo = await github.rest.repos.getPages({
+  //   owner,
+  //   repo,
+  // });
+  const ghPagesInfo = await github.request(
+    `GET /repos/${owner}/${repo}/pages`,
+    {
+      owner,
+      repo,
+    }
+  );
 
   console.log('ghPagesInfo - ', ghPagesInfo);
   console.log('context - ', context);
