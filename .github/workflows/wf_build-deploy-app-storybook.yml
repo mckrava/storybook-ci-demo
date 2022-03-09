@@ -7,7 +7,6 @@ on:
       - 'feat/**'
 
 jobs:
-
   build-app-storybook:
     name: Build App and Storybook
     uses: ./.github/workflows/_called_build-app-and-storybook.yml
@@ -27,3 +26,26 @@ jobs:
     secrets:
       gh_token: ${{ secrets.GH_TOKEN }}
       gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
+
+  report-statuses-issue-comment:
+    name: Reportr issue comment
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs: [build-app-storybook, deploy-app-storybook-builds]
+    uses: ./.github/workflows/_called_publish-report-issue-comment.yml
+    with:
+      report-msg-title: Basilisk-UI build reporter
+
+      app-build-pub-report: true
+      app-build-status: ${{ needs.build-app-storybook.result == 'success' }}
+
+      app-sb-deploy-pub-report: true
+      app-sb-deploy-status: ${{ needs.deploy-app-storybook-builds.result == 'success' }}
+
+      app-unit-test-pub-report: false
+      app-unit-test-status: null
+      app-unit-test-codecov-percentage: null
+      app-unit-test-codecov-diff: null
+    secrets:
+      gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
+      discord_alert_ui_web_hook: ${{ secrets.DISCORD_ALERT_UI_WEB_HOOK }}

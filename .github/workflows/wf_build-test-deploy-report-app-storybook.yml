@@ -71,3 +71,30 @@ jobs:
     secrets:
       gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
       discord_alert_ui_web_hook: ${{ secrets.DISCORD_ALERT_UI_WEB_HOOK }}
+
+  report-statuses-issue-comment:
+    name: Reportr issue comment
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs:
+      [
+        build-app-storybook,
+        unit-tests,
+        generate-unit-tests-codecov-report,
+        deploy-app-storybook-builds,
+      ]
+    uses: ./.github/workflows/_called_publish-report-issue-comment.yml
+    with:
+      app-build-pub-in-discord: true
+      app-build-status: ${{ needs.build-app-storybook.result == 'success' }}
+
+      app-sb-deploy-pub-report-in-discord: true
+      app-sb-deploy-status: ${{ needs.deploy-app-storybook-builds.result == 'success' }}
+
+      app-unit-test-pub-report-in-discord: true
+      app-unit-test-status: ${{ needs.unit-tests.result == 'success' }}
+      app-unit-test-codecov-percentage: ${{ needs.generate-unit-tests-codecov-report.outputs.codecov_unit_percentage }}
+      app-unit-test-codecov-diff: ${{ needs.generate-unit-tests-codecov-report.outputs.codecov_unit_diff }}
+    secrets:
+      gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
+      discord_alert_ui_web_hook: ${{ secrets.DISCORD_ALERT_UI_WEB_HOOK }}
