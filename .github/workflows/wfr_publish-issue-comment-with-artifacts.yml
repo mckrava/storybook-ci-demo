@@ -1,4 +1,4 @@
-name: Publish issue comment
+name: Publish issue comment with artifacts
 on:
   workflow_run:
     workflows:
@@ -27,6 +27,7 @@ jobs:
 #          github_token: ${{secrets.GITHUB_TOKEN}}
           workflow: wf_test-stuff.yml
           name: issue-comment-data
+          workflow_conclusion: success
           path: .
 
       - name: Read and assign
@@ -47,6 +48,6 @@ jobs:
           issue_comment_data: ${{steps.issue-comment-data-content.outputs.value}}
         with:
           script: |
-            const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')
+            const script = require('./scripts/ci/github-script-src/publish-issue-comment-with-artifacts.js')
             await script({github, context, core})
 

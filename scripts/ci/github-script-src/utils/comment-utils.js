@@ -9,13 +9,45 @@ function findCommentPredicate(inputs, comment) {
   );
 }
 
-module.exports = async ({
+async function publishIssueComment({
+  github,
+  context,
+  issueNumber,
+  owner,
+  repo,
+  commentBody,
+  existingIssueCommentId,
+}) {
+  try {
+    if (!existingIssueCommentId || existingIssueCommentId === 'null' || !issueNumber) {
+      await github.rest.issues.createComment({
+        issue_number: issueNumber,
+        owner,
+        repo,
+        body: commentBody,
+      });
+    } else {
+      await github.rest.issues.updateComment({
+        owner,
+        repo,
+        comment_id: existingIssueCommentId,
+        body: commentBody,
+      });
+    }
+    return 0;
+  } catch (e) {
+    console.log(e);
+    return 1;
+  }
+}
+
+async function findIssueComment({
   github,
   context,
   bodyIncludes,
   issueNumber,
   commentAuthor = null,
-}) => {
+}) {
   const [owner, repo] = context.payload.repository.full_name.split('/');
 
   const parameters = {
@@ -23,8 +55,6 @@ module.exports = async ({
     repo: repo,
     issue_number: issueNumber,
   };
-
-  console.log('parameters - ', parameters);
 
   for await (const { data: comments } of github.paginate.iterator(
     github.rest.issues.listComments,
@@ -38,4 +68,9 @@ module.exports = async ({
   }
 
   return null;
+}
+
+module.exports = {
+  publishIssueComment: publishIssueComment,
+  findIssueComment: findIssueComment,
 };

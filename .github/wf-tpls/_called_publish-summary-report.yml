@@ -121,7 +121,7 @@ jobs:
 ##          GITHUB_REF_NAME: ${{ secrets.GITHUB_REF_NAME }}
 #        with:
 #          script: |
-#            const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')
+#            const script = require('./scripts/ci/github-script-src/publish-issue-comment-with-artifacts.js')
 #            await script({github, context, core})
 
 
