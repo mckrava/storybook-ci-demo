@@ -68,9 +68,6 @@ jobs:
       app-unit-test-status: ${{ needs.unit-tests.result == 'success' }}
       app-unit-test-codecov-percentage: ${{ needs.generate-unit-tests-codecov-report.outputs.codecov_unit_percentage }}
       app-unit-test-codecov-diff: ${{ needs.generate-unit-tests-codecov-report.outputs.codecov_unit_diff }}
-
-      base-branch-codecov-artifact-name: ref-lcov.info
-      working-branch-codecov-artifact-name: working-lcov.info
     secrets:
       gh_token: ${{ secrets.GH_TOKEN }}
       gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
