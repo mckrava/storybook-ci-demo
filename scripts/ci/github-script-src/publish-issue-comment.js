@@ -51,10 +51,9 @@ module.exports = async ({ github, context, core }) => {
     });
     commentBody += ` _Report has been triggered by commit [${triggerCommit.data.message} (${triggerCommit.data.sha})](${triggerCommit.data.html_url})_ `;
   }
+  commentBody += `<br /><br />`;
 
   if (IS_APP_SB_BUILD_REPORT === 'true') {
-    commentBody += `<br /><br />`;
-
     commentBody += `:small_blue_diamond: **Application/Storybook build:** <br /> 
     - Status: ${
       APP_BUILD_STATUS === 'true'
