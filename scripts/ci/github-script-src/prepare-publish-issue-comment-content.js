@@ -30,40 +30,28 @@ module.exports = async ({ github, context, core }) => {
   console.log('context 1 - ', context);
   console.log('process.env - ', process.env);
 
-
   const [owner, repo] = context.payload.repository.full_name.split('/');
   const commentTopTitle = 'Basilisk-UI workflows reporter';
 
-  // const githubActions = require('@tonyhallett/github-actions');
-  //
-  // console.log(
-  //   'githubActions - ',
-  //   await githubActions.getWorkflowArtifactDetails()
-  // );
-
-  const triggerCommit = await github.rest.git.getCommit({
-    owner,
-    repo,
-    commit_sha: context.payload.after,
-  });
+  let triggerCommit = null;
 
   // const ghPagesInfo = await github.rest.repos.getPages({
   //   owner,
   //   repo,
   // });
-  const ghPagesInfo = await github.request(
-    `GET /repos/${owner}/${repo}/pages/builds/latest`,
-    {
-      owner,
-      repo,
-    }
-  );
-
-  console.log('ghPagesInfo - ', ghPagesInfo);
+  // console.log('ghPagesInfo - ', ghPagesInfo);
 
   let commentBody = `:page_with_curl: **${commentTopTitle}** <br />`;
 
-  commentBody += ` _Report has been triggered by commit [${triggerCommit.data.message} (${triggerCommit.data.sha})](${triggerCommit.data.html_url})_ `;
+  if (context.payload.after) {
+    triggerCommit = await github.rest.git.getCommit({
+      owner,
+      repo,
+      commit_sha: context.payload.after,
+    });
+    commentBody += ` _Report has been triggered by commit [${triggerCommit.data.message} (${triggerCommit.data.sha})](${triggerCommit.data.html_url})_ `;
+  }
+
   commentBody += `<br /><br />`;
 
   commentBody += `:small_blue_diamond: **Application/Storybook build:** <br /> 
@@ -71,12 +59,16 @@ module.exports = async ({ github, context, core }) => {
       APP_BUILD_STATUS === 'true'
         ? ':white_check_mark: _Built_ '
         : ':no_entry_sign: _Failed_ '
-    } <br />
+    }`;
+
+  if (APP_BUILD_STATUS === 'true') {
+    commentBody += `
+    <br />
     - [Application build page](https://${GH_PAGES_CUSTOM_DOMAIN}/${GITHUB_HEAD_REF}/app) <br />
     - [Storybook build page](https://${GH_PAGES_CUSTOM_DOMAIN}/${GITHUB_HEAD_REF}/storybook)
-`;
-
-  commentBody += `<br /><br />`;
+    `;
+    commentBody += `<br /><br />`;
+  }
 
   commentBody = commentBody.replace(/(\r\n|\n|\r)/gm, '');
 
@@ -86,7 +78,6 @@ module.exports = async ({ github, context, core }) => {
     issueNumber: context.payload.number,
     bodyIncludes: commentTopTitle,
   });
-
 
   // const newSuiteResp = await github.rest.checks.createSuite({
   //   owner,

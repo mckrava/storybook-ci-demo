@@ -1,4 +1,4 @@
-name: Publish issue comment
+name: Publish issue comment with artifacts
 on:
   workflow_run:
     workflows:
@@ -27,6 +27,7 @@ jobs:
 #          github_token: ${{secrets.GITHUB_TOKEN}}
           workflow: wf_test-stuff.yml
           name: issue-comment-data
+          workflow_conclusion: success
           path: .
 
       - name: Read and assign
