@@ -44,5 +44,6 @@ jobs:
 
       app-unit-test-pub-report: false
     secrets:
+      gh_token: ${{ secrets.GH_TOKEN }}
       gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
       discord_alert_ui_web_hook: ${{ secrets.DISCORD_ALERT_UI_WEB_HOOK }}
