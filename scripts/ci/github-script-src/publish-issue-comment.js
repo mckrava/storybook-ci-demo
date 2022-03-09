@@ -62,7 +62,19 @@ module.exports = async ({ github, context, core }) => {
     }`;
   }
 
-  if (IS_APP_SB_BUILD_REPORT === 'true' && APP_BUILD_STATUS === 'true') {
+  if (IS_APP_SB_DEPLOYMENT_REPORT === 'true') {
+    commentBody += `:small_blue_diamond: **Application/Storybook deployment:** <br /> 
+    - Status: ${
+      APP_BUILD_STATUS === 'true'
+        ? ':white_check_mark: _Deployed_ '
+        : ':no_entry_sign: _Failed_ '
+    }`;
+  }
+
+  if (
+    IS_APP_SB_DEPLOYMENT_REPORT === 'true' &&
+    APP_DEPLOYMENT_STATUS === 'true'
+  ) {
     commentBody += `
     <br />
     - [Application build page](https://${GH_PAGES_CUSTOM_DOMAIN}/${GITHUB_HEAD_REF}/app) <br />
