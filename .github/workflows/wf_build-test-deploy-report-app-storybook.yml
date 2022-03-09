@@ -5,7 +5,6 @@ on:
       - develop
 
 jobs:
-
   build-app-storybook:
     name: Build App and Storybook
     uses: ./.github/workflows/_called_build-app-and-storybook.yml
@@ -32,7 +31,8 @@ jobs:
     with:
       base-branch-codecov-artifact-name: ref-lcov.info
       working-branch-codecov-artifact-name: working-lcov.info
-      app-node-modules-cache-key: cache-node-modules-ui-app
+    secrets:
+      barecheck_github_app_token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
 
   deploy-app-storybook-builds:
     name: Deploy App&Storybook builds
@@ -46,15 +46,18 @@ jobs:
       gh_token: ${{ secrets.GH_TOKEN }}
       gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
 
-
-
   report-statuses-discord:
     name: Report Discord
-    needs: [build-app-storybook, unit-tests, generate-unit-tests-codecov-report, deploy-app-storybook-builds]
+    needs:
+      [
+        build-app-storybook,
+        unit-tests,
+        generate-unit-tests-codecov-report,
+        deploy-app-storybook-builds,
+      ]
     uses: ./.github/workflows/_called_publish-report-discord.yml
     if: ${{ always() }}
     with:
-
       app-build-pub-in-discord: true
       app-build-status: ${{ needs.build-app-storybook.result == 'success' }}
 
@@ -72,4 +75,3 @@ jobs:
       gh_token: ${{ secrets.GH_TOKEN }}
       gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
       discord_alert_ui_web_hook: ${{ secrets.DISCORD_ALERT_UI_WEB_HOOK }}
-      barecheck_github_app_token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
