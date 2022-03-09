@@ -63,9 +63,10 @@ module.exports = async ({ github, context, core }) => {
   }
 
   if (IS_APP_SB_DEPLOYMENT_REPORT === 'true') {
+    commentBody += `<br /><br />`;
     commentBody += `:small_blue_diamond: **Application/Storybook deployment:** <br /> 
     - Status: ${
-      APP_BUILD_STATUS === 'true'
+      APP_DEPLOYMENT_STATUS === 'true'
         ? ':white_check_mark: _Deployed_ '
         : ':no_entry_sign: _Failed_ '
     }`;

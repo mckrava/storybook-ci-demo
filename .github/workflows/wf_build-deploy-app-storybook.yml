@@ -7,8 +7,6 @@ on:
       - 'feat/**'
   pull_request:
     branches:
-      - 'fix/**'
-      - 'feat/**'
       - develop
 
 jobs:
