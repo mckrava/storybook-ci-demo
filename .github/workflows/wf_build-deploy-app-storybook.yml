@@ -29,10 +29,9 @@ jobs:
 
   report-statuses-issue-comment:
     name: Reportr issue comment
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/_called_publish-report-issue-comment.yml
     if: ${{ always() }}
     needs: [build-app-storybook, deploy-app-storybook-builds]
-    uses: ./.github/workflows/_called_publish-report-issue-comment.yml
     with:
       report-msg-title: Basilisk-UI build reporter
 

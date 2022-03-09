@@ -1,17 +1,10 @@
-name: Build Test Deploy App and Storybook
-#on:
-#  pull_request:
-#    branches:
-#      - develop
-
-env:
-  APP_BUILD_ARTIFACT_NAME: app-build-files
-  STORYBOOK_BUILD_ARTIFACT_NAME: sb-build-files
-  APP_NODE_MODULES_CACHE_KEY: cache-node-modules-ui-app
-#  Why we cannot use envs globally within workflow - https://github.com/actions/runner/issues/480
+name: Build-Test-Deploy-Report App and Storybook
+on:
+  pull_request:
+    branches:
+      - develop
 
 jobs:
-
   build-app-storybook:
     name: Build App and Storybook
     uses: ./.github/workflows/_called_build-app-and-storybook.yml
@@ -30,6 +23,17 @@ jobs:
       working-branch-codecov-artifact-name: working-lcov.info
       app-node-modules-cache-key: cache-node-modules-ui-app
 
+  generate-unit-tests-codecov-report:
+    name: Generate codecove report
+    needs: unit-tests
+    uses: ./.github/workflows/_called_generate-unit-tests-code-cov-report.yml
+    if: ${{ always() }}
+    with:
+      base-branch-codecov-artifact-name: ref-lcov.info
+      working-branch-codecov-artifact-name: working-lcov.info
+    secrets:
+      barecheck_github_app_token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
+
   deploy-app-storybook-builds:
     name: Deploy App&Storybook builds
     needs: [build-app-storybook, unit-tests]
@@ -42,31 +46,55 @@ jobs:
       gh_token: ${{ secrets.GH_TOKEN }}
       gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
 
-
-
-  report-statuses:
-    name: Report
-    needs: [build-app-storybook, unit-tests, deploy-app-storybook-builds]
-    uses: ./.github/workflows/_called_report-statuses.yml
+  report-statuses-discord:
+    name: Report Discord
+    needs:
+      [
+        build-app-storybook,
+        unit-tests,
+        generate-unit-tests-codecov-report,
+        deploy-app-storybook-builds,
+      ]
+    uses: ./.github/workflows/_called_publish-report-discord.yml
     if: ${{ always() }}
     with:
-      publish-discord-alert: true
-      publish-pr-comment: true
-
       app-build-pub-in-discord: true
       app-build-status: ${{ needs.build-app-storybook.result == 'success' }}
 
       app-sb-deploy-pub-report-in-discord: true
       app-sb-deploy-status: ${{ needs.deploy-app-storybook-builds.result == 'success' }}
 
-      app-unit-test-pub-report-in-pr: true
       app-unit-test-pub-report-in-discord: true
       app-unit-test-status: ${{ needs.unit-tests.result == 'success' }}
-
-      base-branch-codecov-artifact-name: ref-lcov.info
-      working-branch-codecov-artifact-name: working-lcov.info
+      app-unit-test-codecov-percentage: ${{ needs.generate-unit-tests-codecov-report.outputs.codecov_unit_percentage }}
+      app-unit-test-codecov-diff: ${{ needs.generate-unit-tests-codecov-report.outputs.codecov_unit_diff }}
     secrets:
-      gh_token: ${{ secrets.GH_TOKEN }}
       gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
       discord_alert_ui_web_hook: ${{ secrets.DISCORD_ALERT_UI_WEB_HOOK }}
-      barecheck_github_app_token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
+
+  report-statuses-issue-comment:
+    name: Reportr issue comment
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs:
+      [
+        build-app-storybook,
+        unit-tests,
+        generate-unit-tests-codecov-report,
+        deploy-app-storybook-builds,
+      ]
+    uses: ./.github/workflows/_called_publish-report-issue-comment.yml
+    with:
+      app-build-pub-in-discord: true
+      app-build-status: ${{ needs.build-app-storybook.result == 'success' }}
+
+      app-sb-deploy-pub-report-in-discord: true
+      app-sb-deploy-status: ${{ needs.deploy-app-storybook-builds.result == 'success' }}
+
+      app-unit-test-pub-report-in-discord: true
+      app-unit-test-status: ${{ needs.unit-tests.result == 'success' }}
+      app-unit-test-codecov-percentage: ${{ needs.generate-unit-tests-codecov-report.outputs.codecov_unit_percentage }}
+      app-unit-test-codecov-diff: ${{ needs.generate-unit-tests-codecov-report.outputs.codecov_unit_diff }}
+    secrets:
+      gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
+      discord_alert_ui_web_hook: ${{ secrets.DISCORD_ALERT_UI_WEB_HOOK }}
