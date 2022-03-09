@@ -7,6 +7,10 @@ on:
         required: true
         type: boolean
 
+      report-msg-title:
+        required: false
+        type: string
+
       app-build-pub-report:
         required: true
         type: boolean
@@ -31,10 +35,6 @@ on:
         required: false
         type: string
       app-unit-test-codecov-diff:
-        required: false
-        type: string
-
-      report-msg-title:
         required: false
         type: string
 
