@@ -5,6 +5,11 @@ on:
     branches:
       - 'fix/**'
       - 'feat/**'
+  pull_request:
+    branches:
+      - 'fix/**'
+      - 'feat/**'
+      - develop
 
 jobs:
   build-app-storybook:
