@@ -1,4 +1,3 @@
-const getComment = require('./utils/find-issue-comment');
 const commentUtils = require('./utils/comment-utils');
 
 module.exports = async ({ github, context, core }) => {
@@ -77,13 +76,18 @@ module.exports = async ({ github, context, core }) => {
 
   let existingIssueComment = null;
   let suiteId = '';
+  let issueNumber = null;
 
-  existingIssueComment = await getComment({
-    github,
-    context,
-    issueNumber: context.payload.number,
-    bodyIncludes: REPORT_MSG_TITLE,
-  });
+  if (context.eventName === 'pull_request') {
+    existingIssueComment = await commentUtils.findIssueComment({
+      github,
+      context,
+      issueNumber: context.payload.number,
+      bodyIncludes: REPORT_MSG_TITLE,
+    });
+
+    issueNumber = context.payload.number;
+  }
 
   const existingIssueCommentId = existingIssueComment
     ? existingIssueComment.id
@@ -126,20 +130,21 @@ module.exports = async ({ github, context, core }) => {
       repo,
       existingIssueCommentId,
       commentBody,
+      issueNumber,
     });
   }
 
   console.log('commentBody - ', commentBody);
 
   return JSON.stringify({
+    publishArtifactsList: PUBLISH_ARTIFACTS_LIST,
+    repoUrl: context.payload.repository.html_url,
+    runId: context.runId,
     commentBody,
     owner,
     repo,
     suiteId,
     existingIssueCommentId,
-    publishArtifactsList: PUBLISH_ARTIFACTS_LIST,
-    repoUrl: context.payload.repository.html_url,
-    issueNumber: context.payload.number,
-    runId: context.runId,
+    issueNumber,
   });
 };

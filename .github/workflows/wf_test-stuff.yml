@@ -24,7 +24,7 @@ jobs:
           GH_PAGES_CUSTOM_DOMAIN: ${{ secrets.GH_PAGES_CUSTOM_DOMAIN }}
         with:
           script: |
-            const script = require('./scripts/ci/github-script-src/prepare-publish-issue-comment-content.js')
+            const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')
             return await script({github, context, core})
 
       - name: Save issue comment prepared content into file
