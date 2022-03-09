@@ -44,8 +44,6 @@ jobs:
 
   publish-summary-report-discord:
     name: Publish summary report to Discord
-    needs: [app-unit-tests-codecov-pub-report]
-    if: ${{ inputs.publish-discord-alert == true }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
