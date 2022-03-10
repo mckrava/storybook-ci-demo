@@ -19,6 +19,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Upload test art
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-artifacts
+          path: ./scripts
+
       - uses: actions/github-script@v6
         id: issue-comment-data
         env:

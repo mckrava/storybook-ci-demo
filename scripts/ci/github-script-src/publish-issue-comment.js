@@ -196,9 +196,19 @@ module.exports = async ({ github, context, core }) => {
           )
         : null;
 
-    console.log('publishArtifactsWf - ', publishArtifactsWf)
+    console.log('publishArtifactsWf - ', publishArtifactsWf);
 
     if (publishArtifactsWf) {
+      console.log('run params - ', {
+        owner,
+        repo,
+        workflow_id: publishArtifactsWf.id,
+        ref: currentBranchName,
+        inputs: {
+          issue_comment_data: preparedInputs,
+        },
+      });
+
       await github.rest.actions.createWorkflowDispatch({
         owner,
         repo,
