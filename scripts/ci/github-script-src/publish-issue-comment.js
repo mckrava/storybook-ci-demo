@@ -220,10 +220,21 @@ module.exports = async ({ github, context, core }) => {
       //   },
       // });
 
+      console.log(
+        'eee - ',
+        `POST /repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
+        {
+          ref: context.payload.pull_request.head.ref,
+          inputs: {
+            issue_comment_data: preparedInputs,
+          },
+        }
+      );
+
       const dispatchResp = await github.request(
         `POST /repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
         {
-          ref: `refs/heads/${context.payload.repository.default_branch}`,
+          ref: context.payload.pull_request.head.ref,
           inputs: {
             issue_comment_data: preparedInputs,
           },
