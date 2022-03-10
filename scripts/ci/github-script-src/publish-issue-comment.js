@@ -35,7 +35,6 @@ module.exports = async ({ github, context, core }) => {
 
   let triggerCommit = null;
 
-  
   // const ghPagesInfo = await github.rest.repos.getPages({
   //   owner,
   //   repo,
@@ -100,6 +99,16 @@ module.exports = async ({ github, context, core }) => {
     });
 
     issueNumber = context.payload.number;
+  } else if (context.eventName === 'push') {
+    const prList = await github.request(
+      `GET /repos/${owner}/${repo}/commits/${context.sha}/pulls`,
+      {
+        owner,
+        repo,
+        commit_sha: context.sha,
+      }
+    );
+    console.log('prList - ', prList);
   }
 
   const existingIssueCommentId = existingIssueComment
@@ -156,7 +165,9 @@ module.exports = async ({ github, context, core }) => {
       repo,
       workflow_id: 'wfd_publish-issue-comment-with-artifacts.yml',
       ref: GITHUB_HEAD_REF,
-      inputs: preparedInputs,
+      inputs: {
+        issue_comment_data: preparedInputs,
+      },
     });
   } else {
     await commentUtils.publishIssueComment({
