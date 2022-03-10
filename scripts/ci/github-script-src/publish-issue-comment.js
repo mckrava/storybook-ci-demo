@@ -171,15 +171,33 @@ module.exports = async ({ github, context, core }) => {
       issueNumber,
     });
 
-    await github.rest.actions.createWorkflowDispatch({
-      owner,
-      repo,
-      workflow_id: 'wfd_publish-issue-comment-with-artifacts',
-      ref: currentBranchName,
-      inputs: {
-        issue_comment_data: preparedInputs,
-      },
-    });
+    const workflowsList = await github.request(
+      `GET /repos/${owner}/${repo}/actions/workflows`,
+      {
+        owner,
+        repo,
+      }
+    );
+
+    console.log('workflowsList - ', workflowsList);
+
+    const publishArtifactsWf = workflowsList.find(
+      (item) =>
+        item.path ===
+        `.github/workflows/wfd_publish-issue-comment-with-artifacts.yml`
+    );
+
+    if (publishArtifactsWf) {
+      await github.rest.actions.createWorkflowDispatch({
+        owner,
+        repo,
+        workflow_id: publishArtifactsWf.id,
+        ref: currentBranchName,
+        inputs: {
+          issue_comment_data: preparedInputs,
+        },
+      });
+    }
   } else {
     await commentUtils.publishIssueComment({
       github,
