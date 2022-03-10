@@ -12,7 +12,7 @@ on:
       issue_comment_data:
         description: 'Stringified JSON with data for publication comment with artifacts list'
         required: false
-        type: boolean
+        type: string
 
 jobs:
   issue-comment-publish:
