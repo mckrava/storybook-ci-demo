@@ -203,13 +203,13 @@ module.exports = async ({ github, context, core }) => {
         owner,
         repo,
         workflow_id: publishArtifactsWf.id,
-        ref: currentBranchName,
+        ref: context.payload.repository.default_branch,
         inputs: {
           issue_comment_data: preparedInputs,
         },
       });
 
-      await github.rest.actions.createWorkflowDispatch({
+      const dispatchResp = await github.rest.actions.createWorkflowDispatch({
         owner,
         repo,
         workflow_id: publishArtifactsWf.id,
@@ -219,6 +219,8 @@ module.exports = async ({ github, context, core }) => {
           issue_comment_data: preparedInputs,
         },
       });
+
+      console.log('dispatchResp - ', dispatchResp);
     }
   } else {
     await commentUtils.publishIssueComment({
