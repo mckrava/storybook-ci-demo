@@ -181,7 +181,7 @@ module.exports = async ({ github, context, core }) => {
 
     console.log('workflowsList - ', workflowsList);
 
-    const publishArtifactsWf = workflowsList.find(
+    const publishArtifactsWf = workflowsList.data.find(
       (item) =>
         item.path ===
         `.github/workflows/wfd_publish-issue-comment-with-artifacts.yml`
