@@ -22,6 +22,7 @@ module.exports = async ({ github, context, core }) => {
     GITHUB_REF_NAME,
     GITHUB_SHA,
     GITHUB_REF,
+    GITHUB_BASE_REF, // for PR target branch
 
     GH_PAGES_CUSTOM_DOMAIN,
     GH_TOKEN,
@@ -153,6 +154,8 @@ module.exports = async ({ github, context, core }) => {
       }
     );
 
+    console.log('suitesList - ', suitesList);
+
     for (let suiteItem of suitesList.data.check_suites.filter(
       (item) => item.status === 'in_progress'
     )) {
@@ -192,6 +195,8 @@ module.exports = async ({ github, context, core }) => {
               `.github/workflows/wfd_publish-issue-comment-with-artifacts.yml`
           )
         : null;
+
+    console.log('publishArtifactsWf - ', publishArtifactsWf)
 
     if (publishArtifactsWf) {
       await github.rest.actions.createWorkflowDispatch({
