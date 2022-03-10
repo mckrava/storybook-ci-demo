@@ -181,11 +181,14 @@ module.exports = async ({ github, context, core }) => {
 
     console.log('workflowsList - ', workflowsList);
 
-    const publishArtifactsWf = workflowsList.data.find(
-      (item) =>
-        item.path ===
-        `.github/workflows/wfd_publish-issue-comment-with-artifacts.yml`
-    );
+    const publishArtifactsWf =
+      workflowsList.data && workflowsList.data.total_count > 0
+        ? workflowsList.data.workflows.find(
+            (item) =>
+              item.path ===
+              `.github/workflows/wfd_publish-issue-comment-with-artifacts.yml`
+          )
+        : null;
 
     if (publishArtifactsWf) {
       await github.rest.actions.createWorkflowDispatch({
