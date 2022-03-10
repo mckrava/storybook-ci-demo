@@ -203,52 +203,52 @@ module.exports = async ({ github, context, core }) => {
         owner,
         repo,
         workflow_id: publishArtifactsWf.id,
-        ref: 'develop',
+        ref: context.payload.repository.default_branch,
         inputs: {
           issue_comment_data: preparedInputs,
         },
       });
 
-      // const dispatchResp = await github.rest.actions.createWorkflowDispatch({
-      //   owner,
-      //   repo,
-      //   workflow_id: publishArtifactsWf.id,
-      //   // ref: currentBranchName,
-      //   ref: context.payload.repository.default_branch,
-      //   inputs: {
-      //     issue_comment_data: preparedInputs,
-      //   },
-      // });
+      const dispatchResp = await github.actions.createWorkflowDispatch({
+        owner,
+        repo,
+        workflow_id: publishArtifactsWf.id,
+        // ref: currentBranchName,
+        ref: context.payload.repository.default_branch,
+        inputs: {
+          issue_comment_data: preparedInputs,
+        },
+      });
 
-      console.log(
-        'eee - ',
-        `POST /repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
-        {
-          ref: context.payload.pull_request.head.ref,
-          inputs: {
-            issue_comment_data: preparedInputs,
-          },
-        }
-      );
+      // console.log(
+      //   'eee - ',
+      //   `POST /repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
+      //   {
+      //     ref: context.payload.pull_request.head.ref,
+      //     inputs: {
+      //       issue_comment_data: preparedInputs,
+      //     },
+      //   }
+      // );
 
-      await github.request(
-        `PUT /repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/enable`,
-        {
-          owner,
-          repo,
-          workflow_id: publishArtifactsWf.id,
-        }
-      );
-
-      const dispatchResp = await github.request(
-        `POST /repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
-        {
-          ref: context.payload.pull_request.head.ref,
-          inputs: {
-            issue_comment_data: preparedInputs,
-          },
-        }
-      );
+      // await github.request(
+      //   `PUT /repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/enable`,
+      //   {
+      //     owner,
+      //     repo,
+      //     workflow_id: publishArtifactsWf.id,
+      //   }
+      // );
+      //
+      // const dispatchResp = await github.request(
+      //   `POST /repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
+      //   {
+      //     ref: context.payload.pull_request.head.ref,
+      //     inputs: {
+      //       issue_comment_data: preparedInputs,
+      //     },
+      //   }
+      // );
 
       console.log('dispatchResp - ', dispatchResp);
     }
