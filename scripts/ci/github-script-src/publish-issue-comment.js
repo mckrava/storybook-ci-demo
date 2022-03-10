@@ -19,6 +19,7 @@ module.exports = async ({ github, context, core }) => {
     APP_DEPLOYMENT_STATUS,
 
     GITHUB_HEAD_REF,
+    GITHUB_SHA,
     GITHUB_REF,
     GITHUB_REF_NAME,
 
@@ -109,6 +110,14 @@ module.exports = async ({ github, context, core }) => {
       }
     );
     console.log('prList - ', prList);
+    const relatedPr = prList.data.filter((prItem) => prItem.state === 'open');
+
+    existingIssueComment = await commentUtils.findIssueComment({
+      github,
+      context,
+      issueNumber: relatedPr.length > 0 ? relatedPr[0].number : null,
+      bodyIncludes: REPORT_MSG_TITLE,
+    });
   }
 
   const existingIssueCommentId = existingIssueComment
@@ -131,11 +140,12 @@ module.exports = async ({ github, context, core }) => {
     // });
 
     const suitesList = await github.request(
-      `GET /repos/${owner}/${repo}/commits/${context.payload.pull_request.head.sha}/check-suites`,
+      // `GET /repos/${owner}/${repo}/commits/${context.payload.pull_request.head.sha}/check-suites`,
+      `GET /repos/${owner}/${repo}/commits/${GITHUB_SHA}/check-suites`,
       {
         owner,
         repo,
-        ref: context.payload.pull_request.head.sha,
+        ref: GITHUB_SHA,
       }
     );
 

@@ -5,9 +5,10 @@ on:
     branches:
       - 'fix/**'
       - 'feat/**'
-  pull_request:
-    branches:
       - develop
+#  pull_request:
+#    branches:
+#      - develop
 
 jobs:
   publish-report-issue-comment:
