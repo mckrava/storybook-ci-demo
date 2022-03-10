@@ -203,16 +203,17 @@ module.exports = async ({ github, context, core }) => {
         owner,
         repo,
         workflow_id: publishArtifactsWf.id,
-        ref: context.payload.repository.default_branch,
+        ref: 'develop',
         inputs: {
           issue_comment_data: preparedInputs,
         },
       });
 
-      const dispatchResp = await github.actions.createWorkflowDispatch({
+      const dispatchResp = await github.rest.actions.createWorkflowDispatch({
         owner,
         repo,
-        workflow_id: publishArtifactsWf.id,
+        // workflow_id: publishArtifactsWf.id,
+        workflow_id: 'wfd_publish-issue-comment-with-artifacts.yml',
         // ref: currentBranchName,
         ref: context.payload.repository.default_branch,
         inputs: {

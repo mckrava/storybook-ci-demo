@@ -29,6 +29,7 @@ jobs:
         id: issue-comment-data
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          github-token: ${{secrets.GH_TOKEN}}
           GH_PAGES_CUSTOM_DOMAIN: ${{ secrets.GH_PAGES_CUSTOM_DOMAIN }}
 
           REPORT_MSG_TITLE: Test reporter
