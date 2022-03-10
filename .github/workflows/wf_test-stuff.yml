@@ -6,9 +6,11 @@ on:
       - 'fix/**'
       - 'feat/**'
       - develop
-#  pull_request:
-#    branches:
-#      - develop
+  pull_request:
+    types:
+      - opened
+    branches:
+      - develop
 
 jobs:
   publish-report-issue-comment:
