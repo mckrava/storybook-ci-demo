@@ -1,13 +1,13 @@
 name: Build Deploy App and Storybook
 
-on:
-  push:
-    branches:
-      - 'fix/**'
-      - 'feat/**'
-  pull_request:
-    branches:
-      - develop
+#on:
+#  push:
+#    branches:
+#      - 'fix/**'
+#      - 'feat/**'
+#  pull_request:
+#    branches:
+#      - develop
 
 jobs:
   build-app-storybook:

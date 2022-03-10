@@ -19,8 +19,9 @@ module.exports = async ({ github, context, core }) => {
     APP_DEPLOYMENT_STATUS,
 
     GITHUB_HEAD_REF,
-    GITHUB_REF,
     GITHUB_REF_NAME,
+    GITHUB_SHA,
+    GITHUB_REF,
 
     GH_PAGES_CUSTOM_DOMAIN,
     GH_TOKEN,
@@ -32,7 +33,8 @@ module.exports = async ({ github, context, core }) => {
   console.log('process.env - ', process.env);
 
   const [owner, repo] = context.payload.repository.full_name.split('/');
-
+  const currentBranchName =
+    context.eventName === 'pull_request' ? GITHUB_HEAD_REF : GITHUB_REF_NAME;
   let triggerCommit = null;
 
   // const ghPagesInfo = await github.rest.repos.getPages({
@@ -78,8 +80,8 @@ module.exports = async ({ github, context, core }) => {
   ) {
     commentBody += `
     <br />
-    - [Application build page](https://${GH_PAGES_CUSTOM_DOMAIN}/${GITHUB_HEAD_REF}/app) <br />
-    - [Storybook build page](https://${GH_PAGES_CUSTOM_DOMAIN}/${GITHUB_HEAD_REF}/storybook)
+    - [Application build page](https://${GH_PAGES_CUSTOM_DOMAIN}/${currentBranchName}/app) <br />
+    - [Storybook build page](https://${GH_PAGES_CUSTOM_DOMAIN}/${currentBranchName}/storybook)
     `;
     commentBody += `<br /><br />`;
   }
@@ -99,6 +101,24 @@ module.exports = async ({ github, context, core }) => {
     });
 
     issueNumber = context.payload.number;
+  } else if (context.eventName === 'push') {
+    const prList = await github.request(
+      `GET /repos/${owner}/${repo}/commits/${context.sha}/pulls`,
+      {
+        owner,
+        repo,
+        commit_sha: context.sha,
+      }
+    );
+    console.log('prList - ', prList);
+    const relatedPr = prList.data.filter((prItem) => prItem.state === 'open');
+
+    existingIssueComment = await commentUtils.findIssueComment({
+      github,
+      context,
+      issueNumber: relatedPr.length > 0 ? relatedPr[0].number : null,
+      bodyIncludes: REPORT_MSG_TITLE,
+    });
   }
 
   const existingIssueCommentId = existingIssueComment
@@ -121,11 +141,12 @@ module.exports = async ({ github, context, core }) => {
     // });
 
     const suitesList = await github.request(
-      `GET /repos/${owner}/${repo}/commits/${context.payload.pull_request.head.sha}/check-suites`,
+      // `GET /repos/${owner}/${repo}/commits/${context.payload.pull_request.head.sha}/check-suites`,
+      `GET /repos/${owner}/${repo}/commits/${GITHUB_SHA}/check-suites`,
       {
         owner,
         repo,
-        ref: context.payload.pull_request.head.sha,
+        ref: GITHUB_SHA,
       }
     );
 
@@ -150,13 +171,36 @@ module.exports = async ({ github, context, core }) => {
       issueNumber,
     });
 
-    await github.rest.actions.createWorkflowDispatch({
-      owner,
-      repo,
-      workflow_id: 'wfd_publish-issue-comment-with-artifacts.yml',
-      ref: GITHUB_HEAD_REF,
-      inputs: preparedInputs,
-    });
+    const workflowsList = await github.request(
+      `GET /repos/${owner}/${repo}/actions/workflows`,
+      {
+        owner,
+        repo,
+      }
+    );
+
+    console.log('workflowsList - ', workflowsList);
+
+    const publishArtifactsWf =
+      workflowsList.data && workflowsList.data.total_count > 0
+        ? workflowsList.data.workflows.find(
+            (item) =>
+              item.path ===
+              `.github/workflows/wfd_publish-issue-comment-with-artifacts.yml`
+          )
+        : null;
+
+    if (publishArtifactsWf) {
+      await github.rest.actions.createWorkflowDispatch({
+        owner,
+        repo,
+        workflow_id: publishArtifactsWf.id,
+        ref: currentBranchName,
+        inputs: {
+          issue_comment_data: preparedInputs,
+        },
+      });
+    }
   } else {
     await commentUtils.publishIssueComment({
       github,
