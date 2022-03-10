@@ -19,7 +19,11 @@ async function publishIssueComment({
   existingIssueCommentId,
 }) {
   try {
-    if (!existingIssueCommentId || existingIssueCommentId === 'null' || !issueNumber) {
+    if (
+      !existingIssueCommentId ||
+      existingIssueCommentId === 'null' ||
+      !issueNumber
+    ) {
       await github.rest.issues.createComment({
         issue_number: issueNumber,
         owner,
@@ -49,6 +53,8 @@ async function findIssueComment({
   commentAuthor = null,
 }) {
   const [owner, repo] = context.payload.repository.full_name.split('/');
+
+  if (!issueNumber || !owner || !repo) return null;
 
   const parameters = {
     owner: owner,

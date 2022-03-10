@@ -77,6 +77,7 @@ module.exports = async ({ github, context, core }) => {
     github,
     owner,
     repo,
+    issueNumber,
     existingIssueCommentId,
     commentBody,
   });

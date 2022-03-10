@@ -6,9 +6,11 @@ on:
       - 'fix/**'
       - 'feat/**'
       - develop
-#  pull_request:
-#    branches:
-#      - develop
+  pull_request:
+    types:
+      - opened
+    branches:
+      - develop
 
 jobs:
   publish-report-issue-comment:
@@ -16,6 +18,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      - name: Upload test art
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-artifacts
+          path: ./scripts
 
       - uses: actions/github-script@v6
         id: issue-comment-data

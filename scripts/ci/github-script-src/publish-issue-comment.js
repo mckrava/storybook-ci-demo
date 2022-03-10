@@ -22,6 +22,7 @@ module.exports = async ({ github, context, core }) => {
     GITHUB_REF_NAME,
     GITHUB_SHA,
     GITHUB_REF,
+    GITHUB_BASE_REF, // for PR target branch
 
     GH_PAGES_CUSTOM_DOMAIN,
     GH_TOKEN,
@@ -113,12 +114,15 @@ module.exports = async ({ github, context, core }) => {
     console.log('prList - ', prList);
     const relatedPr = prList.data.filter((prItem) => prItem.state === 'open');
 
-    existingIssueComment = await commentUtils.findIssueComment({
-      github,
-      context,
-      issueNumber: relatedPr.length > 0 ? relatedPr[0].number : null,
-      bodyIncludes: REPORT_MSG_TITLE,
-    });
+    existingIssueComment =
+      relatedPr.length > 0
+        ? await commentUtils.findIssueComment({
+            github,
+            context,
+            issueNumber: relatedPr[0].number,
+            bodyIncludes: REPORT_MSG_TITLE,
+          })
+        : null;
   }
 
   const existingIssueCommentId = existingIssueComment
@@ -149,6 +153,8 @@ module.exports = async ({ github, context, core }) => {
         ref: GITHUB_SHA,
       }
     );
+
+    console.log('suitesList - ', suitesList);
 
     for (let suiteItem of suitesList.data.check_suites.filter(
       (item) => item.status === 'in_progress'
@@ -190,12 +196,25 @@ module.exports = async ({ github, context, core }) => {
           )
         : null;
 
+    console.log('publishArtifactsWf - ', publishArtifactsWf);
+
     if (publishArtifactsWf) {
-      await github.rest.actions.createWorkflowDispatch({
+      console.log('run params - ', {
         owner,
         repo,
         workflow_id: publishArtifactsWf.id,
         ref: currentBranchName,
+        inputs: {
+          issue_comment_data: preparedInputs,
+        },
+      });
+
+      await github.rest.actions.createWorkflowDispatch({
+        owner,
+        repo,
+        workflow_id: publishArtifactsWf.id,
+        // ref: currentBranchName,
+        ref: context.payload.repository.default_branch,
         inputs: {
           issue_comment_data: preparedInputs,
         },
