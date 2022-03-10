@@ -19,9 +19,9 @@ module.exports = async ({ github, context, core }) => {
     APP_DEPLOYMENT_STATUS,
 
     GITHUB_HEAD_REF,
+    GITHUB_REF_NAME,
     GITHUB_SHA,
     GITHUB_REF,
-    GITHUB_REF_NAME,
 
     GH_PAGES_CUSTOM_DOMAIN,
     GH_TOKEN,
@@ -33,7 +33,8 @@ module.exports = async ({ github, context, core }) => {
   console.log('process.env - ', process.env);
 
   const [owner, repo] = context.payload.repository.full_name.split('/');
-
+  const currentBranchName =
+    context.eventName === 'pull_request' ? GITHUB_HEAD_REF : GITHUB_REF_NAME;
   let triggerCommit = null;
 
   // const ghPagesInfo = await github.rest.repos.getPages({
@@ -79,8 +80,8 @@ module.exports = async ({ github, context, core }) => {
   ) {
     commentBody += `
     <br />
-    - [Application build page](https://${GH_PAGES_CUSTOM_DOMAIN}/${GITHUB_HEAD_REF}/app) <br />
-    - [Storybook build page](https://${GH_PAGES_CUSTOM_DOMAIN}/${GITHUB_HEAD_REF}/storybook)
+    - [Application build page](https://${GH_PAGES_CUSTOM_DOMAIN}/${currentBranchName}/app) <br />
+    - [Storybook build page](https://${GH_PAGES_CUSTOM_DOMAIN}/${currentBranchName}/storybook)
     `;
     commentBody += `<br /><br />`;
   }
@@ -173,8 +174,8 @@ module.exports = async ({ github, context, core }) => {
     await github.rest.actions.createWorkflowDispatch({
       owner,
       repo,
-      workflow_id: 'wfd_publish-issue-comment-with-artifacts.yml',
-      ref: GITHUB_HEAD_REF,
+      workflow_id: 'wfd_publish-issue-comment-with-artifacts',
+      ref: currentBranchName,
       inputs: {
         issue_comment_data: preparedInputs,
       },
