@@ -203,7 +203,7 @@ module.exports = async ({ github, context, core }) => {
         owner,
         repo,
         workflow_id: publishArtifactsWf.id,
-        ref: context.payload.repository.default_branch,
+        ref: 'develop',
         inputs: {
           issue_comment_data: preparedInputs,
         },
