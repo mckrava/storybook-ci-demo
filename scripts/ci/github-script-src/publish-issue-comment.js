@@ -231,6 +231,15 @@ module.exports = async ({ github, context, core }) => {
         }
       );
 
+      await github.request(
+        `PUT /repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/enable`,
+        {
+          owner,
+          repo,
+          workflow_id: publishArtifactsWf.id,
+        }
+      );
+
       const dispatchResp = await github.request(
         `POST /repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
         {
