@@ -209,16 +209,29 @@ module.exports = async ({ github, context, core }) => {
         },
       });
 
-      const dispatchResp = await github.rest.actions.createWorkflowDispatch({
-        owner,
-        repo,
-        workflow_id: publishArtifactsWf.id,
-        // ref: currentBranchName,
-        ref: context.payload.repository.default_branch,
-        inputs: {
-          issue_comment_data: preparedInputs,
-        },
-      });
+      // const dispatchResp = await github.rest.actions.createWorkflowDispatch({
+      //   owner,
+      //   repo,
+      //   workflow_id: publishArtifactsWf.id,
+      //   // ref: currentBranchName,
+      //   ref: context.payload.repository.default_branch,
+      //   inputs: {
+      //     issue_comment_data: preparedInputs,
+      //   },
+      // });
+
+      const dispatchResp = await github.request(
+        `POST /repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
+        {
+          owner,
+          repo,
+          workflow_id: publishArtifactsWf.id,
+          ref: context.payload.repository.default_branch,
+          inputs: {
+            issue_comment_data: preparedInputs,
+          },
+        }
+      );
 
       console.log('dispatchResp - ', dispatchResp);
     }
