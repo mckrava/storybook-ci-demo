@@ -1,0 +1,62 @@
+name: Publish issue comment with artifacts (dispatch)
+#on:
+#  workflow_run:
+#    workflows:
+#      - Report demo
+#    types:
+#      - completed
+
+on:
+  workflow_dispatch:
+    inputs:
+      issue_comment_data:
+        description: 'Stringified JSON with data for publication comment with artifacts list'
+        required: false
+        type: boolean
+
+jobs:
+  issue-comment-publish:
+    name: Publish issue comment
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+#      - name: Download code coverage report from base branch
+#        uses: actions/download-artifact@v2
+#        id: download-ref
+#        with:
+#          name: issue-comment-tpl
+#          path: .
+
+
+#      - name: Download artifact
+#        uses: dawidd6/action-download-artifact@v2
+#        with:
+##          github_token: ${{secrets.GITHUB_TOKEN}}
+#          workflow: wf_test-stuff.yml
+#          name: issue-comment-data
+#          workflow_conclusion: success
+#          path: .
+#
+#      - name: Read and assign
+#        id: issue-comment-data-content
+#        run: |
+#          input_file="issue-comment-data.txt"
+#          while read line
+#          do
+#            file_text=$line
+#          done < "$input_file"
+#          echo ::set-output name=value::$file_text
+
+#      - run: yarn add @tonyhallett/github-actions
+
+      - uses: actions/github-script@v6
+        env:
+          gh_token: ${{ secrets.GH_TOKEN }}
+#          issue_comment_data: ${{steps.issue-comment-data-content.outputs.value}}
+          issue_comment_data: ${{ github.event.inputs.issue_comment_data }}
+        with:
+          script: |
+            const script = require('./scripts/ci/github-script-src/publish-issue-comment-with-artifacts.js')
+            await script({github, context, core})
+

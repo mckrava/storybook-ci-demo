@@ -5,6 +5,9 @@ on:
     branches:
       - 'fix/**'
       - 'feat/**'
+  pull_request:
+    branches:
+      - develop
 
 jobs:
   build-app-storybook:
@@ -34,7 +37,7 @@ jobs:
     needs: [build-app-storybook, deploy-app-storybook-builds]
     with:
       report-msg-title: Basilisk-UI build reporter
-      publish-artifacts-list: false
+      publish-artifacts-list: true
 
       app-build-pub-report: true
       app-build-status: ${{ needs.build-app-storybook.result == 'success' }}

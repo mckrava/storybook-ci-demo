@@ -51,10 +51,9 @@ module.exports = async ({ github, context, core }) => {
     });
     commentBody += ` _Report has been triggered by commit [${triggerCommit.data.message} (${triggerCommit.data.sha})](${triggerCommit.data.html_url})_ `;
   }
+  commentBody += `<br /><br />`;
 
   if (IS_APP_SB_BUILD_REPORT === 'true') {
-    commentBody += `<br /><br />`;
-
     commentBody += `:small_blue_diamond: **Application/Storybook build:** <br /> 
     - Status: ${
       APP_BUILD_STATUS === 'true'
@@ -63,7 +62,20 @@ module.exports = async ({ github, context, core }) => {
     }`;
   }
 
-  if (IS_APP_SB_BUILD_REPORT === 'true' && APP_BUILD_STATUS === 'true') {
+  if (IS_APP_SB_DEPLOYMENT_REPORT === 'true') {
+    commentBody += `<br /><br />`;
+    commentBody += `:small_blue_diamond: **Application/Storybook deployment:** <br /> 
+    - Status: ${
+      APP_DEPLOYMENT_STATUS === 'true'
+        ? ':white_check_mark: _Deployed_ '
+        : ':no_entry_sign: _Failed_ '
+    }`;
+  }
+
+  if (
+    IS_APP_SB_DEPLOYMENT_REPORT === 'true' &&
+    APP_DEPLOYMENT_STATUS === 'true'
+  ) {
     commentBody += `
     <br />
     - [Application build page](https://${GH_PAGES_CUSTOM_DOMAIN}/${GITHUB_HEAD_REF}/app) <br />
@@ -123,6 +135,28 @@ module.exports = async ({ github, context, core }) => {
       console.log('suiteItem - ', suiteItem);
       suiteId = suiteItem.id;
     }
+
+    // Run workflow for fetching and publication artifacts list
+
+    const preparedInputs = JSON.stringify({
+      publishArtifactsList: PUBLISH_ARTIFACTS_LIST,
+      repoUrl: context.payload.repository.html_url,
+      runId: context.runId,
+      commentBody,
+      owner,
+      repo,
+      suiteId,
+      existingIssueCommentId,
+      issueNumber,
+    });
+
+    await github.rest.actions.createWorkflowDispatch({
+      owner,
+      repo,
+      workflow_id: 'wfd_publish-issue-comment-with-artifacts.yml',
+      ref: GITHUB_HEAD_REF,
+      inputs: preparedInputs,
+    });
   } else {
     await commentUtils.publishIssueComment({
       github,
