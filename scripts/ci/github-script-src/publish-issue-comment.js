@@ -35,6 +35,7 @@ module.exports = async ({ github, context, core }) => {
 
   let triggerCommit = null;
 
+  
   // const ghPagesInfo = await github.rest.repos.getPages({
   //   owner,
   //   repo,
