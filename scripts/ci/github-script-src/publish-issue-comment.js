@@ -135,6 +135,28 @@ module.exports = async ({ github, context, core }) => {
       console.log('suiteItem - ', suiteItem);
       suiteId = suiteItem.id;
     }
+
+    // Run workflow for fetching and publication artifacts list
+
+    const preparedInputs = JSON.stringify({
+      publishArtifactsList: PUBLISH_ARTIFACTS_LIST,
+      repoUrl: context.payload.repository.html_url,
+      runId: context.runId,
+      commentBody,
+      owner,
+      repo,
+      suiteId,
+      existingIssueCommentId,
+      issueNumber,
+    });
+
+    await github.rest.actions.createWorkflowDispatch({
+      owner,
+      repo,
+      workflow_id: 'wfd_publish-issue-comment-with-artifacts.yml',
+      ref: GITHUB_HEAD_REF,
+      inputs: preparedInputs,
+    });
   } else {
     await commentUtils.publishIssueComment({
       github,
