@@ -294,11 +294,9 @@ module.exports = async ({ github, context, core }) => {
         owner,
         repo,
         workflow_id: publishArtifactsWf.id,
-        // ref: currentBranchName,
-        // ref: context.payload.repository.default_branch,
-        ref: 'develop',
+        ref: context.payload.repository.default_branch,
         inputs: {
-          issue_comment_data: encodeURIComponent(preparedInputs),
+          issue_comment_data: preparedInputs,
         },
       });
 
