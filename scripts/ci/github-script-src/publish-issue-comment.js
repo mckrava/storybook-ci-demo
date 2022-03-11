@@ -246,6 +246,7 @@ module.exports = async ({ github, context, core }) => {
         {
           headers: {
             accept: 'application/vnd.github.v3+json',
+            authorization: `token ${GH_TOKEN}`,
           },
           // ref: context.payload.pull_request.head.ref,
           ref: 'develop',
