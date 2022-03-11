@@ -95,7 +95,7 @@ jobs:
         shell: bash
         run: |
           echo $CURL_SCRIPT
-          curl $CURL_SCRIPT
+          eval $CURL_SCRIPT
         env:
           CURL_SCRIPT: ${{ steps.issue-comment-data.outputs.result }}
 
