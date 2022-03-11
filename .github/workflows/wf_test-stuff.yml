@@ -58,6 +58,8 @@ jobs:
           github-token: ${{secrets.GH_TOKEN}}
         with:
           script: |
+            const { GH_TOKEN } = process.env;
+
             await github.request({
                 headers: {
                   accept: 'application/vnd.github.v3+json',
