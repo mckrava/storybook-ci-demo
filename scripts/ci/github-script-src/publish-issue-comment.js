@@ -249,22 +249,38 @@ module.exports = async ({ github, context, core }) => {
         },
       });
 
-      console.log('ghRequestWithAuth - ', ghRequestWithAuth)
+      console.log('ghRequestWithAuth - ', ghRequestWithAuth);
 
-      const dispatchResp = await ghRequestWithAuth(
-        `POST /repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
-        {
-          headers: {
-            accept: 'application/vnd.github.v3+json',
-            authorization: `token ${GH_TOKEN}`,
-          },
-          // ref: context.payload.pull_request.head.ref,
+      // const dispatchResp = await ghRequestWithAuth(
+      //   `POST /repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
+      //   {
+      //     headers: {
+      //       accept: 'application/vnd.github.v3+json',
+      //       authorization: `token ${GH_TOKEN}`,
+      //     },
+      //     // ref: context.payload.pull_request.head.ref,
+      //     ref: 'develop',
+      //     inputs: {
+      //       issue_comment_data: preparedInputs,
+      //     },
+      //   }
+      // );
+
+      const dispatchResp = await ghRequestWithAuth({
+        headers: {
+          accept: 'application/vnd.github.v3+json',
+          authorization: `token ${GH_TOKEN}`,
+        },
+        method: 'POST',
+        url: `/repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
+        // ref: context.payload.pull_request.head.ref,
+        data: {
           ref: 'develop',
           inputs: {
             issue_comment_data: preparedInputs,
           },
-        }
-      );
+        },
+      });
 
       console.log('dispatchResp - ', dispatchResp);
     }
