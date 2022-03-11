@@ -290,12 +290,12 @@ module.exports = async ({ github, context, core }) => {
         method: 'POST',
         url: `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
         // ref: context.payload.pull_request.head.ref,
-        // data: {
-          // ref: 'develop',
+        data: {
+          ref: 'develop',
           // inputs: {
           //   issue_comment_data: preparedInputs,
           // },
-        // },
+        },
       });
 
       console.log('dispatchResp - ', dispatchResp);
