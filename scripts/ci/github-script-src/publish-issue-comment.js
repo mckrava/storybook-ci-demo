@@ -186,7 +186,7 @@ module.exports = async ({ github, context, core }) => {
       }
     );
 
-    console.log('workflowsList - ', workflowsList);
+    console.log('workflowsList 2 - ', workflowsList);
 
     const publishArtifactsWf =
       workflowsList.data && workflowsList.data.total_count > 0
