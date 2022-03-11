@@ -25,10 +25,47 @@ jobs:
           name: test-artifacts
           path: ./scripts
 
+#      - uses: actions/github-script@v6
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+#          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+#          github-token: ${{secrets.GH_TOKEN}}
+#        with:
+#          script: |
+#            await github.rest.actions.createWorkflowDispatch({
+#                owner: 'mckrava',
+#                repo: 'storybook-ci-demo',
+#                workflow_id: 'wfd_publish-issue-comment-with-artifacts.yml',
+#                ref: 'develop',
+#            });
+
+#      - uses: actions/github-script@v6
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+#          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+#          github-token: ${{secrets.GH_TOKEN}}
+#        with:
+#          script: |
+#            const { GH_TOKEN } = process.env;
+#
+#            await github.request({
+#                headers: {
+#                  accept: 'application/vnd.github.v3+json',
+#                  authorization: `Token ${GH_TOKEN}`,
+#                },
+#                method: 'POST',
+#                url: `https://api.github.com/repos/mckrava/storybook-ci-demo/actions/workflows/21524983/dispatches`,
+#                data: {
+#                  ref: 'develop',
+#                },
+#            });
+
       - uses: actions/github-script@v6
         id: issue-comment-data
         env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          github-token: ${{secrets.GH_TOKEN}}
           GH_PAGES_CUSTOM_DOMAIN: ${{ secrets.GH_PAGES_CUSTOM_DOMAIN }}
 
           REPORT_MSG_TITLE: Test reporter
@@ -49,9 +86,18 @@ jobs:
           APP_DEPLOYMENT_STATUS: true
 
         with:
+          result-encoding: string
           script: |
             const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')
             return await script({github, context, core})
+
+      - name: Curl test
+        shell: bash
+        run: |
+          echo $CURL_SCRIPT
+          eval $CURL_SCRIPT
+        env:
+          CURL_SCRIPT: ${{ steps.issue-comment-data.outputs.result }}
 
 #      - name: Save issue comment prepared content into file
 #        run: |

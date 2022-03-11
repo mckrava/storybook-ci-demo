@@ -203,22 +203,119 @@ module.exports = async ({ github, context, core }) => {
         owner,
         repo,
         workflow_id: publishArtifactsWf.id,
-        ref: currentBranchName,
+        ref: 'develop',
         inputs: {
           issue_comment_data: preparedInputs,
         },
       });
 
-      await github.rest.actions.createWorkflowDispatch({
-        owner,
-        repo,
-        workflow_id: publishArtifactsWf.id,
-        // ref: currentBranchName,
-        ref: context.payload.repository.default_branch,
-        inputs: {
-          issue_comment_data: preparedInputs,
+      // const dispatchResp = await github.rest.actions.createWorkflowDispatch({
+      //   owner,
+      //   repo,
+      //   // workflow_id: publishArtifactsWf.id,
+      //   workflow_id: 'wfd_publish-issue-comment-with-artifacts.yml',
+      //   // ref: currentBranchName,
+      //   ref: context.payload.repository.default_branch,
+      //   inputs: {
+      //     issue_comment_data: preparedInputs,
+      //   },
+      // });
+
+      // console.log(
+      //   'eee - ',
+      //   `POST /repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
+      //   {
+      //     ref: context.payload.pull_request.head.ref,
+      //     inputs: {
+      //       issue_comment_data: preparedInputs,
+      //     },
+      //   }
+      // );
+
+      // await github.request(
+      //   `PUT /repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/enable`,
+      //   {
+      //     owner,
+      //     repo,
+      //     workflow_id: publishArtifactsWf.id,
+      //   }
+      // );
+      //
+
+      const ghRequestWithAuth = github.request.defaults({
+        headers: {
+          accept: 'application/vnd.github.v3+json',
+          authorization: `token ${GH_TOKEN}`,
         },
       });
+
+      console.log('ghRequestWithAuth - ', ghRequestWithAuth);
+
+      // const dispatchResp = await ghRequestWithAuth(
+      //   `POST /repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
+      //   {
+      //     headers: {
+      //       accept: 'application/vnd.github.v3+json',
+      //       authorization: `token ${GH_TOKEN}`,
+      //     },
+      //     // ref: context.payload.pull_request.head.ref,
+      //     ref: 'develop',
+      //     inputs: {
+      //       issue_comment_data: preparedInputs,
+      //     },
+      //   }
+      // );
+
+      // console.log('params - ', {
+      //   headers: {
+      //     accept: 'application/vnd.github.v3+json',
+      //     authorization: `token ${GH_TOKEN}`,
+      //   },
+      //   method: 'POST',
+      //   url: `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
+      //   // ref: context.payload.pull_request.head.ref,
+      //   data: {
+      //     ref: 'develop',
+      //     inputs: {
+      //       issue_comment_data: preparedInputs,
+      //     },
+      //   },
+      // })
+
+      // const dispatchResp = await github.request({
+      //   headers: {
+      //     accept: 'application/vnd.github.v3+json',
+      //     authorization: `Token ${GH_TOKEN}`,
+      //   },
+      //   method: 'POST',
+      //   url: `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
+      //   // ref: context.payload.pull_request.head.ref,
+      //   data: {
+      //     ref: 'develop',
+      //     // inputs: {
+      //     //   issue_comment_data: preparedInputs,
+      //     // },
+      //   },
+      // });
+
+      // const dispatchResp = await github.rest.actions.createWorkflowDispatch({
+      //   owner,
+      //   repo,
+      //   workflow_id: publishArtifactsWf.id,
+      //   // ref: currentBranchName,
+      //   // ref: context.payload.repository.default_branch,
+      //   ref: 'develop',
+      //   // inputs: {
+      //   //   issue_comment_data: preparedInputs,
+      //   // },
+      // });
+
+      // console.log('dispatchResp - ', dispatchResp);
+
+      // const curlContent = `curl -X POST -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${GH_TOKEN}" https://api.github.com/repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches -d "{"ref":"${context.payload.repository.default_branch}", "inputs": {"issue_comment_data": ${preparedInputs}}"`;
+      const curlContent = `curl -X POST -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${GH_TOKEN}" https://api.github.com/repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches -d '{"ref":"${context.payload.repository.default_branch}", "inputs":{"issue_comment_data": "${encodeURIComponent(preparedInputs)}"}}'`;
+
+      return curlContent.replace(/(\r\n|\n|\r)/gm, '');
     }
   } else {
     await commentUtils.publishIssueComment({
@@ -233,15 +330,15 @@ module.exports = async ({ github, context, core }) => {
 
   console.log('commentBody - ', commentBody);
 
-  return JSON.stringify({
-    publishArtifactsList: PUBLISH_ARTIFACTS_LIST,
-    repoUrl: context.payload.repository.html_url,
-    runId: context.runId,
-    commentBody,
-    owner,
-    repo,
-    suiteId,
-    existingIssueCommentId,
-    issueNumber,
-  });
+  // return JSON.stringify({
+  //   publishArtifactsList: PUBLISH_ARTIFACTS_LIST,
+  //   repoUrl: context.payload.repository.html_url,
+  //   runId: context.runId,
+  //   commentBody,
+  //   owner,
+  //   repo,
+  //   suiteId,
+  //   existingIssueCommentId,
+  //   issueNumber,
+  // });
 };
