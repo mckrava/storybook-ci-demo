@@ -241,13 +241,23 @@ module.exports = async ({ github, context, core }) => {
       //   }
       // );
       //
-      const dispatchResp = await github.request(
+
+      const ghRequestWithAuth = github.request.defaults({
+        headers: {
+          accept: 'application/vnd.github.v3+json',
+          authorization: `token ${GH_TOKEN}`,
+        },
+      });
+
+      console.log('ghRequestWithAuth - ', ghRequestWithAuth)
+
+      const dispatchResp = await ghRequestWithAuth(
         `POST /repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
         {
-          headers: {
-            accept: 'application/vnd.github.v3+json',
-            authorization: `token ${GH_TOKEN}`,
-          },
+          // headers: {
+          //   accept: 'application/vnd.github.v3+json',
+          //   authorization: `token ${GH_TOKEN}`,
+          // },
           // ref: context.payload.pull_request.head.ref,
           ref: 'develop',
           inputs: {
