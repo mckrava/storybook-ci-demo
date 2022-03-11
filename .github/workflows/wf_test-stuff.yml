@@ -86,6 +86,7 @@ jobs:
           APP_DEPLOYMENT_STATUS: true
 
         with:
+          result-encoding: string
           script: |
             const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')
             return await script({github, context, core})

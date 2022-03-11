@@ -319,7 +319,7 @@ module.exports = async ({ github, context, core }) => {
       -d '{"ref":"${context.payload.repository.default_branch}", "inputs": {"issue_comment_data": ${preparedInputs}}'
       `;
 
-      return curlContent;
+      return curlContent.replace(/(\r\n|\n|\r)/gm, '');
     }
   } else {
     await commentUtils.publishIssueComment({
