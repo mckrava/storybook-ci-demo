@@ -244,7 +244,9 @@ module.exports = async ({ github, context, core }) => {
       const dispatchResp = await github.request(
         `POST /repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
         {
-          accept: 'application/vnd.github.v3+json',
+          headers: {
+            accept: 'application/vnd.github.v3+json',
+          },
           // ref: context.payload.pull_request.head.ref,
           ref: 'develop',
           inputs: {
