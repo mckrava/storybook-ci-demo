@@ -69,7 +69,7 @@ jobs:
           GH_PAGES_CUSTOM_DOMAIN: ${{ secrets.GH_PAGES_CUSTOM_DOMAIN }}
 
           REPORT_MSG_TITLE: Test reporter
-          PUBLISH_ARTIFACTS_LIST: true
+          PUBLISH_ARTIFACTS_LIST: false
 
           IS_APP_SB_BUILD_REPORT: true
           IS_APP_UNIT_TEST_REPORT: false
@@ -91,12 +91,10 @@ jobs:
             const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')
             return await script({github, context, core})
 
-      - name: Curl test
-        if: ${{ always() }}
+      - name: Run workflow with publication artifacts list
+        if: ${{ steps.issue-comment-data.outputs.result }}
         shell: bash
-        run: |
-          echo $CURL_SCRIPT
-          eval $CURL_SCRIPT
+        run: eval $CURL_SCRIPT
         env:
           CURL_SCRIPT: ${{ steps.issue-comment-data.outputs.result }}
 

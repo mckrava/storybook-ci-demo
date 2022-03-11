@@ -324,18 +324,4 @@ module.exports = async ({ github, context, core }) => {
       issueNumber,
     });
   }
-
-  console.log('commentBody - ', commentBody);
-
-  // return JSON.stringify({
-  //   publishArtifactsList: PUBLISH_ARTIFACTS_LIST,
-  //   repoUrl: context.payload.repository.html_url,
-  //   runId: context.runId,
-  //   commentBody,
-  //   owner,
-  //   repo,
-  //   suiteId,
-  //   existingIssueCommentId,
-  //   issueNumber,
-  // });
 };
