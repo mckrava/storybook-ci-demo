@@ -34,7 +34,7 @@ module.exports = async ({ github, context, core }) => {
   console.log('context - ', context);
   console.log('process.env - ', process.env);
 
-  console.log(JSON.parse(issue_comment_data));
+  console.log(JSON.parse(decodeURIComponent(issue_comment_data)));
 
   let {
     owner,
@@ -45,7 +45,7 @@ module.exports = async ({ github, context, core }) => {
     repoUrl,
     existingIssueCommentId,
     commentBody,
-  } = JSON.parse(issue_comment_data);
+  } = JSON.parse(decodeURIComponent(issue_comment_data));
 
   if (!owner || !repo || !runId) return;
 
