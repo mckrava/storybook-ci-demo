@@ -25,14 +25,15 @@ jobs:
           name: test-artifacts
           path: ./scripts
 
-      - run: |
-          curl \
-          -X POST \
-          -H "Authorization: token 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" \
-          https://api.github.com/repos/mckrava/storybook-ci-demo/actions/workflows/21524983/dispatches \
-          --data "{"ref":"develop"}"
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+#      - run: |
+#          curl \
+#          -X POST \
+#          -H "Accept: application/vnd.github.v3+json" \
+#          -H "Authorization: token ***" \
+#          https://api.github.com/repos/mckrava/storybook-ci-demo/actions/workflows/21524983/dispatches \
+#          --data "{"ref":"develop"}"
+#        env:
+#          GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
       - uses: actions/github-script@v6
         id: issue-comment-data
