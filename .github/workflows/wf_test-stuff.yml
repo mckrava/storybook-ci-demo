@@ -25,17 +25,17 @@ jobs:
           name: test-artifacts
           path: ./scripts
 
-      - name: Curl test
-        shell: bash
-        run: |
-          curl \
-          -X POST \
-          -H "Accept: application/vnd.github.v3+json" \
-          -H "Authorization: token $GH_TOKEN" \
-          https://api.github.com/repos/mckrava/storybook-ci-demo/actions/workflows/21524983/dispatches \
-          -d '{"ref":"develop"}'
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+#      - name: Curl test
+#        shell: bash
+#        run: |
+#          curl \
+#          -X POST \
+#          -H "Accept: application/vnd.github.v3+json" \
+#          -H "Authorization: token $GH_TOKEN" \
+#          https://api.github.com/repos/mckrava/storybook-ci-demo/actions/workflows/21524983/dispatches \
+#          -d '{"ref":"develop"}'
+#        env:
+#          GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
 #      - uses: actions/github-script@v6
 #        env:
@@ -50,7 +50,26 @@ jobs:
 #                workflow_id: 'wfd_publish-issue-comment-with-artifacts.yml',
 #                ref: 'develop',
 #            });
-#
+
+      - uses: actions/github-script@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          github-token: ${{secrets.GH_TOKEN}}
+        with:
+          script: |
+            await github.request({
+                headers: {
+                  accept: 'application/vnd.github.v3+json',
+                  authorization: `Token ${GH_TOKEN}`,
+                },
+                method: 'POST',
+                url: `https://api.github.com/repos/${owner}/${repo}/actions/workflows/21524983/dispatches`,
+                data: {
+                  ref: 'develop',
+                },
+            });
+
 #      - uses: actions/github-script@v6
 #        id: issue-comment-data
 #        env:
