@@ -66,7 +66,7 @@ jobs:
                   authorization: `Token ${GH_TOKEN}`,
                 },
                 method: 'POST',
-                url: `https://api.github.com/repos/${owner}/${repo}/actions/workflows/21524983/dispatches`,
+                url: `https://api.github.com/repos/mckrava/storybook-ci-demo/actions/workflows/21524983/dispatches`,
                 data: {
                   ref: 'develop',
                 },
