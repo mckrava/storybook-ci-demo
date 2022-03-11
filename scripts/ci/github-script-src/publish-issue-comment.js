@@ -209,17 +209,17 @@ module.exports = async ({ github, context, core }) => {
         },
       });
 
-      const dispatchResp = await github.rest.actions.createWorkflowDispatch({
-        owner,
-        repo,
-        // workflow_id: publishArtifactsWf.id,
-        workflow_id: 'wfd_publish-issue-comment-with-artifacts.yml',
-        // ref: currentBranchName,
-        ref: context.payload.repository.default_branch,
-        inputs: {
-          issue_comment_data: preparedInputs,
-        },
-      });
+      // const dispatchResp = await github.rest.actions.createWorkflowDispatch({
+      //   owner,
+      //   repo,
+      //   // workflow_id: publishArtifactsWf.id,
+      //   workflow_id: 'wfd_publish-issue-comment-with-artifacts.yml',
+      //   // ref: currentBranchName,
+      //   ref: context.payload.repository.default_branch,
+      //   inputs: {
+      //     issue_comment_data: preparedInputs,
+      //   },
+      // });
 
       // console.log(
       //   'eee - ',
@@ -241,15 +241,17 @@ module.exports = async ({ github, context, core }) => {
       //   }
       // );
       //
-      // const dispatchResp = await github.request(
-      //   `POST /repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
-      //   {
-      //     ref: context.payload.pull_request.head.ref,
-      //     inputs: {
-      //       issue_comment_data: preparedInputs,
-      //     },
-      //   }
-      // );
+      const dispatchResp = await github.request(
+        `POST /repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
+        {
+          accept: 'application/vnd.github.v3+json',
+          // ref: context.payload.pull_request.head.ref,
+          ref: 'develop',
+          inputs: {
+            issue_comment_data: preparedInputs,
+          },
+        }
+      );
 
       console.log('dispatchResp - ', dispatchResp);
     }
