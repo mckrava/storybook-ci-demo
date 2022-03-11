@@ -28,7 +28,7 @@ jobs:
       - run: |
           curl \
           -X POST \
-          -H "Accept: application/vnd.github.v3+json Authorization: token $GH_TOKEN" \
+          -H "Accept: application/vnd.github.v3+json Authorization: token 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" \
           https://api.github.com/repos/mckrava/storybook-ci-demo/actions/workflows/21524983/dispatches \
           -d '{"ref":"develop"}'
         env:
