@@ -290,29 +290,29 @@ module.exports = async ({ github, context, core }) => {
       //   },
       // });
 
-      // const dispatchResp = await github.rest.actions.createWorkflowDispatch({
-      //   owner,
-      //   repo,
-      //   workflow_id: publishArtifactsWf.id,
-      //   // ref: currentBranchName,
-      //   // ref: context.payload.repository.default_branch,
-      //   ref: 'develop',
-      //   // inputs: {
-      //   //   issue_comment_data: preparedInputs,
-      //   // },
-      // });
+      const dispatchResp = await github.rest.actions.createWorkflowDispatch({
+        owner,
+        repo,
+        workflow_id: publishArtifactsWf.id,
+        // ref: currentBranchName,
+        // ref: context.payload.repository.default_branch,
+        ref: 'develop',
+        inputs: {
+          issue_comment_data: encodeURIComponent(preparedInputs),
+        },
+      });
 
-      // console.log('dispatchResp - ', dispatchResp);
+      console.log('dispatchResp - ', dispatchResp);
+      //
+      // const curlContent = `curl -X POST -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${GH_TOKEN}" https://api.github.com/repos/${owner}/${repo}/actions/workflows/${
+      //   publishArtifactsWf.id
+      // }/dispatches -d '{"ref":"${
+      //   context.payload.repository.default_branch
+      // }", "inputs":{"issue_comment_data": "${encodeURIComponent(
+      //   preparedInputs
+      // )}"}}'`;
 
-      const curlContent = `curl -X POST -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${GH_TOKEN}" https://api.github.com/repos/${owner}/${repo}/actions/workflows/${
-        publishArtifactsWf.id
-      }/dispatches -d '{"ref":"${
-        context.payload.repository.default_branch
-      }", "inputs":{"issue_comment_data": "${encodeURIComponent(
-        preparedInputs
-      )}"}}'`;
-
-      return curlContent.replace(/(\r\n|\n|\r)/gm, '');
+      // return curlContent.replace(/(\r\n|\n|\r)/gm, '');
     }
   } else {
     await commentUtils.publishIssueComment({
