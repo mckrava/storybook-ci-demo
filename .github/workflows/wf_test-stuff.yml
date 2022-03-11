@@ -92,6 +92,7 @@ jobs:
             return await script({github, context, core})
 
       - name: Curl test
+        if: ${{ always() }}
         shell: bash
         run: |
           echo $CURL_SCRIPT
