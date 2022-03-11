@@ -82,13 +82,13 @@ jobs:
             const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')
             return await script({github, context, core})
 
-# We must use eval here because issue with creation dispatch events through github-script:
-#  https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event
-#  Issue in github-script - https://github.com/actions/github-script/issues/246
-
-      - name: Run workflow with publication artifacts list
-        if: ${{ steps.issue-comment-data.outputs.result != '0' }}
-        shell: bash
-        run: eval $CURL_SCRIPT
-        env:
-          CURL_SCRIPT: ${{ steps.issue-comment-data.outputs.result }}
+## We must use eval here because issue with creation dispatch events through github-script:
+##  https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event
+##  Issue in github-script - https://github.com/actions/github-script/issues/246
+#
+#      - name: Run workflow with publication artifacts list
+#        if: ${{ steps.issue-comment-data.outputs.result != '0' }}
+#        shell: bash
+#        run: eval $CURL_SCRIPT
+#        env:
+#          CURL_SCRIPT: ${{ steps.issue-comment-data.outputs.result }}
