@@ -25,18 +25,6 @@ jobs:
           name: test-artifacts
           path: ./scripts
 
-#      - name: Curl test
-#        shell: bash
-#        run: |
-#          curl \
-#          -X POST \
-#          -H "Accept: application/vnd.github.v3+json" \
-#          -H "Authorization: token $GH_TOKEN" \
-#          https://api.github.com/repos/mckrava/storybook-ci-demo/actions/workflows/21524983/dispatches \
-#          -d '{"ref":"develop"}'
-#        env:
-#          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-
 #      - uses: actions/github-script@v6
 #        env:
 #          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -51,56 +39,64 @@ jobs:
 #                ref: 'develop',
 #            });
 
-      - uses: actions/github-script@v6
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          github-token: ${{secrets.GH_TOKEN}}
-        with:
-          script: |
-            const { GH_TOKEN } = process.env;
-
-            await github.request({
-                headers: {
-                  accept: 'application/vnd.github.v3+json',
-                  authorization: `Token ${GH_TOKEN}`,
-                },
-                method: 'POST',
-                url: `https://api.github.com/repos/mckrava/storybook-ci-demo/actions/workflows/21524983/dispatches`,
-                data: {
-                  ref: 'develop',
-                },
-            });
-
 #      - uses: actions/github-script@v6
-#        id: issue-comment-data
 #        env:
 #          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 #          GH_TOKEN: ${{ secrets.GH_TOKEN }}
 #          github-token: ${{secrets.GH_TOKEN}}
-#          GH_PAGES_CUSTOM_DOMAIN: ${{ secrets.GH_PAGES_CUSTOM_DOMAIN }}
-#
-#          REPORT_MSG_TITLE: Test reporter
-#          PUBLISH_ARTIFACTS_LIST: true
-#
-#          IS_APP_SB_BUILD_REPORT: true
-#          IS_APP_UNIT_TEST_REPORT: false
-#          IS_APP_E2E_TEST_REPORT: false
-#          IS_SB_UNIT_TEST_REPORT: false
-#          IS_SB_E2E_TEST_REPORT: false
-#          IS_APP_SB_DEPLOYMENT_REPORT: true
-#
-#          APP_UNIT_TEST_PERCENTAGE: 0
-#          APP_UNIT_TEST_DIFF: 0
-#          APP_BUILD_STATUS: true
-#          APP_UNIT_TEST_STATUS: true
-#
-#          APP_DEPLOYMENT_STATUS: true
-#
 #        with:
 #          script: |
-#            const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')
-#            return await script({github, context, core})
+#            const { GH_TOKEN } = process.env;
+#
+#            await github.request({
+#                headers: {
+#                  accept: 'application/vnd.github.v3+json',
+#                  authorization: `Token ${GH_TOKEN}`,
+#                },
+#                method: 'POST',
+#                url: `https://api.github.com/repos/mckrava/storybook-ci-demo/actions/workflows/21524983/dispatches`,
+#                data: {
+#                  ref: 'develop',
+#                },
+#            });
+
+      - uses: actions/github-script@v6
+        id: issue-comment-data
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          github-token: ${{secrets.GH_TOKEN}}
+          GH_PAGES_CUSTOM_DOMAIN: ${{ secrets.GH_PAGES_CUSTOM_DOMAIN }}
+
+          REPORT_MSG_TITLE: Test reporter
+          PUBLISH_ARTIFACTS_LIST: true
+
+          IS_APP_SB_BUILD_REPORT: true
+          IS_APP_UNIT_TEST_REPORT: false
+          IS_APP_E2E_TEST_REPORT: false
+          IS_SB_UNIT_TEST_REPORT: false
+          IS_SB_E2E_TEST_REPORT: false
+          IS_APP_SB_DEPLOYMENT_REPORT: true
+
+          APP_UNIT_TEST_PERCENTAGE: 0
+          APP_UNIT_TEST_DIFF: 0
+          APP_BUILD_STATUS: true
+          APP_UNIT_TEST_STATUS: true
+
+          APP_DEPLOYMENT_STATUS: true
+
+        with:
+          script: |
+            const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')
+            return await script({github, context, core})
+
+      - name: Curl test
+        shell: bash
+        run: |
+          echo $CURL_SCRIPT
+          curl $CURL_SCRIPT
+        env:
+          CURL_SCRIPT: ${{ steps.issue-comment-data.outputs.result }}
 
 #      - name: Save issue comment prepared content into file
 #        run: |
