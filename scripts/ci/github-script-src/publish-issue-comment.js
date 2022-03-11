@@ -324,4 +324,6 @@ module.exports = async ({ github, context, core }) => {
       issueNumber,
     });
   }
+
+  return 0;
 };

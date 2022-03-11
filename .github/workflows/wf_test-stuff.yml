@@ -92,7 +92,7 @@ jobs:
             return await script({github, context, core})
 
       - name: Run workflow with publication artifacts list
-        if: ${{ steps.issue-comment-data.outputs.result != undefined }}
+        if: ${{ steps.issue-comment-data.outputs.result != '0' }}
         shell: bash
         run: eval $CURL_SCRIPT
         env:
