@@ -3,6 +3,7 @@ const commentUtils = require('./utils/comment-utils');
 module.exports = async ({ github, context, core }) => {
   const {
     REPORT_MSG_TITLE = 'Basilisk-UI workflows reporter',
+    PUBLISH_ARTIFACTS_WORKFLOW_DISPATCH_FILE,
     PUBLISH_ARTIFACTS_LIST,
     IS_APP_SB_BUILD_REPORT,
     IS_APP_UNIT_TEST_REPORT,
@@ -207,7 +208,7 @@ module.exports = async ({ github, context, core }) => {
       ? workflowsList.data.workflows.find(
           (item) =>
             item.path ===
-            `.github/workflows/wfd_publish-issue-comment-with-artifacts.yml`
+            `.github/workflows/${PUBLISH_ARTIFACTS_WORKFLOW_DISPATCH_FILE}`
         )
       : null;
 
