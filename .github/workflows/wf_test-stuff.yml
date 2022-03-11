@@ -31,6 +31,8 @@ jobs:
           -H "Accept: application/vnd.github.v3+json Authorization: token $GH_TOKEN" \
           https://api.github.com/repos/mckrava/storybook-ci-demo/actions/workflows/21524983/dispatches \
           -d '{"ref":"develop"}'
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
       - uses: actions/github-script@v6
         id: issue-comment-data
