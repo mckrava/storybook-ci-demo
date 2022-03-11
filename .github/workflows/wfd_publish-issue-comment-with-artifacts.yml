@@ -22,39 +22,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      #      - name: Download code coverage report from base branch
-      #        uses: actions/download-artifact@v2
-      #        id: download-ref
-      #        with:
-      #          name: issue-comment-tpl
-      #          path: .
-
-      #      - name: Download artifact
-      #        uses: dawidd6/action-download-artifact@v2
-      #        with:
-      ##          github_token: ${{secrets.GITHUB_TOKEN}}
-      #          workflow: wf_test-stuff.yml
-      #          name: issue-comment-data
-      #          workflow_conclusion: success
-      #          path: .
-      #
-      #      - name: Read and assign
-      #        id: issue-comment-data-content
-      #        run: |
-      #          input_file="issue-comment-data.txt"
-      #          while read line
-      #          do
-      #            file_text=$line
-      #          done < "$input_file"
-      #          echo ::set-output name=value::$file_text
-
-      #      - run: yarn add @tonyhallett/github-actions
-
       - uses: actions/github-script@v6
         env:
-          gh_token: ${{ secrets.GH_TOKEN }}
-          #          issue_comment_data: ${{steps.issue-comment-data-content.outputs.value}}
-          issue_comment_data: ${{ github.event.inputs.issue_comment_data }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          ISSUE_COMMENT_DATA: ${{ github.event.inputs.issue_comment_data }}
         with:
           script: |
             const script = require('./scripts/ci/github-script-src/publish-issue-comment-with-artifacts.js')

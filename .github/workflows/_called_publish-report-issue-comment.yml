@@ -54,8 +54,6 @@ jobs:
       - uses: actions/github-script@v6
         id: issue-comment-data
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          GH_PAGES_CUSTOM_DOMAIN: ${{ secrets.GH_PAGES_CUSTOM_DOMAIN }}
 
           REPORT_MSG_TITLE: ${{inputs.report-msg-title}}
           PUBLISH_ARTIFACTS_LIST: ${{inputs.publish-artifacts-list}}
@@ -74,19 +72,23 @@ jobs:
 
           APP_DEPLOYMENT_STATUS: ${{ inputs.app-sb-deploy-status }}
 
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_PAGES_CUSTOM_DOMAIN: ${{ secrets.GH_PAGES_CUSTOM_DOMAIN }}
+
         with:
+          result-encoding: string
           script: |
             const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')
             return await script({github, context, core})
 
-      - name: Save issue comment content file
-        if: ${{inputs.publish-artifacts-list}}
-        run: |
-          echo ${{ steps.issue-comment-data.outputs.result }} > issue-comment-data.txt
+# We must use eval here because issue with creation dispatch events through github-script:
+#  https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event
+#  Issue in github-script - https://github.com/actions/github-script/issues/246
 
-      - name: Upload issue-comment-data
-        if: ${{inputs.publish-artifacts-list}}
-        uses: actions/upload-artifact@v2
-        with:
-          name: issue-comment-data
-          path: ./issue-comment-data.txt
+      - name: Run workflow with publication artifacts list
+        if: ${{ steps.issue-comment-data.outputs.result != '0' }}
+        shell: bash
+        run: eval $CURL_SCRIPT
+        env:
+          CURL_SCRIPT: ${{ steps.issue-comment-data.outputs.result }}
