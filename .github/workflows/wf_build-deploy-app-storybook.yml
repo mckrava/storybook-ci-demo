@@ -5,9 +5,12 @@ name: Build Deploy App and Storybook
 #    branches:
 #      - 'fix/**'
 #      - 'feat/**'
-#  pull_request:
-#    branches:
 #      - develop
+#    pull_request:
+#      types:
+#        - opened
+#      branches:
+#        - develop
 
 jobs:
   build-app-storybook:
