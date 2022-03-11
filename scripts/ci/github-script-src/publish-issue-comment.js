@@ -266,13 +266,13 @@ module.exports = async ({ github, context, core }) => {
       //   }
       // );
 
-      const dispatchResp = await ghRequestWithAuth({
+      console.log('params - ', {
         headers: {
           accept: 'application/vnd.github.v3+json',
           authorization: `token ${GH_TOKEN}`,
         },
         method: 'POST',
-        url: `/repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
+        url: `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
         // ref: context.payload.pull_request.head.ref,
         data: {
           ref: 'develop',
@@ -280,6 +280,22 @@ module.exports = async ({ github, context, core }) => {
             issue_comment_data: preparedInputs,
           },
         },
+      })
+
+      const dispatchResp = await github.request({
+        headers: {
+          accept: 'application/vnd.github.v3+json',
+          authorization: `Token ${GH_TOKEN}`,
+        },
+        method: 'POST',
+        url: `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
+        // ref: context.payload.pull_request.head.ref,
+        // data: {
+          // ref: 'develop',
+          // inputs: {
+          //   issue_comment_data: preparedInputs,
+          // },
+        // },
       });
 
       console.log('dispatchResp - ', dispatchResp);
