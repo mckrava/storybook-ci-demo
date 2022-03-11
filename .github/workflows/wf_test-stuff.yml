@@ -45,7 +45,7 @@ jobs:
             await github.rest.actions.createWorkflowDispatch({
                 owner: 'mckrava',
                 repo: 'storybook-ci-demo',
-                workflow_id: 21524983,
+                workflow_id: 'wfd_publish-issue-comment-with-artifacts.yml',
                 ref: 'develop',
             });
 #
