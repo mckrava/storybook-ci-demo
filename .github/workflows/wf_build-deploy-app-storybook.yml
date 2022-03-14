@@ -1,16 +1,16 @@
 name: Build Deploy App and Storybook
 
-#on:
-#  push:
-#    branches:
-#      - 'fix/**'
-#      - 'feat/**'
-#      - develop
-#    pull_request:
-#      types:
-#        - opened
-#      branches:
-#        - develop
+on:
+  push:
+    branches:
+      - 'fix/**'
+      - 'feat/**'
+      - develop
+    pull_request:
+      types:
+        - opened
+      branches:
+        - develop
 
 jobs:
   build-app-storybook:
@@ -52,3 +52,4 @@ jobs:
     secrets:
       gh_token: ${{ secrets.GH_TOKEN }}
       gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
+      gh_pages_custom_domain: ${{ secrets.GH_PAGES_CUSTOM_DOMAIN }}
