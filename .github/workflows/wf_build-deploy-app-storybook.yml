@@ -15,7 +15,7 @@ on:
 jobs:
   build-app-storybook:
     name: Build App and Storybook
-    uses: mckrava/storybook-ci-demo/.github/workflows/reusable-workflows/_called_build-app-and-storybook.yml@latest
+    uses: mckrava/storybook-ci-demo/.github/workflows/_called_build-app-and-storybook.yml@latest
     with:
       app-build-artifact-name: app-build-files
       storybook-build-artifact-name: sb-build-files
@@ -24,7 +24,7 @@ jobs:
   deploy-app-storybook-builds:
     name: Deploy App&Storybook builds
     needs: build-app-storybook
-    uses: mckrava/storybook-ci-demo/.github/workflows/reusable-workflows/_called_deploy-app-and-storybook.yml@latest
+    uses: mckrava/storybook-ci-demo/.github/workflows/_called_deploy-app-and-storybook.yml@latest
     if: ${{ needs.build-app-storybook.result=='success' }}
     with:
       app-build-artifact-name: app-build-files
@@ -35,7 +35,7 @@ jobs:
 
   report-statuses-issue-comment:
     name: Reportr issue comment
-    uses: mckrava/storybook-ci-demo/.github/workflows/reusable-workflows/_called_publish-report-issue-comment.yml@latest
+    uses: mckrava/storybook-ci-demo/.github/workflows/_called_publish-report-issue-comment.yml@latest
     if: ${{ always() }}
     needs: [build-app-storybook, deploy-app-storybook-builds]
     with:
