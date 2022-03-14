@@ -43,6 +43,8 @@ on:
         required: true
       gh_pages_full_branch:
         required: true
+      gh_pages_custom_domain:
+        required: true
 
 jobs:
   publish-report-issue-comment:
