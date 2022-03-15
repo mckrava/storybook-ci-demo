@@ -78,7 +78,6 @@ jobs:
 #                },
 #            });
 
-
       - uses: actions/github-script@v6
         id: issue-comment-data
         env:
