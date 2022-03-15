@@ -14,9 +14,12 @@ on:
 
 jobs:
   build-app-storybook:
-    name: Build App and Storybook
-    uses: mckrava/storybook-ci-demo/reusable-workflows/_called_build-app-and-storybook.yml@feat/refactor-ci-flows
+    # | Build Application and Storybook
+    # | and some other info
+    name: Build
+    uses: ./.github/workflows/_called_build-app-and-storybook.yml
     with:
+      # | Params comment
       app-build-artifact-name: app-build-files
       storybook-build-artifact-name: sb-build-files
       app-node-modules-cache-key: cache-node-modules-ui-app
@@ -24,7 +27,7 @@ jobs:
   deploy-app-storybook-builds:
     name: Deploy App&Storybook builds
     needs: build-app-storybook
-    uses: mckrava/storybook-ci-demo/reusable-workflows/_called_deploy-app-and-storybook.yml@feat/refactor-ci-flows
+    uses: ./.github/workflows/_called_deploy-app-and-storybook.yml
     if: ${{ needs.build-app-storybook.result=='success' }}
     with:
       app-build-artifact-name: app-build-files
@@ -35,7 +38,7 @@ jobs:
 
   report-statuses-issue-comment:
     name: Reportr issue comment
-    uses: mckrava/storybook-ci-demo/reusable-workflows/_called_publish-report-issue-comment.yml@feat/refactor-ci-flows
+    uses: ./.github/workflows/_called_publish-report-issue-comment.yml
     if: ${{ always() }}
     needs: [build-app-storybook, deploy-app-storybook-builds]
     with:
@@ -50,6 +53,7 @@ jobs:
 
       app-unit-test-pub-report: false
     secrets:
+      # | Secrets comment
       gh_token: ${{ secrets.GH_TOKEN }}
-      gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
+      gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }} # | Inline comment
       gh_pages_custom_domain: ${{ secrets.GH_PAGES_CUSTOM_DOMAIN }}
