@@ -22,7 +22,25 @@ jobs:
       - name: Upload test art
         uses: actions/upload-artifact@v2
         with:
-          name: test-artifacts
+          name: deploy_test-artifacts
+          path: ./scripts
+
+      - name: Upload test art
+        uses: actions/upload-artifact@v2
+        with:
+          name: deploy_test-artifacts-2
+          path: ./scripts
+
+      - name: Upload test art
+        uses: actions/upload-artifact@v2
+        with:
+          name: e2e-app_test-artifacts
+          path: ./scripts
+
+      - name: Upload test art
+        uses: actions/upload-artifact@v2
+        with:
+          name: unit-app_test-artifacts
           path: ./scripts
 
 #      - uses: actions/github-script@v6
@@ -70,6 +88,8 @@ jobs:
 
           REPORT_MSG_TITLE: Test reporter
           PUBLISH_ARTIFACTS_LIST: true
+          PUBLISH_ARTIFACTS_GROUP: "e2e-app"
+          PUBLISH_ARTIFACTS_WORKFLOW_DISPATCH_FILE: wfd_publish-issue-comment-with-artifacts.yml
 
           IS_APP_SB_BUILD_REPORT: true
           IS_APP_UNIT_TEST_REPORT: false
@@ -86,7 +106,6 @@ jobs:
           APP_DEPLOYMENT_STATUS: true
 
         with:
-#          result-encoding: string
           github-token: ${{secrets.GH_TOKEN}}
           script: |
             const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')

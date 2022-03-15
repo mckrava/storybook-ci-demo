@@ -43,6 +43,8 @@ on:
         required: true
       gh_pages_full_branch:
         required: true
+      gh_pages_custom_domain:
+        required: true
 
 jobs:
   publish-report-issue-comment:
@@ -57,6 +59,7 @@ jobs:
 
           REPORT_MSG_TITLE: ${{inputs.report-msg-title}}
           PUBLISH_ARTIFACTS_LIST: ${{inputs.publish-artifacts-list}}
+          PUBLISH_ARTIFACTS_WORKFLOW_DISPATCH_FILE: wfd_publish-issue-comment-with-artifacts.yml
 
           IS_APP_SB_BUILD_REPORT: ${{ inputs.app-build-pub-report }}
           IS_APP_UNIT_TEST_REPORT: ${{ inputs.app-unit-test-pub-report }}
@@ -77,18 +80,17 @@ jobs:
           GH_PAGES_CUSTOM_DOMAIN: ${{ secrets.GH_PAGES_CUSTOM_DOMAIN }}
 
         with:
-          result-encoding: string
           script: |
             const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')
             return await script({github, context, core})
 
-# We must use eval here because issue with creation dispatch events through github-script:
-#  https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event
-#  Issue in github-script - https://github.com/actions/github-script/issues/246
-
-      - name: Run workflow with publication artifacts list
-        if: ${{ steps.issue-comment-data.outputs.result != '0' }}
-        shell: bash
-        run: eval $CURL_SCRIPT
-        env:
-          CURL_SCRIPT: ${{ steps.issue-comment-data.outputs.result }}
+## We must use eval here because issue with creation dispatch events through github-script:
+##  https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event
+##  Issue in github-script - https://github.com/actions/github-script/issues/246
+#
+#      - name: Run workflow with publication artifacts list
+#        if: ${{ steps.issue-comment-data.outputs.result != '0' }}
+#        shell: bash
+#        run: eval $CURL_SCRIPT
+#        env:
+#          CURL_SCRIPT: ${{ steps.issue-comment-data.outputs.result }}

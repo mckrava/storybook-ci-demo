@@ -20,6 +20,7 @@ module.exports = async ({ github, context, core }) => {
     repoUrl,
     existingIssueCommentId,
     commentBody,
+    publishArtifactsListGroup,
   } = JSON.parse(ISSUE_COMMENT_DATA);
 
   if (!owner || !repo || !runId) return;
@@ -38,7 +39,11 @@ module.exports = async ({ github, context, core }) => {
 
   for await (const { data: artifacts } of iterator) {
     console.log('[LOG]:: Artifacts - ', artifacts);
-    for (const artifact of artifacts) {
+    for (const artifact of artifacts.filter(
+      (item) =>
+        !publishArtifactsListGroup ||
+        item.name.startsWith(publishArtifactsListGroup)
+    )) {
       commentBody += `- [${artifact.name}](${getArtifactUrl(
         repoUrl,
         suiteId,

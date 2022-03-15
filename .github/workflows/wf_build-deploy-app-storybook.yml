@@ -1,22 +1,25 @@
 name: Build Deploy App and Storybook
 
-#on:
-#  push:
-#    branches:
-#      - 'fix/**'
-#      - 'feat/**'
-#      - develop
-#    pull_request:
-#      types:
-#        - opened
-#      branches:
-#        - develop
+on:
+  push:
+    branches:
+      - 'fix/**'
+      - 'feat/**'
+      - develop
+    pull_request:
+      types:
+        - opened
+      branches:
+        - develop
 
 jobs:
   build-app-storybook:
-    name: Build App and Storybook
+    # | Build Application and Storybook
+    # | and some other info
+    name: Build
     uses: ./.github/workflows/_called_build-app-and-storybook.yml
     with:
+      # | Params comment
       app-build-artifact-name: app-build-files
       storybook-build-artifact-name: sb-build-files
       app-node-modules-cache-key: cache-node-modules-ui-app
@@ -50,5 +53,7 @@ jobs:
 
       app-unit-test-pub-report: false
     secrets:
+      # | Secrets comment
       gh_token: ${{ secrets.GH_TOKEN }}
-      gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
+      gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }} # | Inline comment
+      gh_pages_custom_domain: ${{ secrets.GH_PAGES_CUSTOM_DOMAIN }}
