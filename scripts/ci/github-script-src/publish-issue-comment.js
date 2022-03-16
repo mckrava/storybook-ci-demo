@@ -190,19 +190,19 @@ module.exports = async ({ github, context, core }) => {
 
   console.log('[LOG]:: publishArtifactsWf - ', publishArtifactsWf);
 
-  if (!publishArtifactsWf) return 0;
+  if (!publishArtifactsWf) return preparedInputs;
 
-  const dispatchResp = await github.rest.actions.createWorkflowDispatch({
-    owner,
-    repo,
-    workflow_id: publishArtifactsWf.id,
-    ref: context.payload.repository.default_branch,
-    inputs: {
-      issue_comment_data: preparedInputs,
-    },
-  });
+  // const dispatchResp = await github.rest.actions.createWorkflowDispatch({
+  //   owner,
+  //   repo,
+  //   workflow_id: publishArtifactsWf.id,
+  //   ref: context.payload.repository.default_branch,
+  //   inputs: {
+  //     issue_comment_data: preparedInputs,
+  //   },
+  // });
 
-  console.log('[LOG]:: dispatchResp - ', dispatchResp);
+  // console.log('[LOG]:: dispatchResp - ', dispatchResp);
 
-  return 0;
+  return preparedInputs;
 };

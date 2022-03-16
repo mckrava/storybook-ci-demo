@@ -71,44 +71,51 @@ jobs:
         with:
           path: ./reportrer-artifacts
           key: reporter-artifacts-branch-${{ github.ref_name }}-commit-${{ github.sha }}-${{ steps.timestamp.outputs.time }}
-          restore-keys: |
-            reporter-artifacts-branch-${{ github.ref_name }}-commit-${{ github.sha }}-
+          restore-keys: reporter-artifacts-branch-${{ github.ref_name }}-commit-${{ github.sha }}-
 
+      - run: |
+          pwd
+          cd reportrer-artifacts
+          pwd
+          ls
 
-#      - uses: actions/github-script@v6
-#        id: issue-comment-data
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-#          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-#          github-token: ${{secrets.GH_TOKEN}}
-#          GH_PAGES_CUSTOM_DOMAIN: ${{ secrets.GH_PAGES_CUSTOM_DOMAIN }}
-#
-#          REPORT_MSG_TITLE: Test reporter
-#          PUBLISH_ARTIFACTS_LIST: true
-#          PUBLISH_ARTIFACTS_GROUP: 'e2e-app'
-#          PUBLISH_ARTIFACTS_WORKFLOW_DISPATCH_FILE: wfd_publish-issue-comment-with-artifacts.yml
-#
-#          IS_APP_SB_BUILD_REPORT: true
-#          IS_APP_UNIT_TEST_REPORT: false
-#          IS_APP_E2E_TEST_REPORT: false
-#          IS_SB_UNIT_TEST_REPORT: false
-#          IS_SB_E2E_TEST_REPORT: false
-#          IS_APP_SB_DEPLOYMENT_REPORT: true
-#
-#          APP_UNIT_TEST_PERCENTAGE: 0
-#          APP_UNIT_TEST_DIFF: 0
-#          APP_BUILD_STATUS: true
-#          APP_UNIT_TEST_STATUS: true
-#
-#          APP_DEPLOYMENT_STATUS: true
-#
-#        with:
-#          github-token: ${{secrets.GH_TOKEN}}
-#          script: |
-#            const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')
-#            return await script({github, context, core})
+      - uses: actions/github-script@v6
+        id: issue-comment-data
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          github-token: ${{secrets.GH_TOKEN}}
+          GH_PAGES_CUSTOM_DOMAIN: ${{ secrets.GH_PAGES_CUSTOM_DOMAIN }}
 
-#
+          REPORT_MSG_TITLE: Test reporter
+          PUBLISH_ARTIFACTS_LIST: true
+          PUBLISH_ARTIFACTS_GROUP: 'e2e-app'
+          PUBLISH_ARTIFACTS_WORKFLOW_DISPATCH_FILE: wfd_publish-issue-comment-with-artifacts.yml
+
+          IS_APP_SB_BUILD_REPORT: true
+          IS_APP_UNIT_TEST_REPORT: false
+          IS_APP_E2E_TEST_REPORT: false
+          IS_SB_UNIT_TEST_REPORT: false
+          IS_SB_E2E_TEST_REPORT: false
+          IS_APP_SB_DEPLOYMENT_REPORT: true
+
+          APP_UNIT_TEST_PERCENTAGE: 0
+          APP_UNIT_TEST_DIFF: 0
+          APP_BUILD_STATUS: true
+          APP_UNIT_TEST_STATUS: true
+
+          APP_DEPLOYMENT_STATUS: true
+
+        with:
+          github-token: ${{secrets.GH_TOKEN}}
+          script: |
+            const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')
+            return await script({github, context, core})
+
+      - name: Save issue comment prepared content into file
+        run: |
+          echo ${{ steps.issue-comment-data.outputs.result }} > ./reportrer-artifacts/issue-comment-data.json
+
 #      - name: Run workflow with publication artifacts list
 #        if: ${{ steps.issue-comment-data.outputs.result != '0' }}
 #        shell: bash
