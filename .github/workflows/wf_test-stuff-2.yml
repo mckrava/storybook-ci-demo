@@ -13,134 +13,33 @@ on:
       - develop
 
 jobs:
-  publish-report-issue-comment:
+  delay:
     name: test scripts
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
       - name: Sleep for 30 seconds
         run: sleep 120s
         shell: bash
 
-      - run: |
-          echo " -sha - ${{github.sha}}"
-          echo " -event_name - ${{github.event_name}}"
-          echo " -event_path - ${{github.event_path}}"
-          echo " -run_id - ${{github.run_id}}"
-          echo " -run_number - ${{github.run_number}}"
-          echo " -workflow - ${{github.workflow}}"
-          echo " -ref_name - ${{github.ref_name}}"
+  report-statuses-in-issue:
+    # | Publish build and deployment statuses as pull request comment,
+    # | if any pull request is associated with the latest commit.
+    name: 'Report in PR'
+    uses: ./.github/workflows/_called_report-status-in-issue.yml
+    if: always()
+    needs: delay
+    with:
+      report-msg-title: 'Basilisk-UI build/deploy reporter'
+      publish-artifacts-list: true
 
+      app-storybook-build-pub-report: true
+      app-storybook-build-status: ${{ needs.build.result == 'success' }}
 
-      - name: Get Time
-        id: timestamp
-        uses: nanzm/get-time-action@v1.1
-        with:
-          format: 'YYYYMMDDHHmmssSSS'
+      app-storybook-deploy-pub-report: true
+      app-storybook-deploy-status: ${{ needs.deploy.result == 'success' }}
 
-      - run: |
-          echo $TIMESTAMP
-          pwd
-          ls
-        env:
-          TIMESTAMP: ${{ steps.timestamp.outputs.time }}
-
-      - name: Cache reporter content
-        uses: actions/cache@v2
-        id: cache-reporter-content
-        env:
-          TIMESTAMP: ${{ steps.timestamp.outputs.time }}
-        with:
-          path: ./reportrer-artifacts
-          key: reporter-artifacts-branch-${{ github.ref_name }}-commit-${{ github.sha }}-${{ steps.timestamp.outputs.time }}
-          restore-keys: |
-            reporter-artifacts-branch-${{ github.ref_name }}-commit-${{ github.sha }}-
-
-      - name: "Check if comment data folder exists"
-        id: check-cache-existance
-        run: |
-          DIR="./reportrer-artifacts"
-          if [ -d "$DIR" ]; then
-            echo "::set-output name=cached-comment-data-exists::true"
-          else
-            echo "::set-output name=cached-comment-data-exists::false"
-          fi
-
-      - name: "Parse issue comment data from cache"
-        id: parse-issue-comment-data
-        if: steps.check-cache-existance.outputs.cached-comment-data-exists == 'true'
-        run: |
-          issueCommentDataJson=$(cat ./reportrer-artifacts/issue-comment-data.json)
-          issueCommentDataJson="${issueCommentDataJson//'%'/'%25'}"
-          issueCommentDataJson="${issueCommentDataJson//$'\n'/'%0A'}"
-          issueCommentDataJson="${issueCommentDataJson//$'\r'/'%0D'}"
-          echo "::set-output name=issueCommentDataJson::$issueCommentDataJson"
-
-      - run: mkdir -p reportrer-artifacts
-        if: steps.check-cache-existance.outputs.cached-comment-data-exists != 'true'
-
-      - uses: actions/github-script@v6
-        id: issue-comment-data
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          github-token: ${{secrets.GH_TOKEN}}
-          GH_PAGES_CUSTOM_DOMAIN: ${{ secrets.GH_PAGES_CUSTOM_DOMAIN }}
-
-          REPORT_MSG_TITLE: Test reporter
-          PUBLISH_ARTIFACTS_LIST: true
-          PUBLISH_ARTIFACTS_GROUP: 'e2e-app'
-          PUBLISH_ARTIFACTS_WORKFLOW_DISPATCH_FILE: wfd_publish-issue-comment-with-artifacts.yml
-          COMMENT_CACHED_CONTENT: ${{steps.parse-issue-comment-data.outputs.issueCommentDataJson || false}}
-
-          IS_APP_SB_BUILD_REPORT: true
-          IS_APP_UNIT_TEST_REPORT: false
-          IS_APP_E2E_TEST_REPORT: false
-          IS_SB_UNIT_TEST_REPORT: false
-          IS_SB_E2E_TEST_REPORT: false
-          IS_APP_SB_DEPLOYMENT_REPORT: true
-
-          APP_UNIT_TEST_PERCENTAGE: 0
-          APP_UNIT_TEST_DIFF: 0
-          APP_BUILD_STATUS: true
-          APP_UNIT_TEST_STATUS: true
-
-          APP_DEPLOYMENT_STATUS: true
-
-        with:
-          github-token: ${{secrets.GH_TOKEN}}
-          script: |
-            const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')
-            return await script({github, context, core})
-
-      - name: Save issue comment prepared content into file
-        run: |
-          echo ${{ steps.issue-comment-data.outputs.result }} > ./reportrer-artifacts/issue-comment-data.json
-          pwd
-          ls
-          cd reportrer-artifacts
-          pwd
-          ls
-
-#
-#      - name: Save issue comment prepared content into file
-#        run: |
-#          echo ${{ steps.issue-comment-data.outputs.result }} > ./reportrer-artifacts/issue-comment-data.json
-
-#      - name: Run workflow with publication artifacts list
-#        if: ${{ steps.issue-comment-data.outputs.result != '0' }}
-#        shell: bash
-#        run: eval $CURL_SCRIPT
-#        env:
-#          CURL_SCRIPT: ${{ steps.issue-comment-data.outputs.result }}
-
-#      - name: Save issue comment prepared content into file
-#        run: |
-#          echo ${{ steps.issue-comment-data.outputs.result }} > issue-comment-data.txt
-#
-#      - name: Upload issue-comment-tpl
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: issue-comment-data
-#          path: ./issue-comment-data.txt
+      app-unit-test-pub-report: false
+    secrets:
+      gh_token: ${{ secrets.GH_TOKEN }}
+      gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
+      gh_pages_custom_domain: ${{ secrets.GH_PAGES_CUSTOM_DOMAIN }}

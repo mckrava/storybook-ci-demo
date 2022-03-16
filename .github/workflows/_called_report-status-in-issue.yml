@@ -22,12 +22,6 @@ on:
         required: true
         type: boolean
 
-      # | Group of artifacts which will be published in comment. It's a prefix of artifact which is identifying group.
-      # | If value is not passed, all available artifacts will be published.
-      publish-artifacts-group:
-        required: false
-        type: string
-
       app-storybook-build-pub-report:
         required: true
         type: boolean
@@ -73,6 +67,54 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Get Time
+        id: timestamp
+        uses: nanzm/get-time-action@v1.1
+        with:
+          format: 'YYYYMMDDHHmmssSSS'
+
+      - run: |
+          echo $TIMESTAMP
+          pwd
+          ls
+        env:
+          TIMESTAMP: ${{ steps.timestamp.outputs.time }}
+
+      - name: Cache reporter content
+        uses: actions/cache@v2
+        id: cache-reporter-content
+        env:
+          TIMESTAMP: ${{ steps.timestamp.outputs.time }}
+        with:
+          path: ./reportrer-artifacts
+          key: reporter-artifacts-branch-${{ github.ref_name }}-commit-${{ github.sha }}-${{ steps.timestamp.outputs.time }}
+          restore-keys: |
+            reporter-artifacts-branch-${{ github.ref_name }}-commit-${{ github.sha }}-
+
+      - name: "Check if comment data folder exists"
+        id: check-cache-existance
+        run: |
+          DIR="./reportrer-artifacts"
+          if [ -d "$DIR" ]; then
+            echo "::set-output name=cached-comment-data-exists::true"
+          else
+            echo "::set-output name=cached-comment-data-exists::false"
+          fi
+
+      - name: "Parse issue comment data from cache"
+        id: parse-issue-comment-data
+        if: steps.check-cache-existance.outputs.cached-comment-data-exists == 'true'
+        run: |
+          issueCommentDataJson=$(cat ./reportrer-artifacts/issue-comment-data.json)
+          issueCommentDataJson="${issueCommentDataJson//'%'/'%25'}"
+          issueCommentDataJson="${issueCommentDataJson//$'\n'/'%0A'}"
+          issueCommentDataJson="${issueCommentDataJson//$'\r'/'%0D'}"
+          echo "::set-output name=issueCommentDataJson::$issueCommentDataJson"
+
+      - run: mkdir -p reportrer-artifacts
+        if: steps.check-cache-existance.outputs.cached-comment-data-exists != 'true'
+
+
       - name: "Run github-script for preparation and publication comment content"
         uses: actions/github-script@v6
         id: issue-comment-data
@@ -83,6 +125,7 @@ jobs:
           # | Workflow file which will be dispatched from github-script via API for fetching and publication
           # | artifacts list from current workflow run if "PUBLISH_ARTIFACTS_LIST === true"
           PUBLISH_ARTIFACTS_WORKFLOW_DISPATCH_FILE: wfd_publish-issue-comment-with-artifacts.yml
+          COMMENT_CACHED_CONTENT: ${{steps.parse-issue-comment-data.outputs.issueCommentDataJson || false}}
 
           IS_APP_STORYBOOK_BUILD_REPORT: ${{ inputs.app-storybook-build-pub-report }}
           IS_APP_UNIT_TEST_REPORT: ${{ inputs.app-unit-test-pub-report }}
@@ -105,4 +148,8 @@ jobs:
         with:
           script: |
             const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')
-            await script({github, context, core})
+            return await script({github, context, core})
+
+      - name: Save issue comment prepared content into file
+        run: |
+          echo ${{ steps.issue-comment-data.outputs.result }} > ./reportrer-artifacts/issue-comment-data.json
