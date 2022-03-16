@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Sleep for 30 seconds
-        run: sleep 120s
+        run: sleep 20s
         shell: bash
 
   report-statuses-in-issue:
@@ -32,11 +32,11 @@ jobs:
       report-msg-title: 'Basilisk-UI build/deploy reporter'
       publish-artifacts-list: true
 
-      app-storybook-build-pub-report: true
-      app-storybook-build-status: ${{ needs.build.result == 'success' }}
+      app-storybook-build-pub-report: false
+      app-storybook-build-status: true
 
       app-storybook-deploy-pub-report: true
-      app-storybook-deploy-status: ${{ needs.deploy.result == 'success' }}
+      app-storybook-deploy-status: true
 
       app-unit-test-pub-report: false
     secrets:

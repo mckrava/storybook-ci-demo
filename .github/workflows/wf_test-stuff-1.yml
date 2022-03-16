@@ -51,14 +51,14 @@ jobs:
     if: always()
     needs: publish-dummy-artifacts
     with:
-      report-msg-title: 'Basilisk-UI build/deploy reporter'
+      report-msg-title: 'Basilisk-UI reporter'
       publish-artifacts-list: true
 
       app-storybook-build-pub-report: true
-      app-storybook-build-status: ${{ needs.build.result == 'success' }}
+      app-storybook-build-status: true
 
-      app-storybook-deploy-pub-report: true
-      app-storybook-deploy-status: ${{ needs.deploy.result == 'success' }}
+      app-storybook-deploy-pub-report: false
+      app-storybook-deploy-status: true
 
       app-unit-test-pub-report: false
     secrets:
