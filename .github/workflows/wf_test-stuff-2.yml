@@ -59,7 +59,7 @@ jobs:
           cd reportrer-artifacts
           pwd
           ls
-        if: steps.cache-reporter-content.outputs.cache-hit != 'true'
+        if: steps.cache-reporter-content.outputs.cache-hit == 'true'
 #
 #      - uses: actions/github-script@v6
 #        id: issue-comment-data
