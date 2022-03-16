@@ -64,7 +64,7 @@ jobs:
           TIMESTAMP: ${{ steps.timestamp.outputs.time }}
         with:
           path: ./reportrer-artifacts
-          key: reporter-artifacts-branch-${{ github.ref_name }}-commit-${{ github.sha }}-${{TIMESTAMP}}
+          key: reporter-artifacts-branch-${{ github.ref_name }}-commit-${{ github.sha }}-${{ steps.timestamp.outputs.time }}
           restore-keys: |
             reporter-artifacts-branch-${{ github.ref_name }}-commit-${{ github.sha }}-
 
