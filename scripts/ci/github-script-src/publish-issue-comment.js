@@ -5,6 +5,8 @@ module.exports = async ({ github, context, core }) => {
     REPORT_MSG_TITLE = 'Basilisk-UI workflows reporter',
     PUBLISH_ARTIFACTS_WORKFLOW_DISPATCH_FILE,
     PUBLISH_ARTIFACTS_LIST,
+    COMMENT_CACHED_CONTENT,
+
     IS_APP_STORYBOOK_BUILD_REPORT,
     IS_APP_UNIT_TEST_REPORT,
     IS_APP_E2E_TEST_REPORT,
@@ -32,6 +34,7 @@ module.exports = async ({ github, context, core }) => {
   process.env.GITHUB_TOKEN = GH_TOKEN;
 
   console.log('[LOG]:: context - ', context);
+  console.log('COMMENT_CACHED_CONTENT - ', COMMENT_CACHED_CONTENT);
 
   const [owner, repo] = context.payload.repository.full_name.split('/');
   const currentBranchName =
