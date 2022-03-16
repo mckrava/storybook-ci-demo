@@ -45,7 +45,7 @@ jobs:
 
       - run: echo $GH_CONTEXT
         env:
-          GH_CONTEXT: ${{ github }}
+          GH_CONTEXT: ${{ fromJSON(github) }}
 
       - name: Get Time
         id: timestamp
