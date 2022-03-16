@@ -47,12 +47,12 @@ jobs:
         uses: actions/cache@v2
         id: cache-reporter-content
         env:
-          cache-name: cache-node-modules
           TIMESTAMP: ${{ steps.timestamp.outputs.time }}
         with:
           path: ./reportrer-artifacts
           key: reporter-artifacts-branch-${{ github.ref_name }}-commit-${{ github.sha }}-${{ steps.timestamp.outputs.time }}
-          restore-keys: reporter-artifacts-branch-${{ github.ref_name }}-commit-${{ github.sha }}-
+          restore-keys: |
+            reporter-artifacts-branch-${{ github.ref_name }}-commit-${{ github.sha }}-
 
       - run: |
           pwd
