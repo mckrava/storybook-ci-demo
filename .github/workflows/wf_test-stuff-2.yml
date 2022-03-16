@@ -61,7 +61,9 @@ jobs:
           ls
         if: steps.cache-reporter-content.outputs.cache-hit == 'true'
 
-      - run: mkdir reportrer-artifacts
+      - run: |
+          mkdir -p reportrer-artifacts
+
         if: steps.cache-reporter-content.outputs.cache-hit != 'true'
 #
 #      - uses: actions/github-script@v6
