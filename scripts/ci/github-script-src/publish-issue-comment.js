@@ -37,7 +37,7 @@ module.exports = async ({ github, context, core }) => {
   console.log('[LOG]:: context - ', context);
   console.log('COMMENT_CACHED_CONTENT - ', COMMENT_CACHED_CONTENT);
 
-  const commentData = issueCommentComponents.processCommentData({
+  const commentData = await issueCommentComponents.processCommentData({
     env: process.env,
     github,
     context,

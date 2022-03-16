@@ -134,7 +134,7 @@ async function processCommentData({ github, context, env }) {
     commentData = { ...COMMENT_CACHED_CONTENT };
   }
 
-  commentData.commentMeta = getCommentDataMetadata({ github, context, env });
+  commentData.commentMeta = await getCommentDataMetadata({ github, context, env });
 
   if (!commentData.commentSections) commentData.commentSections = {};
 
@@ -178,7 +178,7 @@ async function processCommentData({ github, context, env }) {
   return commentData;
 }
 
-async function getCommentMarkdownBody({ github, context, commentData = {} }) {
+function getCommentMarkdownBody({ github, context, commentData = {} }) {
   const { commentMeta, commentSections } = commentData;
   let commentMarkdownBody = '';
   const commentSectionsList = Object.keys(commentSections);
