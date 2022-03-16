@@ -81,14 +81,14 @@ jobs:
         run: |
           DIR="./reportrer-artifacts"
           if [ -d "$DIR" ]; then
-            echo "::set-output name=cached-comment-data-exests::true"
+            echo "::set-output name=cached-comment-data-exists::true"
           else
-            echo "::set-output name=cached-comment-data-exests::false"
+            echo "::set-output name=cached-comment-data-exists::false"
           fi
 
       - name: "Parse issue comment data from cache"
         id: parse-issue-comment-data
-        if: steps.check-cache-existance.outputs.check-cache-existance == 'true'
+        if: steps.check-cache-existance.outputs.cached-comment-data-exists == 'true'
         run: |
           issueCommentDataJson=$(cat ./reportrer-artifacts/issue-comment-data)
           issueCommentDataJson="${issueCommentDataJson//'%'/'%25'}"
@@ -97,7 +97,7 @@ jobs:
           echo "::set-output name=issueCommentDataJson::$issueCommentDataJson"
 
       - run: mkdir -p reportrer-artifacts
-        if: steps.check-cache-existance.outputs.check-cache-existance != 'true'
+        if: steps.check-cache-existance.outputs.cached-comment-data-exists != 'true'
 
       - uses: actions/github-script@v6
         id: issue-comment-data
