@@ -134,7 +134,11 @@ async function processCommentData({ github, context, env }) {
     commentData = { ...COMMENT_CACHED_CONTENT };
   }
 
-  commentData.commentMeta = await getCommentDataMetadata({ github, context, env });
+  commentData.commentMeta = await getCommentDataMetadata({
+    github,
+    context,
+    env,
+  });
 
   if (!commentData.commentSections) commentData.commentSections = {};
 
@@ -149,6 +153,9 @@ async function processCommentData({ github, context, env }) {
         ...commentData.commentSections[commentDataKeys.appStorybookBuild],
       };
     }
+
+    if (!commentData.commentSections[commentDataKeys.appStorybookBuild])
+      commentData.commentSections[commentDataKeys.appStorybookBuild] = {};
 
     commentData.commentSections[commentDataKeys.appStorybookBuild].status =
       APP_STORYBOOK_BUILD_STATUS === 'true';
@@ -169,6 +176,10 @@ async function processCommentData({ github, context, env }) {
         ],
       };
     }
+
+    if (!commentData.commentSections[commentDataKeys.appStorybookDeployGhPages])
+      commentData.commentSections[commentDataKeys.appStorybookDeployGhPages] =
+        {};
 
     commentData.commentSections[
       commentDataKeys.appStorybookDeployGhPages
