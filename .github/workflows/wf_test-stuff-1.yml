@@ -90,7 +90,7 @@ jobs:
         id: parse-issue-comment-data
         if: steps.check-cache-existance.outputs.cached-comment-data-exists == 'true'
         run: |
-          issueCommentDataJson=$(cat ./reportrer-artifacts/issue-comment-data)
+          issueCommentDataJson=$(cat ./reportrer-artifacts/issue-comment-data.json)
           issueCommentDataJson="${issueCommentDataJson//'%'/'%25'}"
           issueCommentDataJson="${issueCommentDataJson//$'\n'/'%0A'}"
           issueCommentDataJson="${issueCommentDataJson//$'\r'/'%0D'}"
