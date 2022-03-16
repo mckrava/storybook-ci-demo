@@ -32,6 +32,7 @@ module.exports = async ({ github, context, core }) => {
     GH_TOKEN,
   } = process.env;
 
+
   process.env.GITHUB_TOKEN = GH_TOKEN;
 
   console.log('[LOG]:: context - ', context);
