@@ -43,9 +43,7 @@ jobs:
           name: unit-app_test-artifacts
           path: ./scripts
 
-      - run: echo $GH_CONTEXT
-        env:
-          GH_CONTEXT: ${{ fromJSON(github) }}
+      - run: echo ${{github}}
 
       - name: Get Time
         id: timestamp
