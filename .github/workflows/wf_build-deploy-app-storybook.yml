@@ -1,34 +1,36 @@
-name: Build Deploy App and Storybook
+# | Build Application and Storybook. Deploy builds into GihHub Pages. Publish build and deployment statuses as
+# | pull request comment, if any pull request is associated with latest commit.
 
-on:
-  push:
-    branches:
-      - 'fix/**'
-      - 'feat/**'
-      - develop
-    pull_request:
-      types:
-        - opened
-      branches:
-        - develop
+name: 'Build-Deploy-Report App and Storybook'
+
+#on:
+#  push:
+#    branches:
+#      - 'fix/**'
+#      - 'feat/**'
+#      - develop
+#  pull_request:
+#    types:
+#      - opened
+#    branches:
+#      - develop
 
 jobs:
-  build-app-storybook:
-    # | Build Application and Storybook
-    # | and some other info
-    name: Build
-    uses: ./.github/workflows/_called_build-app-and-storybook.yml
+  build:
+    # | Build Application and Storybook.
+    name: 'Build'
+    uses: ./.github/workflows/_called_build.yml
     with:
-      # | Params comment
       app-build-artifact-name: app-build-files
       storybook-build-artifact-name: sb-build-files
       app-node-modules-cache-key: cache-node-modules-ui-app
 
-  deploy-app-storybook-builds:
-    name: Deploy App&Storybook builds
-    needs: build-app-storybook
-    uses: ./.github/workflows/_called_deploy-app-and-storybook.yml
-    if: ${{ needs.build-app-storybook.result=='success' }}
+  deploy:
+    # | Deploy Application and Storybook into GitHub Pages. Folder name is the same as working branch.
+    name: 'Deploy'
+    needs: build
+    uses: ./.github/workflows/_called_deploy.yml
+    if: ${{ needs.build.result=='success' }}
     with:
       app-build-artifact-name: app-build-files
       storybook-build-artifact-name: sb-build-files
@@ -36,24 +38,26 @@ jobs:
       gh_token: ${{ secrets.GH_TOKEN }}
       gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
 
-  report-statuses-issue-comment:
-    name: Reportr issue comment
-    uses: ./.github/workflows/_called_publish-report-issue-comment.yml
-    if: ${{ always() }}
-    needs: [build-app-storybook, deploy-app-storybook-builds]
+  report-statuses-in-issue:
+    # | Publish build and deployment statuses as pull request comment,
+    # | if any pull request is associated with the latest commit.
+    name: 'Report in PR'
+    uses: ./.github/workflows/_called_report-status-in-issue.yml
+    if: always()
+    needs: [build, deploy]
     with:
-      report-msg-title: Basilisk-UI build reporter
+      report-msg-title: 'Basilisk-UI build/deploy reporter'
       publish-artifacts-list: true
+      publish-artifacts-group: ['build']
 
-      app-build-pub-report: true
-      app-build-status: ${{ needs.build-app-storybook.result == 'success' }}
+      app-storybook-build-pub-report: true
+      app-storybook-build-status: ${{ needs.build.result == 'success' }}
 
-      app-sb-deploy-pub-report: true
-      app-sb-deploy-status: ${{ needs.deploy-app-storybook-builds.result == 'success' }}
+      app-storybook-deploy-pub-report: true
+      app-storybook-deploy-status: ${{ needs.deploy.result == 'success' }}
 
       app-unit-test-pub-report: false
     secrets:
-      # | Secrets comment
       gh_token: ${{ secrets.GH_TOKEN }}
-      gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }} # | Inline comment
+      gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
       gh_pages_custom_domain: ${{ secrets.GH_PAGES_CUSTOM_DOMAIN }}

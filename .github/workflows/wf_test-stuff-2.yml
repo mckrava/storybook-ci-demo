@@ -1,0 +1,129 @@
+name: Report demo v2
+
+#on:
+#  push:
+#    branches:
+#      - 'fix/**'
+#      - 'feat/**'
+#      - develop
+#  pull_request:
+#    types:
+#      - opened
+#    branches:
+#      - develop
+
+jobs:
+  publish-report-issue-comment:
+    name: test scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Upload test art
+        uses: actions/upload-artifact@v2
+        with:
+          name: deploy_test-artifacts
+          path: ./scripts
+
+      - name: Upload test art
+        uses: actions/upload-artifact@v2
+        with:
+          name: deploy_test-artifacts-2
+          path: ./scripts
+
+      - name: Upload test art
+        uses: actions/upload-artifact@v2
+        with:
+          name: e2e-app_test-artifacts
+          path: ./scripts
+
+      - name: Upload test art
+        uses: actions/upload-artifact@v2
+        with:
+          name: unit-app_test-artifacts
+          path: ./scripts
+
+#      - uses: actions/github-script@v6
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+#          github-token: ${{secrets.GH_TOKEN}}
+#        with:
+#          github-token: ${{secrets.GH_TOKEN}}
+#          script: |
+#            await github.rest.actions.createWorkflowDispatch({
+#                owner: 'mckrava',
+#                repo: 'storybook-ci-demo',
+#                workflow_id: '21524983',
+#                ref: 'develop',
+#            });
+
+#      - uses: actions/github-script@v6
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+#          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+#          github-token: ${{secrets.GH_TOKEN}}
+#        with:
+#          script: |
+#            const { GH_TOKEN } = process.env;
+#
+#            await github.request({
+#                headers: {
+#                  accept: 'application/vnd.github.v3+json',
+#                  authorization: `Token ${GH_TOKEN}`,
+#                },
+#                method: 'POST',
+#                url: `https://api.github.com/repos/mckrava/storybook-ci-demo/actions/workflows/21524983/dispatches`,
+#                data: {
+#                  ref: 'develop',
+#                },
+#            });
+
+      - uses: actions/github-script@v6
+        id: issue-comment-data
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          github-token: ${{secrets.GH_TOKEN}}
+          GH_PAGES_CUSTOM_DOMAIN: ${{ secrets.GH_PAGES_CUSTOM_DOMAIN }}
+
+          REPORT_MSG_TITLE: Test reporter
+          PUBLISH_ARTIFACTS_LIST: true
+          PUBLISH_ARTIFACTS_GROUP: "e2e-app"
+          PUBLISH_ARTIFACTS_WORKFLOW_DISPATCH_FILE: wfd_publish-issue-comment-with-artifacts.yml
+
+          IS_APP_SB_BUILD_REPORT: true
+          IS_APP_UNIT_TEST_REPORT: false
+          IS_APP_E2E_TEST_REPORT: false
+          IS_SB_UNIT_TEST_REPORT: false
+          IS_SB_E2E_TEST_REPORT: false
+          IS_APP_SB_DEPLOYMENT_REPORT: true
+
+          APP_UNIT_TEST_PERCENTAGE: 0
+          APP_UNIT_TEST_DIFF: 0
+          APP_BUILD_STATUS: true
+          APP_UNIT_TEST_STATUS: true
+
+          APP_DEPLOYMENT_STATUS: true
+
+        with:
+          github-token: ${{secrets.GH_TOKEN}}
+          script: |
+            const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')
+            return await script({github, context, core})
+#
+#      - name: Run workflow with publication artifacts list
+#        if: ${{ steps.issue-comment-data.outputs.result != '0' }}
+#        shell: bash
+#        run: eval $CURL_SCRIPT
+#        env:
+#          CURL_SCRIPT: ${{ steps.issue-comment-data.outputs.result }}
+
+#      - name: Save issue comment prepared content into file
+#        run: |
+#          echo ${{ steps.issue-comment-data.outputs.result }} > issue-comment-data.txt
+#
+#      - name: Upload issue-comment-tpl
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: issue-comment-data
+#          path: ./issue-comment-data.txt

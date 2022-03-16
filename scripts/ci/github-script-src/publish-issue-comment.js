@@ -5,20 +5,19 @@ module.exports = async ({ github, context, core }) => {
     REPORT_MSG_TITLE = 'Basilisk-UI workflows reporter',
     PUBLISH_ARTIFACTS_WORKFLOW_DISPATCH_FILE,
     PUBLISH_ARTIFACTS_LIST,
-    PUBLISH_ARTIFACTS_GROUP,
-    IS_APP_SB_BUILD_REPORT,
+    IS_APP_STORYBOOK_BUILD_REPORT,
     IS_APP_UNIT_TEST_REPORT,
     IS_APP_E2E_TEST_REPORT,
-    IS_SB_UNIT_TEST_REPORT,
-    IS_SB_E2E_TEST_REPORT,
-    IS_APP_SB_DEPLOYMENT_REPORT,
+    IS_STORYBOOK_UNIT_TEST_REPORT,
+    IS_STORYBOOK_E2E_TEST_REPORT,
+    IS_APP_STORYBOOK_DEPLOYMENT_REPORT,
 
     APP_UNIT_TEST_PERCENTAGE,
     APP_UNIT_TEST_DIFF,
 
-    APP_BUILD_STATUS,
+    APP_STORYBOOK_BUILD_STATUS,
     APP_UNIT_TEST_STATUS,
-    APP_DEPLOYMENT_STATUS,
+    APP_STORYBOOK_DEPLOYMENT_STATUS,
 
     GITHUB_HEAD_REF,
     GITHUB_REF_NAME,
@@ -32,19 +31,12 @@ module.exports = async ({ github, context, core }) => {
 
   process.env.GITHUB_TOKEN = GH_TOKEN;
 
-  console.log('context 1 - ', context);
-  console.log('process.env - ', process.env);
+  console.log('[LOG]:: context - ', context);
 
   const [owner, repo] = context.payload.repository.full_name.split('/');
   const currentBranchName =
     context.eventName === 'pull_request' ? GITHUB_HEAD_REF : GITHUB_REF_NAME;
   let triggerCommit = null;
-
-  // const ghPagesInfo = await github.rest.repos.getPages({
-  //   owner,
-  //   repo,
-  // });
-  // console.log('ghPagesInfo - ', ghPagesInfo);
 
   let commentBody = `:page_with_curl: **${REPORT_MSG_TITLE}** <br />`;
 
@@ -58,28 +50,28 @@ module.exports = async ({ github, context, core }) => {
   }
   commentBody += `<br /><br />`;
 
-  if (IS_APP_SB_BUILD_REPORT === 'true') {
+  if (IS_APP_STORYBOOK_BUILD_REPORT === 'true') {
     commentBody += `:small_blue_diamond: **Application/Storybook build:** <br /> 
     - Status: ${
-      APP_BUILD_STATUS === 'true'
+      APP_STORYBOOK_BUILD_STATUS === 'true'
         ? ':white_check_mark: _Built_ '
         : ':no_entry_sign: _Failed_ '
     }`;
   }
 
-  if (IS_APP_SB_DEPLOYMENT_REPORT === 'true') {
+  if (IS_APP_STORYBOOK_DEPLOYMENT_REPORT === 'true') {
     commentBody += `<br /><br />`;
     commentBody += `:small_blue_diamond: **Application/Storybook deployment:** <br /> 
     - Status: ${
-      APP_DEPLOYMENT_STATUS === 'true'
+      APP_STORYBOOK_DEPLOYMENT_STATUS === 'true'
         ? ':white_check_mark: _Deployed_ '
         : ':no_entry_sign: _Failed_ '
     }`;
   }
 
   if (
-    IS_APP_SB_DEPLOYMENT_REPORT === 'true' &&
-    APP_DEPLOYMENT_STATUS === 'true'
+    IS_APP_STORYBOOK_DEPLOYMENT_REPORT === 'true' &&
+    APP_STORYBOOK_DEPLOYMENT_STATUS === 'true'
   ) {
     commentBody += `
     <br />
@@ -113,7 +105,7 @@ module.exports = async ({ github, context, core }) => {
         commit_sha: context.sha,
       }
     );
-    console.log('prList - ', prList);
+    console.log('[LOG]:: prList - ', prList);
     const relatedPr = prList.data.filter((prItem) => prItem.state === 'open');
 
     issueNumber = relatedPr.length > 0 ? relatedPr[0].number : null;
@@ -147,22 +139,7 @@ module.exports = async ({ github, context, core }) => {
     return 0;
   }
 
-  // const newSuiteResp = await github.rest.checks.createSuite({
-  //   owner,
-  //   repo,
-  //   head_sha: context.payload.pull_request.head.sha,
-  // });
-  //
-  // console.log('newSuiteResp - ', newSuiteResp);
-  //
-  // const suite = await github.rest.checks.getSuite({
-  //   owner,
-  //   repo,
-  //   check_suite_id: newSuiteResp.data.id,
-  // });
-
   const suitesList = await github.request(
-    // `GET /repos/${owner}/${repo}/commits/${context.payload.pull_request.head.sha}/check-suites`,
     `GET /repos/${owner}/${repo}/commits/${GITHUB_SHA}/check-suites`,
     {
       owner,
@@ -171,12 +148,12 @@ module.exports = async ({ github, context, core }) => {
     }
   );
 
-  console.log('suitesList - ', suitesList);
+  console.log('[LOG]:: suitesList - ', suitesList);
 
   for (let suiteItem of suitesList.data.check_suites.filter(
     (item) => item.status === 'in_progress'
   )) {
-    console.log('suiteItem - ', suiteItem);
+    console.log('[LOG]:: suiteItem - ', suiteItem);
     suiteId = suiteItem.id;
   }
 
@@ -184,7 +161,6 @@ module.exports = async ({ github, context, core }) => {
 
   const preparedInputs = JSON.stringify({
     publishArtifactsList: PUBLISH_ARTIFACTS_LIST,
-    publishArtifactsListGroup: PUBLISH_ARTIFACTS_GROUP,
     repoUrl: context.payload.repository.html_url,
     runId: context.runId,
     commentBody,
@@ -203,8 +179,6 @@ module.exports = async ({ github, context, core }) => {
     }
   );
 
-  console.log('workflowsList 2 - ', workflowsList);
-
   const publishArtifactsWf =
     workflowsList.data && workflowsList.data.total_count > 0
       ? workflowsList.data.workflows.find(
@@ -214,121 +188,21 @@ module.exports = async ({ github, context, core }) => {
         )
       : null;
 
-  console.log('publishArtifactsWf - ', publishArtifactsWf);
+  console.log('[LOG]:: publishArtifactsWf - ', publishArtifactsWf);
 
-  if (publishArtifactsWf) {
-    console.log('run params - ', {
-      owner,
-      repo,
-      workflow_id: publishArtifactsWf.id,
-      ref: 'develop',
-      inputs: {
-        issue_comment_data: preparedInputs,
-      },
-    });
+  if (!publishArtifactsWf) return 0;
 
-    // const dispatchResp = await github.rest.actions.createWorkflowDispatch({
-    //   owner,
-    //   repo,
-    //   // workflow_id: publishArtifactsWf.id,
-    //   workflow_id: 'wfd_publish-issue-comment-with-artifacts.yml',
-    //   // ref: currentBranchName,
-    //   ref: context.payload.repository.default_branch,
-    //   inputs: {
-    //     issue_comment_data: preparedInputs,
-    //   },
-    // });
+  const dispatchResp = await github.rest.actions.createWorkflowDispatch({
+    owner,
+    repo,
+    workflow_id: publishArtifactsWf.id,
+    ref: context.payload.repository.default_branch,
+    inputs: {
+      issue_comment_data: preparedInputs,
+    },
+  });
 
-    // console.log(
-    //   'eee - ',
-    //   `POST /repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
-    //   {
-    //     ref: context.payload.pull_request.head.ref,
-    //     inputs: {
-    //       issue_comment_data: preparedInputs,
-    //     },
-    //   }
-    // );
-
-    // await github.request(
-    //   `PUT /repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/enable`,
-    //   {
-    //     owner,
-    //     repo,
-    //     workflow_id: publishArtifactsWf.id,
-    //   }
-    // );
-    //
-
-    // const dispatchResp = await ghRequestWithAuth(
-    //   `POST /repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
-    //   {
-    //     headers: {
-    //       accept: 'application/vnd.github.v3+json',
-    //       authorization: `token ${GH_TOKEN}`,
-    //     },
-    //     // ref: context.payload.pull_request.head.ref,
-    //     ref: 'develop',
-    //     inputs: {
-    //       issue_comment_data: preparedInputs,
-    //     },
-    //   }
-    // );
-
-    // console.log('params - ', {
-    //   headers: {
-    //     accept: 'application/vnd.github.v3+json',
-    //     authorization: `token ${GH_TOKEN}`,
-    //   },
-    //   method: 'POST',
-    //   url: `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
-    //   // ref: context.payload.pull_request.head.ref,
-    //   data: {
-    //     ref: 'develop',
-    //     inputs: {
-    //       issue_comment_data: preparedInputs,
-    //     },
-    //   },
-    // })
-
-    // const dispatchResp = await github.request({
-    //   headers: {
-    //     accept: 'application/vnd.github.v3+json',
-    //     authorization: `Token ${GH_TOKEN}`,
-    //   },
-    //   method: 'POST',
-    //   url: `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${publishArtifactsWf.id}/dispatches`,
-    //   // ref: context.payload.pull_request.head.ref,
-    //   data: {
-    //     ref: 'develop',
-    //     // inputs: {
-    //     //   issue_comment_data: preparedInputs,
-    //     // },
-    //   },
-    // });
-
-    const dispatchResp = await github.rest.actions.createWorkflowDispatch({
-      owner,
-      repo,
-      workflow_id: publishArtifactsWf.id,
-      ref: context.payload.repository.default_branch,
-      inputs: {
-        issue_comment_data: preparedInputs,
-      },
-    });
-
-    console.log('dispatchResp - ', dispatchResp);
-    //
-    // const curlContent = `curl -X POST -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${GH_TOKEN}" https://api.github.com/repos/${owner}/${repo}/actions/workflows/${
-    //   publishArtifactsWf.id
-    // }/dispatches -d '{"ref":"${
-    //   context.payload.repository.default_branch
-    // }", "inputs":{"issue_comment_data": "${encodeURIComponent(
-    //   preparedInputs
-    // )}"}}'`;
-
-    // return curlContent.replace(/(\r\n|\n|\r)/gm, '');
-  }
+  console.log('[LOG]:: dispatchResp - ', dispatchResp);
 
   return 0;
 };
