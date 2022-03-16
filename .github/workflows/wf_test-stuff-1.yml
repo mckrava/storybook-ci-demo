@@ -43,7 +43,15 @@ jobs:
           name: unit-app_test-artifacts
           path: ./scripts
 
-      - run: echo ${{github}}
+      - run: |
+          echo " -sha - ${{github.sha}}"
+          echo " -event_name - ${{github.event_name}}"
+          echo " -event_path - ${{github.event_path}}"
+          echo " -run_id - ${{github.run_id}}"
+          echo " -run_number - ${{github.run_number}}"
+          echo " -workflow - ${{github.workflow}}"
+          echo " -ref_name - ${{github.ref_name}}"
+          
 
       - name: Get Time
         id: timestamp
