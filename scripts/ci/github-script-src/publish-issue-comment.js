@@ -35,7 +35,7 @@ module.exports = async ({ github, context, core }) => {
   process.env.GITHUB_TOKEN = GH_TOKEN;
 
   console.log('[LOG]:: context - ', context);
-  console.log('COMMENT_CACHED_CONTENT - ', COMMENT_CACHED_CONTENT);
+  console.log('[LOG]:: COMMENT_CACHED_CONTENT - ', COMMENT_CACHED_CONTENT);
 
   const commentData = await issueCommentComponents.processCommentData({
     env: process.env,
