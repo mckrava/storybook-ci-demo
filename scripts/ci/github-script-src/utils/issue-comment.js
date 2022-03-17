@@ -310,20 +310,19 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
    * Artifacts list
    */
 
-  if (
-    commentMeta.publishArtifactsList &&
-    commentMeta.publishArtifactsList.length > 0
-  ) {
+  if (commentMeta.publishArtifactsList) {
     const filteredArtifactsList = availableArtifacts.filter(
       (artifactItem) =>
         !artifactItem.name.startsWith(artifactsFilters.excludeFromListingPrefix)
     );
 
-    commentMarkdownBody += `<hr />`;
-    commentMarkdownBody += `:small_blue_diamond: **Available artifacts:** <br />`;
+    if (filteredArtifactsList.length > 0) {
+      commentMarkdownBody += `<hr />`;
+      commentMarkdownBody += `:small_blue_diamond: **Available artifacts:** <br />`;
 
-    for (const artifactItem of filteredArtifactsList) {
-      commentMarkdownBody += `- [${artifactItem.name}](${artifactItem.download_url}) <br />`;
+      for (const artifactItem of filteredArtifactsList) {
+        commentMarkdownBody += `- [${artifactItem.name}](${artifactItem.download_url}) <br />`;
+      }
     }
   }
 
@@ -391,7 +390,6 @@ async function runPublishArtifactsWorkflow({ github, commentData }) {
 function getArtifactUrl(repoHtmlUrl, checkSuiteNumber, artifactId) {
   return `${repoHtmlUrl}/suites/${checkSuiteNumber}/artifacts/${artifactId.toString()}`;
 }
-
 
 /**
  * Fetch available artifacts in particular workflow run.
