@@ -261,12 +261,15 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
    * Artifacts list
    */
 
-  const filteredArtifactsList = commentMeta.publishArtifactsList.filter(
-    (artifactItem) =>
-      artifactItem.name.startsWith(artifactsFilters.excludeFromListingPrefix)
-  );
+  if (
+    commentMeta.publishArtifactsList &&
+    commentMeta.publishArtifactsList.length > 0
+  ) {
+    const filteredArtifactsList = commentMeta.publishArtifactsList.filter(
+      (artifactItem) =>
+        artifactItem.name.startsWith(artifactsFilters.excludeFromListingPrefix)
+    );
 
-  if (filteredArtifactsList.length > 0) {
     commentMarkdownBody += `<hr />`;
     commentMarkdownBody += `:small_blue_diamond: **Available artifacts:** <br />`;
 
