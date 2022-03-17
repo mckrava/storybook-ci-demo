@@ -17,6 +17,12 @@ jobs:
     name: test scripts
     runs-on: ubuntu-latest
     steps:
+      - name: Upload test art
+        uses: actions/upload-artifact@v2
+        with:
+          name: wf_test-artifacts-v2
+          path: ./scripts
+
       - name: Sleep for 30 seconds
         run: sleep 20s
         shell: bash

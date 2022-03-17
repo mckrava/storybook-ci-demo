@@ -88,7 +88,6 @@ jobs:
 
           REPORT_MSG_TITLE: Test reporter
           PUBLISH_ARTIFACTS_LIST: true
-          PUBLISH_ARTIFACTS_GROUP: "e2e-app"
           PUBLISH_ARTIFACTS_WORKFLOW_DISPATCH_FILE: wfd_publish-issue-comment-with-artifacts.yml
 
           IS_APP_SB_BUILD_REPORT: true
