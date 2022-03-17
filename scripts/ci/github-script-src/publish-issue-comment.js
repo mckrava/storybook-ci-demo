@@ -51,7 +51,7 @@ module.exports = async ({ github, context, core }) => {
 
   if (!commentData.commentMeta.issueNumber) return commentData;
 
-  await commentUtils.publishIssueComment({
+  const publishCommentResp = await commentUtils.publishIssueComment({
     github,
     owner: commentData.commentMeta.owner,
     repo: commentData.commentMeta.repo,
@@ -61,6 +61,9 @@ module.exports = async ({ github, context, core }) => {
     commentBody: commentMarkdownBody,
     issueNumber: commentData.commentMeta.issueNumber,
   });
+
+  console.log('existingIssueComment - ', commentData.commentMeta.existingIssueComment);
+  console.log('publishCommentResp - ', publishCommentResp);
 
   if (PUBLISH_ARTIFACTS_LIST === 'true')
     await issueCommentComponents.runPublishArtifactsWorkflow({

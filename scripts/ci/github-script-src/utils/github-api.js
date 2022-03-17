@@ -24,21 +24,20 @@ async function publishIssueComment({
       existingIssueCommentId === 'null' ||
       !issueNumber
     ) {
-      await github.rest.issues.createComment({
+      return await github.rest.issues.createComment({
         issue_number: issueNumber,
         owner,
         repo,
         body: commentBody,
       });
     } else {
-      await github.rest.issues.updateComment({
+      return await github.rest.issues.updateComment({
         owner,
         repo,
         comment_id: existingIssueCommentId,
         body: commentBody,
       });
     }
-    return 0;
   } catch (e) {
     console.log(e);
     return 1;
