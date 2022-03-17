@@ -149,5 +149,5 @@ jobs:
       - name: Upload test art
         uses: actions/upload-artifact@v2
         with:
-          name: comment-data
+          name: wf-maint-comment-data
           path: ./reporter-artifacts/issue-comment-data.json

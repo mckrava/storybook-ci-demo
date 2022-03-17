@@ -3,5 +3,8 @@ module.exports = {
     appStorybookBuild: 'appStorybookBuild',
     appStorybookDeployGhPages: 'appStorybookDeployGhPages',
     allRunArtifacts: 'allRunArtifacts',
+  },
+  artifactsFilters: {
+    excludeFromListingPrefix: 'wf-maint'
   }
 };

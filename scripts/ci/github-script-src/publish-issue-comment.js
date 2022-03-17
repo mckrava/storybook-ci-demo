@@ -1,5 +1,5 @@
-const commentUtils = require('./utils/comment-utils');
-const issueCommentComponents = require('./issue-comment-report-components');
+const commentUtils = require('./utils/github-api');
+const issueCommentComponents = require('./utils/issue-comment');
 
 module.exports = async ({ github, context, core }) => {
   const {
@@ -31,7 +31,6 @@ module.exports = async ({ github, context, core }) => {
     GH_PAGES_CUSTOM_DOMAIN,
     GH_TOKEN,
   } = process.env;
-
 
   process.env.GITHUB_TOKEN = GH_TOKEN;
 

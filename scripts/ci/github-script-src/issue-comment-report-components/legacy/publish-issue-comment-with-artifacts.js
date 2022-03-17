@@ -1,4 +1,4 @@
-// const commentUtils = require('./utils/comment-utils');
+// const commentUtils = require('./utils/github-api');
 //
 // function getArtifactUrl(repoHtmlUrl, checkSuiteNumber, artifactId) {
 //   return `${repoHtmlUrl}/suites/${checkSuiteNumber}/artifacts/${artifactId.toString()}`;

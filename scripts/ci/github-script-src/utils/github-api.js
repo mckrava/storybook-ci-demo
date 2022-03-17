@@ -77,6 +77,6 @@ async function findIssueComment({
 }
 
 module.exports = {
-  publishIssueComment: publishIssueComment,
-  findIssueComment: findIssueComment,
+  publishIssueComment,
+  findIssueComment,
 };

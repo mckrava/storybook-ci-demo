@@ -1,8 +1,5 @@
-const commentUtils = require('./utils/comment-utils');
-
-function getArtifactUrl(repoHtmlUrl, checkSuiteNumber, artifactId) {
-  return `${repoHtmlUrl}/suites/${checkSuiteNumber}/artifacts/${artifactId.toString()}`;
-}
+const commentUtils = require('./utils/github-api');
+const issueCommentComponents = require('./utils/issue-comment');
 
 module.exports = async ({ github, context, core }) => {
   const { ISSUE_COMMENT_DATA = '{}' } = process.env;
@@ -11,48 +8,33 @@ module.exports = async ({ github, context, core }) => {
 
   console.log(JSON.parse(ISSUE_COMMENT_DATA));
 
-  let {
-    owner,
-    repo,
-    runId,
-    issueNumber,
-    suiteId,
-    repoUrl,
-    existingIssueCommentId,
-    commentBody,
-  } = JSON.parse(ISSUE_COMMENT_DATA);
+  const { commentMeta, commentSections } = JSON.parse(ISSUE_COMMENT_DATA);
 
-  if (!owner || !repo || !runId) return;
+  if (!commentMeta.owner || !commentMeta.repo || !commentMeta.runId) return;
 
-  const iterator = github.paginate.iterator(
-    github.rest.actions.listWorkflowRunArtifacts,
-    {
-      owner,
-      repo,
-      run_id: runId,
-      per_page: 100,
-    }
-  );
+  const availableArtifacts = await issueCommentComponents.getRunArtifactsList({
+    github,
+    commentMeta,
+  });
 
-  commentBody += `:small_blue_diamond: **Available artifacts:** <br />`;
-
-  for await (const { data: artifacts } of iterator) {
-    console.log('[LOG]:: Artifacts - ', artifacts);
-    for (const artifact of artifacts) {
-      commentBody += `- [${artifact.name}](${getArtifactUrl(
-        repoUrl,
-        suiteId,
-        artifact.id
-      )}) <br />`;
-    }
-  }
+  const commentMarkdownBody = issueCommentComponents.getCommentMarkdownBody({
+    github,
+    context,
+    commentData: {
+      commentMeta,
+      commentSections,
+      availableArtifacts,
+    },
+  });
 
   await commentUtils.publishIssueComment({
     github,
-    owner,
-    repo,
-    issueNumber,
-    existingIssueCommentId,
-    commentBody,
+    owner: commentMeta.owner,
+    repo: commentMeta.repo,
+    existingIssueCommentId: commentMeta.existingIssueComment
+      ? commentMeta.existingIssueComment.id
+      : null,
+    commentBody: commentMarkdownBody,
+    issueNumber: commentMeta.issueNumber,
   });
 };

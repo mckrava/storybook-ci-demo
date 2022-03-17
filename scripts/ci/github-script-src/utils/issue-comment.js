@@ -1,5 +1,5 @@
-const commentUtils = require('../utils/comment-utils');
-const { commentDataKeys } = require('../utils/variables');
+const commentUtils = require('./github-api');
+const { commentDataKeys } = require('./variables');
 
 async function getCommentDataMetadata({ github, context, env }) {
   const {
@@ -9,6 +9,7 @@ async function getCommentDataMetadata({ github, context, env }) {
     GITHUB_SHA,
     GH_PAGES_CUSTOM_DOMAIN,
     PUBLISH_ARTIFACTS_WORKFLOW_DISPATCH_FILE,
+    PUBLISH_ARTIFACTS_LIST,
   } = env;
   const [owner, repo] = context.payload.repository.full_name.split('/');
   const branchName =
@@ -28,6 +29,7 @@ async function getCommentDataMetadata({ github, context, env }) {
     suiteId: '',
     issueNumber: null,
     reportMessageTitle: REPORT_MSG_TITLE,
+    publishArtifactsList: PUBLISH_ARTIFACTS_LIST === 'true',
     publishArtifactsWorkflowDispatchFile:
       PUBLISH_ARTIFACTS_WORKFLOW_DISPATCH_FILE,
   };
@@ -130,7 +132,7 @@ async function processCommentData({ github, context, env }) {
   } = env;
   let commentData = {};
 
-  if (COMMENT_CACHED_CONTENT) {
+  if (COMMENT_CACHED_CONTENT === 'false') {
     commentData = { ...COMMENT_CACHED_CONTENT };
   }
 
@@ -190,7 +192,11 @@ async function processCommentData({ github, context, env }) {
 }
 
 function getCommentMarkdownBody({ github, context, commentData = {} }) {
-  const { commentMeta, commentSections } = commentData;
+  const {
+    commentMeta = {},
+    commentSections = {},
+    availableArtifacts = [],
+  } = commentData;
   let commentMarkdownBody = '';
   const commentSectionsList = Object.keys(commentSections);
 
@@ -239,6 +245,14 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
     commentMarkdownBody += `<br /><br />`;
   }
 
+  if (commentMeta.publishArtifactsList && availableArtifacts.length > 0) {
+    commentMarkdownBody += `:small_blue_diamond: **Available artifacts:** <br />`;
+
+    for (const artifactItem of availableArtifacts) {
+      commentMarkdownBody += `- [${artifactItem.name}](${artifactItem.download_url}) <br />`;
+    }
+  }
+
   commentMarkdownBody = commentMarkdownBody.replace(/(\r\n|\n|\r)/gm, '');
 
   return commentMarkdownBody;
@@ -282,8 +296,40 @@ async function runPublishArtifactsWorkflow({ github, commentData }) {
   console.log('[LOG]:: dispatchResp - ', dispatchResp);
 }
 
+function getArtifactUrl(repoHtmlUrl, checkSuiteNumber, artifactId) {
+  return `${repoHtmlUrl}/suites/${checkSuiteNumber}/artifacts/${artifactId.toString()}`;
+}
+
+async function getRunArtifactsList({ github, commentMeta }) {
+  const { owner, repo, runId, repoUrl, suiteId } = commentMeta;
+  const artifactsList = [];
+
+  const iterator = github.paginate.iterator(
+    github.rest.actions.listWorkflowRunArtifacts,
+    {
+      owner,
+      repo,
+      run_id: runId,
+      per_page: 100,
+    }
+  );
+
+  for await (const { data: artifacts } of iterator) {
+    console.log('[LOG]:: Artifacts - ', artifacts);
+    for (const artifact of artifacts) {
+      artifactsList.push({
+        ...artifact,
+        download_url: getArtifactUrl(repoUrl, suiteId, artifact.id),
+      });
+    }
+  }
+
+  return artifactsList;
+}
+
 module.exports = {
-  getCommentMarkdownBody: getCommentMarkdownBody,
-  processCommentData: processCommentData,
-  runPublishArtifactsWorkflow: runPublishArtifactsWorkflow,
+  getCommentMarkdownBody,
+  processCommentData,
+  runPublishArtifactsWorkflow,
+  getRunArtifactsList,
 };

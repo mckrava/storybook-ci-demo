@@ -1,4 +1,4 @@
-// const commentUtils = require('./utils/comment-utils');
+// const commentUtils = require('./utils/github-api');
 //
 // module.exports = async ({ github, context, core }) => {
 //   const {
