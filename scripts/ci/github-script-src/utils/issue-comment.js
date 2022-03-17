@@ -267,7 +267,7 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
   ) {
     const filteredArtifactsList = commentMeta.publishArtifactsList.filter(
       (artifactItem) =>
-        artifactItem.name.startsWith(artifactsFilters.excludeFromListingPrefix)
+        !artifactItem.name.startsWith(artifactsFilters.excludeFromListingPrefix)
     );
 
     commentMarkdownBody += `<hr />`;
