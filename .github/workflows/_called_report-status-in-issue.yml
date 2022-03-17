@@ -111,7 +111,7 @@ jobs:
         uses: actions/github-script@v6
         id: issue-comment-data
         env:
-          REPORT_MSG_TITLE: ${{inputs.report-msg-title}}
+          REPORT_MSG_TITLE: "Basilisk UI reporter"
           PUBLISH_ARTIFACTS_LIST: ${{inputs.publish-artifacts-list}}
           PUBLISH_ARTIFACTS_GROUP: ${{inputs.publish-artifacts-group}}
           # | Workflow file which will be dispatched from github-script via API for fetching and publication

@@ -10,7 +10,7 @@ async function getCommentDataMetadata({
   const {
     GITHUB_HEAD_REF,
     GITHUB_REF_NAME,
-    REPORT_MSG_TITLE = reportMsgDefaultTitle,
+    REPORT_MSG_TITLE,
     GITHUB_SHA,
     GH_PAGES_CUSTOM_DOMAIN,
     PUBLISH_ARTIFACTS_WORKFLOW_DISPATCH_FILE,
@@ -33,7 +33,10 @@ async function getCommentDataMetadata({
     existingIssueComment: commentCachedContent.existingIssueComment,
     suiteId: '',
     issueNumber: null,
-    reportMessageTitle: REPORT_MSG_TITLE,
+    reportMessageTitle:
+      !REPORT_MSG_TITLE || REPORT_MSG_TITLE.length === 0
+        ? reportMsgDefaultTitle
+        : REPORT_MSG_TITLE,
     publishArtifactsList: PUBLISH_ARTIFACTS_LIST === 'true',
     publishArtifactsWorkflowDispatchFile:
       PUBLISH_ARTIFACTS_WORKFLOW_DISPATCH_FILE,
@@ -59,17 +62,17 @@ async function getCommentDataMetadata({
    * Fetch "existingIssueComment", "issueNumber"
    */
   if (context.eventName === 'pull_request') {
-    // try {
-    //   commentMetaData.existingIssueComment =
-    //     await commentUtils.findIssueComment({
-    //       github,
-    //       context,
-    //       issueNumber: context.payload.number,
-    //       bodyIncludes: REPORT_MSG_TITLE,
-    //     });
-    // } catch (e) {
-    //   console.log(e);
-    // }
+    try {
+      commentMetaData.existingIssueComment =
+        await commentUtils.findIssueComment({
+          github,
+          context,
+          issueNumber: context.payload.number,
+          bodyIncludes: REPORT_MSG_TITLE,
+        });
+    } catch (e) {
+      console.log(e);
+    }
 
     commentMetaData.issueNumber = context.payload.number;
   } else if (context.eventName === 'push') {
@@ -89,14 +92,14 @@ async function getCommentDataMetadata({
     commentMetaData.issueNumber =
       relatedPr.length > 0 ? relatedPr[0].number : null;
 
-    // commentMetaData.existingIssueComment = commentMetaData.issueNumber
-    //   ? await commentUtils.findIssueComment({
-    //       github,
-    //       context,
-    //       issueNumber: commentMetaData.issueNumber,
-    //       bodyIncludes: REPORT_MSG_TITLE,
-    //     })
-    //   : null;
+    commentMetaData.existingIssueComment = commentMetaData.issueNumber
+      ? await commentUtils.findIssueComment({
+          github,
+          context,
+          issueNumber: commentMetaData.issueNumber,
+          bodyIncludes: REPORT_MSG_TITLE,
+        })
+      : null;
   }
 
   if (!commentMetaData.issueNumber) return commentMetaData;
