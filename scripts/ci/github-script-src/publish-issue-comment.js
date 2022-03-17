@@ -3,7 +3,7 @@ const issueCommentComponents = require('./utils/issue-comment');
 
 module.exports = async ({ github, context, core }) => {
   const {
-    REPORT_MSG_TITLE = 'Basilisk-UI workflows reporter',
+    REPORT_MSG_TITLE = 'Basilisk-UI reporter',
     PUBLISH_ARTIFACTS_WORKFLOW_DISPATCH_FILE,
     PUBLISH_ARTIFACTS_LIST,
     COMMENT_CACHED_CONTENT,
@@ -62,8 +62,14 @@ module.exports = async ({ github, context, core }) => {
     issueNumber: commentData.commentMeta.issueNumber,
   });
 
-  console.log('existingIssueComment - ', commentData.commentMeta.existingIssueComment);
+  console.log(
+    'existingIssueComment - ',
+    commentData.commentMeta.existingIssueComment
+  );
   console.log('publishCommentResp - ', publishCommentResp);
+
+  if (publishCommentResp.status === 201)
+    commentData.commentMeta.existingIssueComment = publishCommentResp.data;
 
   if (PUBLISH_ARTIFACTS_LIST === 'true')
     await issueCommentComponents.runPublishArtifactsWorkflow({

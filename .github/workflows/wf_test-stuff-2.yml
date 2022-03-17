@@ -29,7 +29,6 @@ jobs:
     if: always()
     needs: delay
     with:
-      report-msg-title: 'Basilisk-UI build/deploy reporter'
       publish-artifacts-list: true
 
       app-storybook-build-pub-report: false

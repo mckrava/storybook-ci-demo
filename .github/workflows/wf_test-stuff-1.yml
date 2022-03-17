@@ -51,7 +51,6 @@ jobs:
     if: always()
     needs: publish-dummy-artifacts
     with:
-      report-msg-title: 'Basilisk-UI reporter'
       publish-artifacts-list: true
 
       app-storybook-build-pub-report: true
