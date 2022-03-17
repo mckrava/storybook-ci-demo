@@ -138,6 +138,7 @@ jobs:
           GH_PAGES_CUSTOM_DOMAIN: ${{ secrets.gh_pages_custom_domain }}
 
         with:
+          github-token: ${{ secrets.GH_TOKEN }}
           script: |
             const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')
             return await script({github, context, core})
