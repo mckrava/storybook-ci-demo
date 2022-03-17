@@ -5,6 +5,31 @@ const {
   artifactsFilters,
 } = require('./variables');
 
+/**
+ * Prepare metadata for issue comment, which will be used in current
+ * and the next workflows vai actions cache.
+ *
+ * @param github
+ * @param context
+ * @param env
+ * @param commentCachedContent
+ * @returns {Promise<{
+ *    owner: string,
+ *    repoUrl: string,
+ *    suiteId: string,
+ *    existingIssueComment: any,
+ *    repo: string,
+ *    defaultBranch: string,
+ *    issueNumber: number|null,
+ *    publishArtifactsList: boolean,
+ *    branchName: string,
+ *    publishArtifactsWorkflowDispatchFile: string,
+ *    ghPagesCustomDomain: string,
+ *    reportMessageTitle: (string|*),
+ *    triggerCommit: null|any,
+ *    runId: number
+ *  }>}
+ */
 async function getCommentDataMetadata({
   github,
   context,
@@ -133,12 +158,28 @@ async function getCommentDataMetadata({
   return commentMetaData;
 }
 
+/**
+ * Prepare scope of comment data for comment publication process and passing
+ * prepared data to the next workflows via actions cache (actions/cache@v2).
+ *
+ * If "COMMENT_CACHED_CONTENT" is existing, "commentMeta" data will be updated.
+ * Existing sections in "commentSections" block will be updated (if it's
+ * necessary - e.g. if IS_APP_STORYBOOK_BUILD_REPORT === 'true' so section
+ * "appStorybookBuild" will be updated).
+ *
+ * If "COMMENT_CACHED_CONTENT" is not passed from cache, comment metadata and
+ * comment content sections will be prepared regarding passed config variables.
+ *
+ * @param github
+ * @param context
+ * @param env
+ * @returns {Promise<any>}
+ */
 async function processCommentData({ github, context, env }) {
   const {
     COMMENT_CACHED_CONTENT,
     IS_APP_STORYBOOK_BUILD_REPORT,
     IS_APP_STORYBOOK_DEPLOYMENT_REPORT,
-    PUBLISH_ARTIFACTS_LIST,
     APP_STORYBOOK_BUILD_STATUS,
     APP_STORYBOOK_DEPLOYMENT_STATUS,
   } = env;
@@ -204,6 +245,14 @@ async function processCommentData({ github, context, env }) {
   return commentData;
 }
 
+/**
+ * Compile markdown body for issue comment from prepared or passed comment data.
+ *
+ * @param github
+ * @param context
+ * @param commentData
+ * @returns {string}
+ */
 function getCommentMarkdownBody({ github, context, commentData = {} }) {
   const {
     commentMeta = {},
@@ -265,7 +314,7 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
     commentMeta.publishArtifactsList &&
     commentMeta.publishArtifactsList.length > 0
   ) {
-    const filteredArtifactsList = commentMeta.publishArtifactsList.filter(
+    const filteredArtifactsList = availableArtifacts.filter(
       (artifactItem) =>
         !artifactItem.name.startsWith(artifactsFilters.excludeFromListingPrefix)
     );
@@ -283,6 +332,14 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
   return commentMarkdownBody;
 }
 
+/**
+ * Create `workflow_dispatch` event via GitHub API for workflow for fetch and
+ * publish available run artifacts.
+ *
+ * @param github
+ * @param commentData
+ * @returns {Promise<number>}
+ */
 async function runPublishArtifactsWorkflow({ github, commentData }) {
   const { commentMeta } = commentData;
   const preparedInputs = JSON.stringify(commentData);
@@ -306,7 +363,7 @@ async function runPublishArtifactsWorkflow({ github, commentData }) {
 
   console.log('[LOG]:: publishArtifactsWf - ', publishArtifactsWf);
 
-  if (!publishArtifactsWf) return preparedInputs;
+  if (!publishArtifactsWf) return 1;
 
   const dispatchResp = await github.rest.actions.createWorkflowDispatch({
     owner: commentMeta.owner,
@@ -319,12 +376,30 @@ async function runPublishArtifactsWorkflow({ github, commentData }) {
   });
 
   console.log('[LOG]:: dispatchResp - ', dispatchResp);
+
+  return 0;
 }
 
+/**
+ * Compile URL for downloading run artifact.
+ *
+ * @param repoHtmlUrl
+ * @param checkSuiteNumber
+ * @param artifactId
+ * @returns {string}
+ */
 function getArtifactUrl(repoHtmlUrl, checkSuiteNumber, artifactId) {
   return `${repoHtmlUrl}/suites/${checkSuiteNumber}/artifacts/${artifactId.toString()}`;
 }
 
+
+/**
+ * Fetch available artifacts in particular workflow run.
+ *
+ * @param github
+ * @param commentMeta
+ * @returns {Promise<*[]>}
+ */
 async function getRunArtifactsList({ github, commentMeta }) {
   const { owner, repo, runId, repoUrl, suiteId } = commentMeta;
   const artifactsList = [];

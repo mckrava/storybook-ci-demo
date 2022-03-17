@@ -2,37 +2,7 @@ const commentUtils = require('./utils/github-api');
 const issueCommentComponents = require('./utils/issue-comment');
 
 module.exports = async ({ github, context, core }) => {
-  const {
-    REPORT_MSG_TITLE = 'Basilisk-UI reporter',
-    PUBLISH_ARTIFACTS_WORKFLOW_DISPATCH_FILE,
-    PUBLISH_ARTIFACTS_LIST,
-    COMMENT_CACHED_CONTENT,
-
-    IS_APP_STORYBOOK_BUILD_REPORT,
-    IS_APP_UNIT_TEST_REPORT,
-    IS_APP_E2E_TEST_REPORT,
-    IS_STORYBOOK_UNIT_TEST_REPORT,
-    IS_STORYBOOK_E2E_TEST_REPORT,
-    IS_APP_STORYBOOK_DEPLOYMENT_REPORT,
-
-    APP_UNIT_TEST_PERCENTAGE,
-    APP_UNIT_TEST_DIFF,
-
-    APP_STORYBOOK_BUILD_STATUS,
-    APP_UNIT_TEST_STATUS,
-    APP_STORYBOOK_DEPLOYMENT_STATUS,
-
-    GITHUB_HEAD_REF,
-    GITHUB_REF_NAME,
-    GITHUB_SHA,
-    GITHUB_REF,
-    GITHUB_BASE_REF, // for PR target branch
-
-    GH_PAGES_CUSTOM_DOMAIN,
-    GH_TOKEN,
-  } = process.env;
-
-  process.env.GITHUB_TOKEN = GH_TOKEN;
+  const { PUBLISH_ARTIFACTS_LIST, COMMENT_CACHED_CONTENT } = process.env;
 
   console.log('[LOG]:: context - ', context);
   console.log('[LOG]:: COMMENT_CACHED_CONTENT - ', COMMENT_CACHED_CONTENT);
@@ -61,12 +31,6 @@ module.exports = async ({ github, context, core }) => {
     commentBody: commentMarkdownBody,
     issueNumber: commentData.commentMeta.issueNumber,
   });
-
-  console.log(
-    'existingIssueComment - ',
-    commentData.commentMeta.existingIssueComment
-  );
-  console.log('publishCommentResp - ', publishCommentResp);
 
   if (publishCommentResp.status === 201)
     commentData.commentMeta.existingIssueComment = publishCommentResp.data;
