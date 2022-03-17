@@ -1,0 +1,67 @@
+name: Report demo v1
+
+on:
+  push:
+    branches:
+      - 'fix/**'
+      - 'feat/**'
+      - develop
+  pull_request:
+    types:
+      - opened
+    branches:
+      - develop
+
+jobs:
+  publish-dummy-artifacts:
+    name: test scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Upload test art
+        uses: actions/upload-artifact@v2
+        with:
+          name: deploy_test-artifacts
+          path: ./scripts
+
+      - name: Upload test art
+        uses: actions/upload-artifact@v2
+        with:
+          name: deploy_test-artifacts-2
+          path: ./scripts
+
+      - name: Upload test art
+        uses: actions/upload-artifact@v2
+        with:
+          name: e2e-app_test-artifacts
+          path: ./scripts
+
+      - name: Upload test art
+        uses: actions/upload-artifact@v2
+        with:
+          name: unit-app_test-artifacts
+          path: ./scripts
+
+  report-statuses-in-issue:
+    # | Publish build and deployment statuses as pull request comment,
+    # | if any pull request is associated with the latest commit.
+    name: 'Report in PR'
+    uses: ./.github/workflows/_called_report-status-in-issue.yml
+    if: always()
+    needs: publish-dummy-artifacts
+    with:
+      report-msg-title: 'Basilisk-UI reporter'
+      publish-artifacts-list: true
+
+      app-storybook-build-pub-report: true
+      app-storybook-build-status: true
+
+      app-storybook-deploy-pub-report: false
+      app-storybook-deploy-status: true
+
+      app-unit-test-pub-report: false
+    secrets:
+      gh_token: ${{ secrets.GH_TOKEN }}
+      gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
+      gh_pages_custom_domain: ${{ secrets.GH_PAGES_CUSTOM_DOMAIN }}

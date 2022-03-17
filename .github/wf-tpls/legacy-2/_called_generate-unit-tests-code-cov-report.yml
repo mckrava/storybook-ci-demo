@@ -1,7 +1,4 @@
-# | This workflow can be invoked only from root workflow.
-# | More information about Reusing workflows - https://docs.github.com/en/actions/using-workflows/reusing-workflows
-
-name: "Reusable :: Generate unit tests codecov report"
+name: Generate unit tests code coverage report
 
 on:
   workflow_call:
@@ -13,7 +10,7 @@ on:
         required: true
         type: string
 
-    # https://docs.github.com/en/actions/using-workflows/reusing-workflows#using-outputs-from-a-reusable-workflow:
+    #https://docs.github.com/en/actions/using-workflows/reusing-workflows#using-outputs-from-a-reusable-workflow:
     outputs:
       codecov_unit_percentage:
         description: "Total Percentage coverage"
@@ -26,28 +23,28 @@ on:
         required: true
 
 jobs:
-  generate_report:
-    name: "Generate"
+  unit_tests_codecov_pub_report:
+    name: Unit test codecov reports
     runs-on: ubuntu-latest
     outputs:
       codecov_output_percentage: ${{ steps.code-coverage.outputs.percentage }}
       codecov_output_diff: ${{ steps.code-coverage.outputs.diff }}
     steps:
-      - name: "Download code coverage report from base branch"
+      - name: Download code coverage report from base branch
         uses: actions/download-artifact@v2
         id: download-ref
         with:
           name: ${{inputs.base-branch-codecov-artifact-name}}
           path: ./ref-report
 
-      - name: "Download code coverage report from working branch"
+      - name: Download code coverage report from working branch
         uses: actions/download-artifact@v2
         id: download-working
         with:
           name: ${{inputs.working-branch-codecov-artifact-name}}
           path: ./working-report
 
-      - name: "Post coverage report in PR"
+      - name: Post coverage report in PR
         id: code-coverage
         continue-on-error: true
         uses: barecheck/code-coverage-action@v0.5.1
@@ -55,5 +52,12 @@ jobs:
           barecheck-github-app-token: ${{ secrets.barecheck_github_app_token }}
           lcov-file: './working-report/lcov.info'
           base-lcov-file: './ref-report/lcov.info'
+#          send-summary-comment: ${{ inputs.app-unit-test-pub-report-in-pr }}
           send-summary-comment: false
           show-annotations: 'warning'
+
+#      - name: Echo cov report
+#        run: |
+#          echo sum - ${{ toJson(steps.code-coverage.outputs) }}
+#          echo percentage - ${{ steps.code-coverage.outputs.percentage }}
+#          echo diff - ${{ steps.code-coverage.outputs.diff }}
