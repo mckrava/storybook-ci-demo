@@ -5,7 +5,6 @@ module.exports = async ({ github, context, core }) => {
   const { ISSUE_COMMENT_DATA = '{}' } = process.env;
 
   console.log('[LOG]:: context - ', context);
-
   console.log(JSON.parse(ISSUE_COMMENT_DATA));
 
   const { commentMeta, commentSections } = JSON.parse(ISSUE_COMMENT_DATA);
