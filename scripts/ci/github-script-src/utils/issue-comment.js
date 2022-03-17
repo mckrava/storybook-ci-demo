@@ -1,5 +1,5 @@
 const commentUtils = require('./github-api');
-const { commentDataKeys } = require('./variables');
+const { commentDataKeys, reportMsgDefaultTitle } = require('./variables');
 
 async function getCommentDataMetadata({
   github,
@@ -10,7 +10,7 @@ async function getCommentDataMetadata({
   const {
     GITHUB_HEAD_REF,
     GITHUB_REF_NAME,
-    REPORT_MSG_TITLE,
+    REPORT_MSG_TITLE = reportMsgDefaultTitle,
     GITHUB_SHA,
     GH_PAGES_CUSTOM_DOMAIN,
     PUBLISH_ARTIFACTS_WORKFLOW_DISPATCH_FILE,
