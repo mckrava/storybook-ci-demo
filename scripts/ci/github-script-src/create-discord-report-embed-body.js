@@ -17,7 +17,7 @@ module.exports = async ({ github, context, core }) => {
     APP_UNIT_TEST_REF_BRANCH,
     APP_UNIT_TEST_STATUS,
     APP_STORYBOOK_DEPLOYMENT_STATUS,
-    REPORT_MSG_TITLE = 'Basilisk-UI APP/Storybook build | testing | deployment',
+    REPORT_MSG_TITLE = 'Basilisk-UI reporter',
 
     GITHUB_HEAD_REF,
     GITHUB_REF,

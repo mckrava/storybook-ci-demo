@@ -3,7 +3,7 @@ const issueCommentComponents = require('./utils/issue-comment');
 
 module.exports = async ({ github, context, core }) => {
   const {
-    REPORT_MSG_TITLE = 'Basilisk-UI workflows reporter',
+    REPORT_MSG_TITLE = 'Basilisk-UI reporter',
     PUBLISH_ARTIFACTS_WORKFLOW_DISPATCH_FILE,
     PUBLISH_ARTIFACTS_LIST,
     COMMENT_CACHED_CONTENT,
@@ -35,7 +35,7 @@ module.exports = async ({ github, context, core }) => {
   process.env.GITHUB_TOKEN = GH_TOKEN;
 
   console.log('[LOG]:: context - ', context);
-  console.log('COMMENT_CACHED_CONTENT - ', COMMENT_CACHED_CONTENT);
+  console.log('[LOG]:: COMMENT_CACHED_CONTENT - ', COMMENT_CACHED_CONTENT);
 
   const commentData = await issueCommentComponents.processCommentData({
     env: process.env,
@@ -51,7 +51,7 @@ module.exports = async ({ github, context, core }) => {
 
   if (!commentData.commentMeta.issueNumber) return commentData;
 
-  await commentUtils.publishIssueComment({
+  const publishCommentResp = await commentUtils.publishIssueComment({
     github,
     owner: commentData.commentMeta.owner,
     repo: commentData.commentMeta.repo,
@@ -61,6 +61,15 @@ module.exports = async ({ github, context, core }) => {
     commentBody: commentMarkdownBody,
     issueNumber: commentData.commentMeta.issueNumber,
   });
+
+  console.log(
+    'existingIssueComment - ',
+    commentData.commentMeta.existingIssueComment
+  );
+  console.log('publishCommentResp - ', publishCommentResp);
+
+  if (publishCommentResp.status === 201)
+    commentData.commentMeta.existingIssueComment = publishCommentResp.data;
 
   if (PUBLISH_ARTIFACTS_LIST === 'true')
     await issueCommentComponents.runPublishArtifactsWorkflow({

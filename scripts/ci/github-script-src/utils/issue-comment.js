@@ -1,7 +1,16 @@
 const commentUtils = require('./github-api');
-const { commentDataKeys } = require('./variables');
+const {
+  commentDataKeys,
+  reportMsgDefaultTitle,
+  artifactsFilters,
+} = require('./variables');
 
-async function getCommentDataMetadata({ github, context, env }) {
+async function getCommentDataMetadata({
+  github,
+  context,
+  env,
+  commentCachedContent,
+}) {
   const {
     GITHUB_HEAD_REF,
     GITHUB_REF_NAME,
@@ -25,10 +34,13 @@ async function getCommentDataMetadata({ github, context, env }) {
     repoUrl: context.payload.repository.html_url,
     runId: context.runId,
     triggerCommit: null,
-    existingIssueComment: null,
+    existingIssueComment: commentCachedContent.existingIssueComment,
     suiteId: '',
     issueNumber: null,
-    reportMessageTitle: REPORT_MSG_TITLE,
+    reportMessageTitle:
+      !REPORT_MSG_TITLE || REPORT_MSG_TITLE.length === 0
+        ? reportMsgDefaultTitle
+        : REPORT_MSG_TITLE,
     publishArtifactsList: PUBLISH_ARTIFACTS_LIST === 'true',
     publishArtifactsWorkflowDispatchFile:
       PUBLISH_ARTIFACTS_WORKFLOW_DISPATCH_FILE,
@@ -140,6 +152,7 @@ async function processCommentData({ github, context, env }) {
     github,
     context,
     env,
+    commentCachedContent: COMMENT_CACHED_CONTENT,
   });
 
   if (!commentData.commentSections) commentData.commentSections = {};
@@ -205,12 +218,12 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
   if (commentMeta.triggerCommit) {
     commentMarkdownBody += ` _Report has been triggered by commit [${commentMeta.triggerCommit.message} (${commentMeta.triggerCommit.sha})](${commentMeta.triggerCommit.html_url})_ `;
   }
-  commentMarkdownBody += `<br /><br />`;
 
   /**
    * App Storybook Build
    */
   if (commentSectionsList.includes(commentDataKeys.appStorybookBuild)) {
+    commentMarkdownBody += `<hr />`;
     commentMarkdownBody += `:small_blue_diamond: **Application/Storybook build:** <br />
     - Status: ${
       commentSections[commentDataKeys.appStorybookBuild].status
@@ -224,7 +237,7 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
    */
 
   if (commentSectionsList.includes(commentDataKeys.appStorybookDeployGhPages)) {
-    commentMarkdownBody += `<br /><br />`;
+    commentMarkdownBody += `<hr />`;
     commentMarkdownBody += `:small_blue_diamond: **Application/Storybook deployment:** <br />
     - Status: ${
       commentSections[commentDataKeys.appStorybookDeployGhPages].status
@@ -242,13 +255,25 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
     - [Application build page](https://${commentMeta.ghPagesCustomDomain}/${commentMeta.branchName}/app) <br />
     - [Storybook build page](https://${commentMeta.ghPagesCustomDomain}/${commentMeta.branchName}/storybook)
     `;
-    commentMarkdownBody += `<br /><br />`;
   }
 
-  if (commentMeta.publishArtifactsList && availableArtifacts.length > 0) {
+  /**
+   * Artifacts list
+   */
+
+  if (
+    commentMeta.publishArtifactsList &&
+    commentMeta.publishArtifactsList.length > 0
+  ) {
+    const filteredArtifactsList = commentMeta.publishArtifactsList.filter(
+      (artifactItem) =>
+        artifactItem.name.startsWith(artifactsFilters.excludeFromListingPrefix)
+    );
+
+    commentMarkdownBody += `<hr />`;
     commentMarkdownBody += `:small_blue_diamond: **Available artifacts:** <br />`;
 
-    for (const artifactItem of availableArtifacts) {
+    for (const artifactItem of filteredArtifactsList) {
       commentMarkdownBody += `- [${artifactItem.name}](${artifactItem.download_url}) <br />`;
     }
   }
