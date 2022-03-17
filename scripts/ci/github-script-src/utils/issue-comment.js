@@ -320,8 +320,19 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
       commentMarkdownBody += `<hr />`;
       commentMarkdownBody += `:small_blue_diamond: **Available artifacts:** <br />`;
 
+      if (!commentMeta.suiteId) {
+        commentMarkdownBody += "<sup>This list doesn't contain links at the moment " +
+          "because it has been generated on `pull_request:open` event where " +
+          "`suite_id` (required part of artifact download link) is not available. " +
+          "After the next commit into this Pull Request artifacts list will contain links.<sup> <br />";
+      }
+
       for (const artifactItem of filteredArtifactsList) {
-        commentMarkdownBody += `- [${artifactItem.name}](${artifactItem.download_url}) <br />`;
+        if (commentMeta.suiteId) {
+          commentMarkdownBody += `- [${artifactItem.name}](${artifactItem.download_url}) <br />`;
+        } else {
+          commentMarkdownBody += `- ${artifactItem.name} <br />`;
+        }
       }
     }
   }
