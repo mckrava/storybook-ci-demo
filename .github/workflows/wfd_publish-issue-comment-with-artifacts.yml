@@ -1,5 +1,5 @@
 # | IMPORTANT - any changes to workflow with trigger event "workflow_dispatch" requires to push changes to default
-# | branch first (eg. "develop" branch) to take effect.
+# | branch first (eg. "develop" branch) to take effect. This concerns all github-scripts which are used in such workflow.
 # | More details - https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch
 
 

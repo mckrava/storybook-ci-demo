@@ -17,6 +17,8 @@ jobs:
     name: test scripts
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+        
       - name: Upload test art
         uses: actions/upload-artifact@v2
         with:
