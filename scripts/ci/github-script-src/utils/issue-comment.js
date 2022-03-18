@@ -350,7 +350,11 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
       commentMarkdownBody += `<hr />`;
       commentMarkdownBody += `:small_blue_diamond: **Available artifacts:** <br />`;
 
-      if (!commentMeta.suiteId) {
+      const showArtifactsNotice = !!filteredArtifactsList.find(
+        (item) => !item.suiteId
+      );
+
+      if (showArtifactsNotice) {
         commentMarkdownBody +=
           "<br /><details><summary>**_Artifacts list notice!_**</summary>_This list doesn't contain links at the moment " +
           'because it has been generated on `pull_request:open` event where ' +
@@ -359,7 +363,7 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
       }
 
       for (const artifactItem of filteredArtifactsList) {
-        if (commentMeta.suiteId) {
+        if (artifactItem.suiteId) {
           commentMarkdownBody += `- [${artifactItem.name}](${artifactItem.download_url}) <br />`;
         } else {
           commentMarkdownBody += `- ${artifactItem.name} <br />`;
