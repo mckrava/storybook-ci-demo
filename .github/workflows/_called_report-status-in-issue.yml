@@ -94,7 +94,7 @@ jobs:
         id: parse-issue-comment-data
         if: steps.check-cache-existance.outputs.cached-comment-data-exists == 'true'
         run: |
-          issueCommentDataJson=$(cat ./reporter-artifacts/issue-comment-data.json)
+          issueCommentDataJson=$(cat ./reporter-artifacts/issue-comment-data.txt)
           echo "::set-output name=issueCommentDataJson::$issueCommentDataJson"
           
 #                    issueCommentDataJson="${issueCommentDataJson//'%'/'%25'}"
@@ -145,4 +145,4 @@ jobs:
       - name: "Save issue comment prepared content into file"
         run: |
           echo ${{ steps.issue-comment-data.outputs.result }}
-          echo ${{ steps.issue-comment-data.outputs.result }} > ./reporter-artifacts/issue-comment-data.json
+          echo ${{ steps.issue-comment-data.outputs.result }} > ./reporter-artifacts/issue-comment-data.txt

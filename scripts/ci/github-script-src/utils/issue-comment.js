@@ -234,7 +234,7 @@ async function processCommentData({ github, context, env }) {
   /**
    * IS_APP_STORYBOOK_BUILD_REPORT
    */
-  if (IS_APP_STORYBOOK_BUILD_REPORT) {
+  if (IS_APP_STORYBOOK_BUILD_REPORT === 'true') {
     if (
       COMMENT_CACHED_CONTENT.hasOwnProperty(commentDataKeys.appStorybookBuild)
     ) {
@@ -253,7 +253,7 @@ async function processCommentData({ github, context, env }) {
   /**
    * IS_APP_STORYBOOK_DEPLOYMENT_REPORT
    */
-  if (IS_APP_STORYBOOK_DEPLOYMENT_REPORT) {
+  if (IS_APP_STORYBOOK_DEPLOYMENT_REPORT === 'true') {
     if (
       COMMENT_CACHED_CONTENT.hasOwnProperty(
         commentDataKeys.appStorybookDeployGhPages
