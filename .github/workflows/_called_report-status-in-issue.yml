@@ -95,10 +95,11 @@ jobs:
         if: steps.check-cache-existance.outputs.cached-comment-data-exists == 'true'
         run: |
           issueCommentDataJson=$(cat ./reporter-artifacts/issue-comment-data.json)
-#          issueCommentDataJson="${issueCommentDataJson//'%'/'%25'}"
-#          issueCommentDataJson="${issueCommentDataJson//$'\n'/'%0A'}"
-#          issueCommentDataJson="${issueCommentDataJson//$'\r'/'%0D'}"
           echo "::set-output name=issueCommentDataJson::$issueCommentDataJson"
+          
+#                    issueCommentDataJson="${issueCommentDataJson//'%'/'%25'}"
+      #          issueCommentDataJson="${issueCommentDataJson//$'\n'/'%0A'}"
+      #          issueCommentDataJson="${issueCommentDataJson//$'\r'/'%0D'}"
 
       - run: mkdir -p reporter-artifacts
         if: steps.check-cache-existance.outputs.cached-comment-data-exists != 'true'
