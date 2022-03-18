@@ -212,6 +212,7 @@ async function processCommentData({ github, context, env }) {
   let commentData = {};
 
   if (COMMENT_CACHED_CONTENT !== 'false') {
+    console.log('typeof - ', typeof COMMENT_CACHED_CONTENT);
     try {
       commentData =
         typeof COMMENT_CACHED_CONTENT === 'string'
@@ -226,10 +227,7 @@ async function processCommentData({ github, context, env }) {
     github,
     context,
     env,
-    cachedCommentMeta:
-      COMMENT_CACHED_CONTENT !== 'false'
-        ? COMMENT_CACHED_CONTENT.commentMeta
-        : null,
+    cachedCommentMeta: commentData.commentMeta,
   });
 
   if (!commentData.commentSections) commentData.commentSections = {};
