@@ -77,12 +77,7 @@ async function getCommentDataMetadata({
    * Migrate runsList from previous runs.
    */
   console.log('cachedCommentMeta - ', cachedCommentMeta);
-  console.log(
-    'cachedCommentMeta 2 - ',
-    !!cachedCommentMeta,
-    !!cachedCommentMeta.runsList,
-    Array.isArray(cachedCommentMeta.runsList)
-  );
+
   if (
     cachedCommentMeta &&
     cachedCommentMeta.runsList &&
