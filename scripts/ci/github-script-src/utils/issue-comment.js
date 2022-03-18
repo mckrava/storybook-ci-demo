@@ -8,7 +8,6 @@ const {
 /**
  * Prepare metadata for issue comment, which will be used in current
  * and the next workflows vai actions cache.
- *
  * @param github
  * @param context
  * @param env
@@ -16,19 +15,19 @@ const {
  * @returns {Promise<{
  *    owner: string,
  *    repoUrl: string,
- *    suiteIdsList: number[],
- *    existingIssueComment: any,
+ *    existingIssueComment: (any|null),
  *    repo: string,
  *    defaultBranch: string,
- *    issueNumber: number|null,
+ *    issueNumber: null,
  *    publishArtifactsList: boolean,
  *    branchName: string,
+ *    runsList: any[],
  *    publishArtifactsWorkflowDispatchFile: string,
  *    ghPagesCustomDomain: string,
- *    reportMessageTitle: (string|*),
- *    triggerCommit: null|any,
- *    runIdsList: number[]
- *  }>}
+ *    reportMessageTitle: string,
+ *    triggerCommit: null,
+ *    runIdCurrent: number
+ * }>}
  */
 async function getCommentDataMetadata({
   github,
@@ -210,7 +209,14 @@ async function processCommentData({ github, context, env }) {
   let commentData = {};
 
   if (COMMENT_CACHED_CONTENT !== 'false') {
-    commentData = { ...COMMENT_CACHED_CONTENT };
+    try {
+      commentData =
+        typeof COMMENT_CACHED_CONTENT === 'string'
+          ? JSON.parse(COMMENT_CACHED_CONTENT)
+          : COMMENT_CACHED_CONTENT;
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   commentData.commentMeta = await getCommentDataMetadata({
@@ -472,7 +478,7 @@ async function getRunArtifactsList({ github, commentMeta }) {
 
   console.log('artifactsScope - ', artifactsScope);
   console.log(
-    'artifactsScope 2 - ',
+    'artifactsScope 3 - ',
     artifactsScope.filter((item) => !!item).flat()
   );
 

@@ -9,7 +9,13 @@ module.exports = async ({ github, context, core }) => {
 
   const { commentMeta, commentSections } = JSON.parse(ISSUE_COMMENT_DATA);
 
-  if (!commentMeta.owner || !commentMeta.repo || !commentMeta.runId) return;
+  if (
+    !commentMeta.owner ||
+    !commentMeta.repo ||
+    !commentMeta.runsList ||
+    commentMeta.runsList.length === 0
+  )
+    return;
 
   const availableArtifacts = await issueCommentComponents.getRunArtifactsList({
     github,
