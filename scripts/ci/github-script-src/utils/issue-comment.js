@@ -12,7 +12,7 @@ const {
  * @param github
  * @param context
  * @param env
- * @param commentCachedContent
+ * @param cachedCommentMeta
  * @returns {Promise<{
  *    owner: string,
  *    repoUrl: string,
@@ -34,7 +34,7 @@ async function getCommentDataMetadata({
   github,
   context,
   env,
-  commentCachedContent,
+  cachedCommentMeta,
 }) {
   const {
     GITHUB_HEAD_REF,
@@ -60,7 +60,9 @@ async function getCommentDataMetadata({
     runIdCurrent: context.runId,
     runsList: [],
     triggerCommit: null,
-    existingIssueComment: commentCachedContent.commentMeta.existingIssueComment,
+    existingIssueComment: cachedCommentMeta
+      ? cachedCommentMeta.existingIssueComment
+      : null,
     // suiteIdsList: [],
     issueNumber: null,
     reportMessageTitle:
@@ -76,10 +78,11 @@ async function getCommentDataMetadata({
    * Migrate runsList from previous runs.
    */
   if (
-    commentCachedContent.commentMeta.runsList &&
-    Array.isArray(commentCachedContent.commentMeta.runsList)
+    cachedCommentMeta &&
+    cachedCommentMeta.runsList &&
+    Array.isArray(cachedCommentMeta.runsList)
   ) {
-    commentMetaData.runsList = commentCachedContent.commentMeta.runsList;
+    commentMetaData.runsList = cachedCommentMeta.runsList;
   }
 
   /**
@@ -206,7 +209,7 @@ async function processCommentData({ github, context, env }) {
   } = env;
   let commentData = {};
 
-  if (COMMENT_CACHED_CONTENT === 'false') {
+  if (COMMENT_CACHED_CONTENT !== 'false') {
     commentData = { ...COMMENT_CACHED_CONTENT };
   }
 
@@ -214,7 +217,10 @@ async function processCommentData({ github, context, env }) {
     github,
     context,
     env,
-    commentCachedContent: COMMENT_CACHED_CONTENT,
+    cachedCommentMeta:
+      COMMENT_CACHED_CONTENT !== 'false'
+        ? COMMENT_CACHED_CONTENT.commentMeta
+        : null,
   });
 
   if (!commentData.commentSections) commentData.commentSections = {};
@@ -332,7 +338,6 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
    */
 
   if (commentMeta.publishArtifactsList) {
-
     const filteredArtifactsList = availableArtifacts.filter(
       (artifactItem) =>
         !artifactItem.name.startsWith(artifactsFilters.excludeFromListingPrefix)
