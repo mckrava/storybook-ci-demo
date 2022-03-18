@@ -94,11 +94,12 @@ jobs:
         id: parse-issue-comment-data
         if: steps.check-cache-existance.outputs.cached-comment-data-exists == 'true'
         run: |
-          issueCommentDataJson=$(cat ./reporter-artifacts/issue-comment-data.json)
-          issueCommentDataJson="${issueCommentDataJson//'%'/'%25'}"
-          issueCommentDataJson="${issueCommentDataJson//$'\n'/'%0A'}"
-          issueCommentDataJson="${issueCommentDataJson//$'\r'/'%0D'}"
+          issueCommentDataJson=$(cat ./reporter-artifacts/issue-comment-data.txt)
           echo "::set-output name=issueCommentDataJson::$issueCommentDataJson"
+          
+#                    issueCommentDataJson="${issueCommentDataJson//'%'/'%25'}"
+      #          issueCommentDataJson="${issueCommentDataJson//$'\n'/'%0A'}"
+      #          issueCommentDataJson="${issueCommentDataJson//$'\r'/'%0D'}"
 
       - run: mkdir -p reporter-artifacts
         if: steps.check-cache-existance.outputs.cached-comment-data-exists != 'true'
@@ -136,10 +137,12 @@ jobs:
         with:
           # | "github-token" parameter is required for work with github API
           github-token: ${{ secrets.GH_TOKEN }}
+          result-encoding: string
           script: |
             const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')
             return await script({github, context, core})
 
       - name: "Save issue comment prepared content into file"
         run: |
-          echo ${{ steps.issue-comment-data.outputs.result }} > ./reporter-artifacts/issue-comment-data.json
+          echo ${{ steps.issue-comment-data.outputs.result }}
+          echo ${{ steps.issue-comment-data.outputs.result }} > ./reporter-artifacts/issue-comment-data.txt

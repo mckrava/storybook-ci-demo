@@ -25,9 +25,10 @@ jobs:
           name: wf_test-artifacts-v2
           path: ./scripts
 
-#      - name: Sleep for 30 seconds
-#        run: sleep 3s
-#        shell: bash
+      - name: Sleep for 30 seconds
+        run: sleep 20s
+        shell: bash
+
 
   report-statuses-in-issue:
     # | Publish build and deployment statuses as pull request comment,

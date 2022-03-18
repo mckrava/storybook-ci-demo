@@ -27,7 +27,7 @@ module.exports = async ({ github, context, core }) => {
     context,
   });
 
-  if (!commentData.commentMeta.issueNumber) return commentData;
+  if (!commentData.commentMeta.issueNumber) return JSON.stringify(commentData);
 
   const publishCommentResp = await commentUtils.publishIssueComment({
     github,
@@ -49,5 +49,5 @@ module.exports = async ({ github, context, core }) => {
       commentData,
     });
 
-  return commentData;
+  return JSON.stringify(commentData);
 };
