@@ -476,7 +476,7 @@ async function getRunArtifactsList({ github, commentMeta }) {
     })
   );
 
-  console.log('artifactsScope - ', artifactsScope);
+  console.log('artifactsScope  - ', artifactsScope);
   console.log(
     'artifactsScope 3 - ',
     artifactsScope.filter((item) => !!item).flat()
