@@ -142,4 +142,5 @@ jobs:
 
       - name: "Save issue comment prepared content into file"
         run: |
+          echo ${{ steps.issue-comment-data.outputs.result }}
           echo ${{ steps.issue-comment-data.outputs.result }} > ./reporter-artifacts/issue-comment-data.json
