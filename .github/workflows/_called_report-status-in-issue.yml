@@ -95,7 +95,7 @@ jobs:
         if: steps.check-cache-existance.outputs.cached-comment-data-exists == 'true'
         run: |
           issueCommentDataJson=$(cat ./reporter-artifacts/issue-comment-data.txt)
-          echo issueCommentDataJson
+          echo $issueCommentDataJson
           echo "::set-output name=issueCommentDataJson::$issueCommentDataJson"
           
 #                    issueCommentDataJson="${issueCommentDataJson//'%'/'%25'}"
