@@ -95,6 +95,7 @@ jobs:
         if: steps.check-cache-existance.outputs.cached-comment-data-exists == 'true'
         run: |
           issueCommentDataJson=$(cat ./reporter-artifacts/issue-comment-data.txt)
+          echo $issueCommentDataJson
           echo "::set-output name=issueCommentDataJson::$issueCommentDataJson"
           
 #                    issueCommentDataJson="${issueCommentDataJson//'%'/'%25'}"
@@ -137,7 +138,7 @@ jobs:
         with:
           # | "github-token" parameter is required for work with github API
           github-token: ${{ secrets.GH_TOKEN }}
-          result-encoding: string
+#          result-encoding: string
           script: |
             const script = require('./scripts/ci/github-script-src/publish-issue-comment.js')
             return await script({github, context, core})
@@ -146,3 +147,9 @@ jobs:
         run: |
           echo ${{ steps.issue-comment-data.outputs.result }}
           echo ${{ steps.issue-comment-data.outputs.result }} > ./reporter-artifacts/issue-comment-data.txt
+
+      - name: Upload test art
+        uses: actions/upload-artifact@v2
+        with:
+          name: wf-maint-issue-comment-data
+          path: ./reporter-artifacts/issue-comment-data.txt

@@ -175,7 +175,7 @@ async function getCommentDataMetadata({
 
   commentMetaData.runsList.push({
     runId: context.runId,
-    suitId: currentSuitId,
+    suiteId: currentSuitId,
   });
 
   return commentMetaData;
@@ -223,10 +223,7 @@ async function processCommentData({ github, context, env }) {
     github,
     context,
     env,
-    cachedCommentMeta:
-      COMMENT_CACHED_CONTENT !== 'false'
-        ? COMMENT_CACHED_CONTENT.commentMeta
-        : null,
+    cachedCommentMeta: commentData.commentMeta,
   });
 
   if (!commentData.commentSections) commentData.commentSections = {};
@@ -353,7 +350,11 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
       commentMarkdownBody += `<hr />`;
       commentMarkdownBody += `:small_blue_diamond: **Available artifacts:** <br />`;
 
-      if (!commentMeta.suiteId) {
+      const showArtifactsNotice = !!filteredArtifactsList.find(
+        (item) => !item.suiteId
+      );
+
+      if (showArtifactsNotice) {
         commentMarkdownBody +=
           "<br /><details><summary>**_Artifacts list notice!_**</summary>_This list doesn't contain links at the moment " +
           'because it has been generated on `pull_request:open` event where ' +
@@ -362,7 +363,7 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
       }
 
       for (const artifactItem of filteredArtifactsList) {
-        if (commentMeta.suiteId) {
+        if (artifactItem.suiteId) {
           commentMarkdownBody += `- [${artifactItem.name}](${artifactItem.download_url}) <br />`;
         } else {
           commentMarkdownBody += `- ${artifactItem.name} <br />`;
@@ -476,7 +477,7 @@ async function getRunArtifactsList({ github, commentMeta }) {
     })
   );
 
-  console.log('artifactsScope - ', artifactsScope);
+  console.log('artifactsScope  - ', artifactsScope);
   console.log(
     'artifactsScope 3 - ',
     artifactsScope.filter((item) => !!item).flat()
