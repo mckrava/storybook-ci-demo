@@ -76,14 +76,11 @@ async function getCommentDataMetadata({
   /**
    * Migrate runsList from previous runs.
    */
-  console.log('cachedCommentMeta - ', cachedCommentMeta);
-
   if (
     cachedCommentMeta &&
     cachedCommentMeta.runsList &&
     Array.isArray(cachedCommentMeta.runsList)
   ) {
-    console.log('point1');
     commentMetaData.runsList = cachedCommentMeta.runsList;
   }
 
@@ -178,7 +175,7 @@ async function getCommentDataMetadata({
 
   commentMetaData.runsList.push({
     runId: context.runId,
-    suitId: currentSuitId,
+    suiteId: currentSuitId,
   });
 
   return commentMetaData;
@@ -212,7 +209,6 @@ async function processCommentData({ github, context, env }) {
   let commentData = {};
 
   if (COMMENT_CACHED_CONTENT !== 'false') {
-    console.log('typeof - ', typeof COMMENT_CACHED_CONTENT);
     try {
       commentData =
         typeof COMMENT_CACHED_CONTENT === 'string'
