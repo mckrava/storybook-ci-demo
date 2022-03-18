@@ -16,7 +16,7 @@ const {
  * @returns {Promise<{
  *    owner: string,
  *    repoUrl: string,
- *    suiteId: string,
+ *    suiteIdsList: number[],
  *    existingIssueComment: any,
  *    repo: string,
  *    defaultBranch: string,
@@ -27,7 +27,7 @@ const {
  *    ghPagesCustomDomain: string,
  *    reportMessageTitle: (string|*),
  *    triggerCommit: null|any,
- *    runId: number
+ *    runIdsList: number[]
  *  }>}
  */
 async function getCommentDataMetadata({
@@ -57,10 +57,11 @@ async function getCommentDataMetadata({
     defaultBranch: context.payload.repository.default_branch,
     ghPagesCustomDomain: GH_PAGES_CUSTOM_DOMAIN,
     repoUrl: context.payload.repository.html_url,
-    runId: context.runId,
+    runIdCurrent: context.runId,
+    runsList: [],
     triggerCommit: null,
-    existingIssueComment: commentCachedContent.existingIssueComment,
-    suiteId: '',
+    existingIssueComment: commentCachedContent.commentMeta.existingIssueComment,
+    // suiteIdsList: [],
     issueNumber: null,
     reportMessageTitle:
       !REPORT_MSG_TITLE || REPORT_MSG_TITLE.length === 0
@@ -70,6 +71,16 @@ async function getCommentDataMetadata({
     publishArtifactsWorkflowDispatchFile:
       PUBLISH_ARTIFACTS_WORKFLOW_DISPATCH_FILE,
   };
+
+  /**
+   * Migrate runsList from previous runs.
+   */
+  if (
+    commentCachedContent.commentMeta.runsList &&
+    Array.isArray(commentCachedContent.commentMeta.runsList)
+  ) {
+    commentMetaData.runsList = commentCachedContent.commentMeta.runsList;
+  }
 
   /**
    * Get triggered commit SHA
@@ -137,6 +148,7 @@ async function getCommentDataMetadata({
    * Get Suit ID
    */
 
+  let currentSuitId = null;
   const suitesList = await github.request(
     `GET /repos/${owner}/${repo}/commits/${GITHUB_SHA}/check-suites`,
     {
@@ -148,12 +160,21 @@ async function getCommentDataMetadata({
 
   console.log('[LOG]:: suitesList - ', suitesList);
 
+  for (let suiteItem of suitesList.data.check_suites) {
+    console.log('[LOG]:: fullSuitesListItem - ', suiteItem);
+  }
+
   for (let suiteItem of suitesList.data.check_suites.filter(
-    (item) => item.status === 'in_progress'
+    (item) => item.status === 'in_progress' && item.head_branch === branchName
   )) {
     console.log('[LOG]:: suiteItem - ', suiteItem);
-    commentMetaData.suiteId = suiteItem.id;
+    currentSuitId = suiteItem.id;
   }
+
+  commentMetaData.runsList.push({
+    runId: context.runId,
+    suitId: currentSuitId,
+  });
 
   return commentMetaData;
 }
@@ -311,6 +332,7 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
    */
 
   if (commentMeta.publishArtifactsList) {
+
     const filteredArtifactsList = availableArtifacts.filter(
       (artifactItem) =>
         !artifactItem.name.startsWith(artifactsFilters.excludeFromListingPrefix)
@@ -321,10 +343,11 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
       commentMarkdownBody += `:small_blue_diamond: **Available artifacts:** <br />`;
 
       if (!commentMeta.suiteId) {
-        commentMarkdownBody += "<br /><details><summary>**_Artifacts list notice!_**</summary>_This list doesn't contain links at the moment " +
-          "because it has been generated on `pull_request:open` event where " +
-          "`suite_id` (required part of artifact download link) is not available. " +
-          "After the next commit into this Pull Request artifacts list will contain links._</details>";
+        commentMarkdownBody +=
+          "<br /><details><summary>**_Artifacts list notice!_**</summary>_This list doesn't contain links at the moment " +
+          'because it has been generated on `pull_request:open` event where ' +
+          '`suite_id` (required part of artifact download link) is not available. ' +
+          'After the next commit into this Pull Request artifacts list will contain links._</details>';
       }
 
       for (const artifactItem of filteredArtifactsList) {
@@ -410,30 +433,45 @@ function getArtifactUrl(repoHtmlUrl, checkSuiteNumber, artifactId) {
  * @returns {Promise<*[]>}
  */
 async function getRunArtifactsList({ github, commentMeta }) {
-  const { owner, repo, runId, repoUrl, suiteId } = commentMeta;
-  const artifactsList = [];
+  const { owner, repo, runsList, repoUrl } = commentMeta;
 
-  const iterator = github.paginate.iterator(
-    github.rest.actions.listWorkflowRunArtifacts,
-    {
-      owner,
-      repo,
-      run_id: runId,
-      per_page: 100,
-    }
+  const artifactsScope = await Promise.all(
+    runsList.map(async (runItem) => {
+      const runArtifactsList = [];
+
+      const iterator = github.paginate.iterator(
+        github.rest.actions.listWorkflowRunArtifacts,
+        {
+          owner,
+          repo,
+          run_id: runItem.runId,
+          per_page: 100,
+        }
+      );
+
+      for await (const { data: artifacts } of iterator) {
+        console.log('[LOG]:: Artifacts - ', artifacts);
+        for (const artifact of artifacts) {
+          runArtifactsList.push({
+            ...artifact,
+            download_url: getArtifactUrl(repoUrl, runItem.suiteId, artifact.id),
+            suiteId: runItem.suiteId,
+            runId: runItem.runId,
+          });
+        }
+      }
+
+      return runArtifactsList;
+    })
   );
 
-  for await (const { data: artifacts } of iterator) {
-    console.log('[LOG]:: Artifacts - ', artifacts);
-    for (const artifact of artifacts) {
-      artifactsList.push({
-        ...artifact,
-        download_url: getArtifactUrl(repoUrl, suiteId, artifact.id),
-      });
-    }
-  }
+  console.log('artifactsScope - ', artifactsScope);
+  console.log(
+    'artifactsScope 2 - ',
+    artifactsScope.filter((item) => !!item).flat()
+  );
 
-  return artifactsList;
+  return artifactsScope.filter((item) => !!item).flat();
 }
 
 module.exports = {

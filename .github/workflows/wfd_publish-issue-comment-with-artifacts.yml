@@ -38,6 +38,47 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+#
+#      - name: "Get Timestamp"
+#          id: timestamp
+#          uses: nanzm/get-time-action@v1.1
+#          with:
+#            format: 'YYYYMMDDHHmmssSSS'
+#
+#      - name: "Cache issue comment content"
+#        uses: actions/cache@v2
+#        id: cache-reporter-content
+#        env:
+#          TIMESTAMP: ${{ steps.timestamp.outputs.time }}
+#        with:
+#          path: ./reporter-artifacts
+#          key: reporter-artifacts-branch-${{ github.ref_name }}-commit-${{ github.sha }}-${{ steps.timestamp.outputs.time }}
+#          restore-keys: |
+#            reporter-artifacts-branch-${{ github.ref_name }}-commit-${{ github.sha }}-
+#
+#      - name: "Check if comment data folder exists"
+#        id: check-cache-existance
+#        run: |
+#          DIR="./reporter-artifacts"
+#          if [ -d "$DIR" ]; then
+#            echo "::set-output name=cached-comment-data-exists::true"
+#          else
+#            echo "::set-output name=cached-comment-data-exists::false"
+#          fi
+#
+#      - name: "Parse issue comment data from cache"
+#        id: parse-issue-comment-data
+#        if: steps.check-cache-existance.outputs.cached-comment-data-exists == 'true'
+#        run: |
+#          issueCommentDataJson=$(cat ./reporter-artifacts/issue-comment-data.json)
+#          issueCommentDataJson="${issueCommentDataJson//'%'/'%25'}"
+#          issueCommentDataJson="${issueCommentDataJson//$'\n'/'%0A'}"
+#          issueCommentDataJson="${issueCommentDataJson//$'\r'/'%0D'}"
+#          echo "::set-output name=issueCommentDataJson::$issueCommentDataJson"
+#
+#      - run: mkdir -p reporter-artifacts
+#        if: steps.check-cache-existance.outputs.cached-comment-data-exists != 'true'
+
       - uses: actions/github-script@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
