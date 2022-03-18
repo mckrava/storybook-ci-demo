@@ -321,10 +321,10 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
       commentMarkdownBody += `:small_blue_diamond: **Available artifacts:** <br />`;
 
       if (!commentMeta.suiteId) {
-        commentMarkdownBody += "<sup>This list doesn't contain links at the moment " +
+        commentMarkdownBody += "<br /><details><summary>**_Artifacts list notice!_**</summary>_This list doesn't contain links at the moment " +
           "because it has been generated on `pull_request:open` event where " +
           "`suite_id` (required part of artifact download link) is not available. " +
-          "After the next commit into this Pull Request artifacts list will contain links.<sup> <br />";
+          "After the next commit into this Pull Request artifacts list will contain links._</details>";
       }
 
       for (const artifactItem of filteredArtifactsList) {
