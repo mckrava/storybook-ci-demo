@@ -2,11 +2,17 @@
 
 name: "E2E testing App"
 
-#on:
-#  push:
-#    branches:
-#      - 'fix/**'
-#      - 'feat/**'
+on:
+  push:
+    branches:
+      - 'fix/**'
+      - 'feat/**'
+      - develop
+  pull_request:
+    types:
+      - opened
+    branches:
+      - develop
 
 jobs:
   build:
@@ -25,3 +31,25 @@ jobs:
     with:
       app-build-artifact-name: app-build-files
       app-node-modules-cache-key: cache-node-modules-ui-app
+
+  report-statuses-in-issue:
+    # | Publish build and deployment statuses as pull request comment,
+    # | if any pull request is associated with the latest commit.
+    name: 'Report in PR'
+    uses: ./.github/workflows/_called_report-status-in-issue.yml
+    if: always()
+    needs: [ build, app-e2e-tests ]
+    with:
+      publish-artifacts-list: true
+
+      app-storybook-build-pub-report: false
+      app-storybook-deploy-pub-report: false
+      app-unit-test-pub-report: false
+
+      app-e2e-test-pub-report: true
+      app-e2e-test-status: ${{ needs.app-e2e-tests.result == 'success' }}
+
+    secrets:
+      gh_token: ${{ secrets.GH_TOKEN }}
+      gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
+      gh_pages_custom_domain: ${{ secrets.GH_PAGES_CUSTOM_DOMAIN }}

@@ -45,6 +45,13 @@ on:
         required: false
         type: string
 
+      app-e2e-test-pub-report:
+        required: true
+        type: boolean
+      app-e2e-test-status:
+        required: false
+        type: boolean
+
     secrets:
       gh_token:
         required: true
@@ -119,7 +126,7 @@ jobs:
 
           IS_APP_STORYBOOK_BUILD_REPORT: ${{ inputs.app-storybook-build-pub-report }}
           IS_APP_UNIT_TEST_REPORT: ${{ inputs.app-unit-test-pub-report }}
-          IS_APP_E2E_TEST_REPORT: false
+
           IS_STORYBOOK_UNIT_TEST_REPORT: false
           IS_STORYBOOK_E2E_TEST_REPORT: false
           IS_APP_STORYBOOK_DEPLOYMENT_REPORT: ${{ inputs.app-storybook-deploy-pub-report }}
@@ -127,6 +134,11 @@ jobs:
           APP_UNIT_TEST_PERCENTAGE: ${{ inputs.app-unit-test-codecov-percentage }}
           APP_UNIT_TEST_DIFF: ${{ inputs.app-unit-test-codecov-diff }}
           APP_UNIT_TEST_STATUS: ${{ inputs.app-unit-test-status }}
+
+          # | E2E Tests
+          IS_APP_E2E_TEST_REPORT: ${{ inputs.app-e2e-test-pub-report }}
+          APP_E2E_TEST_STATUS: ${{ inputs.app-e2e-test-status }}
+
 
           APP_STORYBOOK_BUILD_STATUS: ${{ inputs.app-storybook-build-status }}
           APP_STORYBOOK_DEPLOYMENT_STATUS: ${{ inputs.app-storybook-deploy-status }}
