@@ -17,10 +17,10 @@ on:
     outputs:
       codecov_unit_percentage:
         description: "Total Percentage coverage"
-        value: ${{ jobs.unit_tests_codecov_pub_report.outputs.codecov_output_percentage }}
+        value: ${{ jobs.generate_report.outputs.codecov_output_percentage }}
       codecov_unit_diff:
-        description: "Percentage difference between head branch"
-        value: ${{ jobs.unit_tests_codecov_pub_report.outputs.codecov_output_diff }}
+        description: "Percentage difference between head branch, if PR is available for current workflow run"
+        value: ${{ jobs.generate_report.outputs.codecov_output_diff }}
     secrets:
       barecheck_github_app_token:
         required: true
@@ -47,7 +47,7 @@ jobs:
           name: ${{inputs.working-branch-codecov-artifact-name}}
           path: ./working-report
 
-      - name: "Post coverage report in PR"
+      - name: "Generate code coverage report"
         id: code-coverage
         continue-on-error: true
         uses: barecheck/code-coverage-action@v0.5.1
@@ -55,5 +55,5 @@ jobs:
           barecheck-github-app-token: ${{ secrets.barecheck_github_app_token }}
           lcov-file: './working-report/lcov.info'
           base-lcov-file: './base-report/lcov.info'
-          send-summary-comment: false
+          send-summary-comment: "false"
           show-annotations: 'warning'
