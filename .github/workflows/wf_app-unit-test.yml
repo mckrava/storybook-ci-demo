@@ -7,6 +7,12 @@ on:
     branches:
       - 'fix/**'
       - 'feat/**'
+      - develop
+  pull_request:
+    types:
+      - opened
+    branches:
+      - develop
 
 jobs:
   testing:
@@ -34,7 +40,7 @@ jobs:
     # | if any pull request is associated with triggered commit.
     name: 'Report in PR'
     uses: ./.github/workflows/_called_report-status-in-issue.yml
-    if: always()
+    if: ${{ always() && needs.testing.result != 'cancelled' && needs.codecov-report.result != 'cancelled' }}
     needs: [testing, codecov-report]
     with:
       publish-artifacts-list: true

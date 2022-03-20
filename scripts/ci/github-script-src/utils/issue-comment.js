@@ -346,7 +346,7 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
    */
   if (commentSectionsList.includes(commentDataKeys.appStorybookBuild)) {
     commentMarkdownBody += `<hr />`;
-    commentMarkdownBody += `:small_blue_diamond: **Application/Storybook build:** <br />
+    commentMarkdownBody += `:small_blue_diamond: **App/Storybook build:** <br />
     - Status: ${
       commentSections[commentDataKeys.appStorybookBuild].status
         ? ':white_check_mark: _Built_ '
@@ -360,7 +360,7 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
 
   if (commentSectionsList.includes(commentDataKeys.appStorybookDeployGhPages)) {
     commentMarkdownBody += `<hr />`;
-    commentMarkdownBody += `:small_blue_diamond: **Application/Storybook deployment:** <br />
+    commentMarkdownBody += `:small_blue_diamond: **App/Storybook deployment:** <br />
     - Status: ${
       commentSections[commentDataKeys.appStorybookDeployGhPages].status
         ? ':white_check_mark: _Deployed_ '
@@ -384,7 +384,7 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
    */
   if (commentSectionsList.includes(commentDataKeys.appEndToEndTests)) {
     commentMarkdownBody += `<hr />`;
-    commentMarkdownBody += `:small_blue_diamond: **Application E2E tests:** <br />
+    commentMarkdownBody += `:small_blue_diamond: **App E2E tests:** <br />
     - Status: ${
       commentSections[commentDataKeys.appEndToEndTests].status
         ? ':white_check_mark: _Passed_ '
@@ -397,7 +397,7 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
    */
   if (commentSectionsList.includes(commentDataKeys.appUnitTests)) {
     commentMarkdownBody += `<hr />`;
-    commentMarkdownBody += `:small_blue_diamond: **Application Unit tests:** <br />
+    commentMarkdownBody += `:small_blue_diamond: **App Unit tests:** <br />
     - Status: ${
       commentSections[commentDataKeys.appUnitTests].status
         ? ':white_check_mark: _Passed_ '
