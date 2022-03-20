@@ -313,7 +313,7 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
   let commentMarkdownBody = '';
   const commentSectionsList = Object.keys(commentSections);
 
-  console.log('commentSectionsList 2 - ', commentSectionsList);
+  console.log('commentSectionsList - ', commentSectionsList);
   console.log('commentDataKeys - ', commentDataKeys);
 
   commentMarkdownBody = `:page_with_curl: **${commentMeta.reportMessageTitle}** <br />`;
