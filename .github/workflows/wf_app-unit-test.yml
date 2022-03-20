@@ -1,18 +1,60 @@
 # | Run Unit test for UI Application
 
-name: "Unit testing App"
+name: 'Unit testing App'
 
-#on:
-#  push:
-#    branches:
-#      - 'fix/**'
-#      - 'feat/**'
+on:
+  push:
+    branches:
+      - 'fix/**'
+      - 'feat/**'
+      - develop
+  pull_request:
+    types:
+      - opened
+    branches:
+      - develop
 
 jobs:
   testing:
-    name: "Testing"
+    name: 'Testing'
     uses: ./.github/workflows/_called_run-unit-tests-app.yml
     with:
       base-branch-codecov-artifact-name: base-lcov.info
       working-branch-codecov-artifact-name: working-lcov.info
       app-node-modules-cache-key: cache-node-modules-ui-app
+
+  # | Generate code coverage report for App unit tests
+  codecov-report:
+    name: 'Generate codecove report'
+    needs: testing
+    uses: ./.github/workflows/_called_generate-unit-tests-code-cov-report.yml
+    if: ${{ always() }}
+    with:
+      base-branch-codecov-artifact-name: ref-lcov.info
+      working-branch-codecov-artifact-name: working-lcov.info
+    secrets:
+      barecheck_github_app_token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
+
+  report-statuses-in-issue:
+    # | Publish build and deployment statuses as pull request comment,
+    # | if any pull request is associated with triggered commit.
+    name: 'Report in PR'
+    uses: ./.github/workflows/_called_report-status-in-issue.yml
+    if: ${{ always() && needs.testing.result != 'cancelled' && needs.codecov-report.result != 'cancelled' }}
+    needs: [testing, codecov-report]
+    with:
+      publish-artifacts-list: true
+
+      app-unit-test-pub-report: true
+      app-unit-test-status: ${{ needs.unit-tests.result == 'success' }}
+      app-unit-test-codecov-percentage: ${{ needs.codecov-report.outputs.codecov_unit_percentage }}
+      app-unit-test-codecov-diff: ${{ needs.codecov-report.outputs.codecov_unit_diff }}
+
+      app-e2e-test-pub-report: false
+      app-storybook-build-pub-report: false
+      app-storybook-deploy-pub-report: false
+
+    secrets:
+      gh_token: ${{ secrets.GH_TOKEN }}
+      gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
+      gh_pages_custom_domain: ${{ secrets.GH_PAGES_CUSTOM_DOMAIN }}

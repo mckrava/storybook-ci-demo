@@ -160,12 +160,6 @@ async function getCommentDataMetadata({
     }
   );
 
-  console.log('[LOG]:: suitesList - ', suitesList);
-
-  for (let suiteItem of suitesList.data.check_suites) {
-    console.log('[LOG]:: fullSuitesListItem - ', suiteItem);
-  }
-
   for (let suiteItem of suitesList.data.check_suites.filter(
     (item) => item.status === 'in_progress' && item.head_branch === branchName
   )) {
@@ -202,11 +196,18 @@ async function processCommentData({ github, context, env }) {
   const {
     COMMENT_CACHED_CONTENT,
     IS_APP_STORYBOOK_BUILD_REPORT,
-    IS_APP_STORYBOOK_DEPLOYMENT_REPORT,
-    IS_APP_E2E_TEST_REPORT,
     APP_STORYBOOK_BUILD_STATUS,
+
+    IS_APP_STORYBOOK_DEPLOYMENT_REPORT,
     APP_STORYBOOK_DEPLOYMENT_STATUS,
+
+    IS_APP_E2E_TEST_REPORT,
     APP_E2E_TEST_STATUS,
+
+    IS_APP_UNIT_TEST_REPORT,
+    APP_UNIT_TEST_STATUS,
+    APP_UNIT_TEST_PERCENTAGE,
+    APP_UNIT_TEST_DIFF,
   } = env;
   let commentData = {};
 
@@ -293,6 +294,27 @@ async function processCommentData({ github, context, env }) {
       APP_E2E_TEST_STATUS === 'true';
   }
 
+  /**
+   * IS_APP_UNIT_TEST_REPORT
+   */
+  if (IS_APP_UNIT_TEST_REPORT === 'true') {
+    if (COMMENT_CACHED_CONTENT.hasOwnProperty(commentDataKeys.appUnitTests)) {
+      commentData.commentSections[commentDataKeys.appUnitTests] = {
+        ...commentData.commentSections[commentDataKeys.appUnitTests],
+      };
+    }
+
+    if (!commentData.commentSections[commentDataKeys.appUnitTests])
+      commentData.commentSections[commentDataKeys.appUnitTests] = {};
+
+    commentData.commentSections[commentDataKeys.appUnitTests].status =
+      APP_UNIT_TEST_STATUS === 'true';
+    commentData.commentSections[commentDataKeys.appUnitTests].percentage =
+      APP_UNIT_TEST_PERCENTAGE;
+    commentData.commentSections[commentDataKeys.appUnitTests].diff =
+      APP_UNIT_TEST_DIFF;
+  }
+
   return commentData;
 }
 
@@ -313,9 +335,6 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
   let commentMarkdownBody = '';
   const commentSectionsList = Object.keys(commentSections);
 
-  console.log('commentSectionsList - ', commentSectionsList);
-  console.log('commentDataKeys - ', commentDataKeys);
-
   commentMarkdownBody = `:page_with_curl: **${commentMeta.reportMessageTitle}** <br />`;
 
   if (commentMeta.triggerCommit) {
@@ -327,7 +346,7 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
    */
   if (commentSectionsList.includes(commentDataKeys.appStorybookBuild)) {
     commentMarkdownBody += `<hr />`;
-    commentMarkdownBody += `:small_blue_diamond: **Application/Storybook build:** <br />
+    commentMarkdownBody += `:small_blue_diamond: **App/Storybook build:** <br />
     - Status: ${
       commentSections[commentDataKeys.appStorybookBuild].status
         ? ':white_check_mark: _Built_ '
@@ -341,7 +360,7 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
 
   if (commentSectionsList.includes(commentDataKeys.appStorybookDeployGhPages)) {
     commentMarkdownBody += `<hr />`;
-    commentMarkdownBody += `:small_blue_diamond: **Application/Storybook deployment:** <br />
+    commentMarkdownBody += `:small_blue_diamond: **App/Storybook deployment:** <br />
     - Status: ${
       commentSections[commentDataKeys.appStorybookDeployGhPages].status
         ? ':white_check_mark: _Deployed_ '
@@ -364,14 +383,28 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
    * App E2E Tests
    */
   if (commentSectionsList.includes(commentDataKeys.appEndToEndTests)) {
-    console.log('point 11');
     commentMarkdownBody += `<hr />`;
-    commentMarkdownBody += `:small_blue_diamond: **Application E2E tests:** <br />
+    commentMarkdownBody += `:small_blue_diamond: **App E2E tests:** <br />
     - Status: ${
       commentSections[commentDataKeys.appEndToEndTests].status
         ? ':white_check_mark: _Passed_ '
         : ':no_entry_sign: _Failed_ '
     }`;
+  }
+
+  /**
+   * App Unit Tests
+   */
+  if (commentSectionsList.includes(commentDataKeys.appUnitTests)) {
+    commentMarkdownBody += `<hr />`;
+    commentMarkdownBody += `:small_blue_diamond: **App Unit tests:** <br />
+    - Status: ${
+      commentSections[commentDataKeys.appUnitTests].status
+        ? ':white_check_mark: _Passed_ '
+        : ':no_entry_sign: _Failed_ '
+    }<br />
+    - Tests coverage: ${commentSections[commentDataKeys.appUnitTests].percentage}%
+    `;
   }
 
   /**
@@ -411,8 +444,6 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
   }
 
   commentMarkdownBody = commentMarkdownBody.replace(/(\r\n|\n|\r)/gm, '');
-
-  console.log('commentMarkdownBody - ', commentMarkdownBody);
 
   return commentMarkdownBody;
 }
@@ -515,12 +546,6 @@ async function getRunArtifactsList({ github, commentMeta }) {
 
       return runArtifactsList;
     })
-  );
-
-  console.log('artifactsScope  - ', artifactsScope);
-  console.log(
-    'artifactsScope 3 - ',
-    artifactsScope.filter((item) => !!item).flat()
   );
 
   return artifactsScope.filter((item) => !!item).flat();

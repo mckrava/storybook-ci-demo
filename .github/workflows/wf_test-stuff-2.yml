@@ -32,7 +32,7 @@ jobs:
 
   report-statuses-in-issue:
     # | Publish build and deployment statuses as pull request comment,
-    # | if any pull request is associated with the latest commit.
+    # | if any pull request is associated with triggered commit.
     name: 'Report in PR'
     uses: ./.github/workflows/_called_report-status-in-issue.yml
     if: always()

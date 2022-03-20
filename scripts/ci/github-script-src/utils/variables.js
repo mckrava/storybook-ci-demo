@@ -5,6 +5,7 @@ module.exports = {
     appStorybookDeployGhPages: 'appStorybookDeployGhPages',
     allRunArtifacts: 'allRunArtifacts',
     appEndToEndTests: 'appEndToEndTests',
+    appUnitTests: 'appUnitTests',
   },
   artifactsFilters: {
     excludeFromListingPrefix: 'wf-maint'
