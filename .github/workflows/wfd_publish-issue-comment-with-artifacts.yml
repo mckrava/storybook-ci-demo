@@ -16,15 +16,9 @@ on:
       issue_comment_data:
         # | Data passed from caller workflow - "Reusable :: Report in issue" (.github/workflows/_called_report-status-in-issue.yml)
         # | {
-        # |   publishArtifactsList: bool;
-        # |   repoUrl: string;
-        # |   runId: number;
-        # |   commentBody: string;
-        # |   owner: string;
-        # |   repo: string;
-        # |   suiteId: number;
-        # |   existingIssueCommentId: number;
-        # |   issueNumber: string;
+        # |   commentMeta: metadata for issue comment;
+        # |   commentSections: scope of comment sections data;
+        # |   availableArtifacts: available artifacts for current PR;;
         # | }
         description: 'Stringified JSON with prepared data for publication comment'
         required: false
