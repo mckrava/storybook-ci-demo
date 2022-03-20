@@ -1,6 +1,8 @@
 # | This workflow can be invoked only from root workflow.
 # | More information about Reusing workflows - https://docs.github.com/en/actions/using-workflows/reusing-workflows
 
+# | If any PR is available for commit which has triggered current run, unit tests will be executed for both base and
+# | working branches for generation code coverage difference value.
 name: "Reusable :: Unit tests :: App"
 
 on:
@@ -37,7 +39,7 @@ jobs:
         with:
           node-version: 17.3
 
-      - name:" Cache Node Modules for ui-app"
+      - name: "Cache Node Modules for ui-app"
         id: cache-node-modules-ui-app
         uses: actions/cache@v2
         with:
@@ -60,6 +62,7 @@ jobs:
   unit_testing:
     name: Run work branch
     runs-on: macos-11
+    if: ${{ always() && needs.base_branch_coverage_check.result != 'cancelled' }}
     outputs:
       codecov_output_percentage: ${{ steps.code-coverage.outputs.percentage }}
       codecov_output_diff: ${{ steps.code-coverage.outputs.diff }}
