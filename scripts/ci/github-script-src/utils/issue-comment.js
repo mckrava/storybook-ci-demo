@@ -313,6 +313,9 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
   let commentMarkdownBody = '';
   const commentSectionsList = Object.keys(commentSections);
 
+  console.log('commentSectionsList - ', commentSectionsList);
+  console.log('commentDataKeys - ', commentDataKeys);
+
   commentMarkdownBody = `:page_with_curl: **${commentMeta.reportMessageTitle}** <br />`;
 
   if (commentMeta.triggerCommit) {
@@ -361,6 +364,7 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
    * App E2E Tests
    */
   if (commentSectionsList.includes(commentDataKeys.appEndToEndTests)) {
+    console.log('point 11')
     commentMarkdownBody += `<hr />`;
     commentMarkdownBody += `:small_blue_diamond: **Application E2E tests:** <br />
     - Status: ${
@@ -369,7 +373,6 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
         : ':no_entry_sign: _Failed_ '
     }`;
   }
-
 
   /**
    * Artifacts list
