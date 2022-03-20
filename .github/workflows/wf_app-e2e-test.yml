@@ -45,7 +45,6 @@ jobs:
       app-storybook-build-pub-report: false
       app-storybook-deploy-pub-report: false
       app-unit-test-pub-report: false
-
       app-e2e-test-pub-report: true
       app-e2e-test-status: ${{ needs.app-e2e-tests.result == 'success' }}
 
