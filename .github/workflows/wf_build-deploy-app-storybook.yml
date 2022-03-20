@@ -55,6 +55,7 @@ jobs:
       app-storybook-deploy-status: ${{ needs.deploy.result == 'success' }}
 
       app-unit-test-pub-report: false
+      app-e2e-test-pub-report: false
     secrets:
       gh_token: ${{ secrets.GH_TOKEN }}
       gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}

@@ -1,16 +1,16 @@
 name: Report demo v2
 
-on:
-  push:
-    branches:
-      - 'fix/**'
-      - 'feat/**'
-      - develop
-  pull_request:
-    types:
-      - opened
-    branches:
-      - develop
+#on:
+#  push:
+#    branches:
+#      - 'fix/**'
+#      - 'feat/**'
+#      - develop
+#  pull_request:
+#    types:
+#      - opened
+#    branches:
+#      - develop
 
 jobs:
   delay:

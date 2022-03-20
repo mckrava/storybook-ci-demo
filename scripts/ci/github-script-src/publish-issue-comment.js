@@ -13,14 +13,6 @@ module.exports = async ({ github, context, core }) => {
     context,
   });
 
-  const runsList = await github.rest.actions.listWorkflowRunsForRepo({
-    owner: commentData.commentMeta.owner,
-    repo: commentData.commentMeta.repo,
-    branch: commentData.commentMeta.branchName,
-  });
-
-  console.log('runsList - ', runsList);
-
   const commentMarkdownBody = issueCommentComponents.getCommentMarkdownBody({
     commentData,
     github,

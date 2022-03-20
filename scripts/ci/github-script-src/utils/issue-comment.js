@@ -203,8 +203,10 @@ async function processCommentData({ github, context, env }) {
     COMMENT_CACHED_CONTENT,
     IS_APP_STORYBOOK_BUILD_REPORT,
     IS_APP_STORYBOOK_DEPLOYMENT_REPORT,
+    IS_APP_E2E_TEST_REPORT,
     APP_STORYBOOK_BUILD_STATUS,
     APP_STORYBOOK_DEPLOYMENT_STATUS,
+    APP_E2E_TEST_STATUS,
   } = env;
   let commentData = {};
 
@@ -272,6 +274,25 @@ async function processCommentData({ github, context, env }) {
     ].status = APP_STORYBOOK_DEPLOYMENT_STATUS === 'true';
   }
 
+  /**
+   * IS_APP_E2E_TEST_REPORT
+   */
+  if (IS_APP_E2E_TEST_REPORT === 'true') {
+    if (
+      COMMENT_CACHED_CONTENT.hasOwnProperty(commentDataKeys.appEndToEndTests)
+    ) {
+      commentData.commentSections[commentDataKeys.appEndToEndTests] = {
+        ...commentData.commentSections[commentDataKeys.appEndToEndTests],
+      };
+    }
+
+    if (!commentData.commentSections[commentDataKeys.appEndToEndTests])
+      commentData.commentSections[commentDataKeys.appEndToEndTests] = {};
+
+    commentData.commentSections[commentDataKeys.appEndToEndTests].status =
+      APP_E2E_TEST_STATUS === 'true';
+  }
+
   return commentData;
 }
 
@@ -291,6 +312,9 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
   } = commentData;
   let commentMarkdownBody = '';
   const commentSectionsList = Object.keys(commentSections);
+
+  console.log('commentSectionsList - ', commentSectionsList);
+  console.log('commentDataKeys - ', commentDataKeys);
 
   commentMarkdownBody = `:page_with_curl: **${commentMeta.reportMessageTitle}** <br />`;
 
@@ -337,6 +361,20 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
   }
 
   /**
+   * App E2E Tests
+   */
+  if (commentSectionsList.includes(commentDataKeys.appEndToEndTests)) {
+    console.log('point 11');
+    commentMarkdownBody += `<hr />`;
+    commentMarkdownBody += `:small_blue_diamond: **Application E2E tests:** <br />
+    - Status: ${
+      commentSections[commentDataKeys.appEndToEndTests].status
+        ? ':white_check_mark: _Passed_ '
+        : ':no_entry_sign: _Failed_ '
+    }`;
+  }
+
+  /**
    * Artifacts list
    */
 
@@ -373,6 +411,8 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
   }
 
   commentMarkdownBody = commentMarkdownBody.replace(/(\r\n|\n|\r)/gm, '');
+
+  console.log('commentMarkdownBody - ', commentMarkdownBody);
 
   return commentMarkdownBody;
 }
