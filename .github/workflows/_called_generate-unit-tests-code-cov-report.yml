@@ -35,10 +35,10 @@ jobs:
     steps:
       - name: "Download code coverage report from base branch"
         uses: actions/download-artifact@v2
-        id: download-ref
+        id: download-base
         with:
           name: ${{inputs.base-branch-codecov-artifact-name}}
-          path: ./ref-report
+          path: ./base-report
 
       - name: "Download code coverage report from working branch"
         uses: actions/download-artifact@v2
@@ -54,6 +54,6 @@ jobs:
         with:
           barecheck-github-app-token: ${{ secrets.barecheck_github_app_token }}
           lcov-file: './working-report/lcov.info'
-          base-lcov-file: './ref-report/lcov.info'
+          base-lcov-file: './base-report/lcov.info'
           send-summary-comment: false
           show-annotations: 'warning'

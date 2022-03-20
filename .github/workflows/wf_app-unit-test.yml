@@ -26,14 +26,15 @@ jobs:
       working-branch-codecov-artifact-name: working-lcov.info
       app-node-modules-cache-key: cache-node-modules-ui-app
 
-  # | Generate code coverage report for App unit tests
+  # | Generate code coverage report for App unit tests.
+  # | Available outputs: "codecov_unit_percentage", "codecov_unit_diff".
   codecov-report:
     name: 'Generate codecove report'
     needs: testing
     uses: ./.github/workflows/_called_generate-unit-tests-code-cov-report.yml
     if: ${{ always() }}
     with:
-      base-branch-codecov-artifact-name: ref-lcov.info
+      base-branch-codecov-artifact-name: base-lcov.info
       working-branch-codecov-artifact-name: working-lcov.info
     secrets:
       barecheck_github_app_token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
@@ -49,7 +50,7 @@ jobs:
       publish-artifacts-list: true
 
       app-unit-test-pub-report: true
-      app-unit-test-status: ${{ needs.unit-tests.result == 'success' }}
+      app-unit-test-status: ${{ needs.testing.result == 'success' }}
       app-unit-test-codecov-percentage: ${{ needs.codecov-report.outputs.codecov_unit_percentage }}
       app-unit-test-codecov-diff: ${{ needs.codecov-report.outputs.codecov_unit_diff }}
 
