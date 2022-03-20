@@ -364,7 +364,7 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
    * App E2E Tests
    */
   if (commentSectionsList.includes(commentDataKeys.appEndToEndTests)) {
-    console.log('point 11')
+    console.log('point 11');
     commentMarkdownBody += `<hr />`;
     commentMarkdownBody += `:small_blue_diamond: **Application E2E tests:** <br />
     - Status: ${
@@ -411,6 +411,8 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
   }
 
   commentMarkdownBody = commentMarkdownBody.replace(/(\r\n|\n|\r)/gm, '');
+
+  console.log('commentMarkdownBody - ', commentMarkdownBody);
 
   return commentMarkdownBody;
 }
