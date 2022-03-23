@@ -117,7 +117,6 @@ jobs:
       # | Create folder for reporter artifacts if folder is not existing. It can be necessary if comment data is not
       # | available in cache from previous workflow.
       - name: 'Create reporter artifacts dir'
-        if: steps.check-cache-dir-existance.outputs.exists == 'true'
         run: mkdir -p reporter-artifacts
 
       - name: 'Run github-script for preparation and publication comment content'

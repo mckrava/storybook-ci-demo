@@ -37,7 +37,7 @@ jobs:
       gh_token: ${{ secrets.GH_TOKEN }}
       gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
 
-  # | Publish status of testing in PR comment, if PRr is available.
+  # | Publish status of testing in PR comment, if it's available.
   report-statuses-in-issue:
     # | Publish build and deployment statuses as pull request comment,
     # | if any pull request is associated with triggered commit.
