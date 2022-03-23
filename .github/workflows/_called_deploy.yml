@@ -75,7 +75,7 @@ jobs:
         run: |
           sudo chmod +x ./scripts/ci/gh-actions-get-branch-name.sh
           sudo chmod +x ./scripts/ci/gh-actions-branch-name-serialize.sh
-          BRANCH_NAME="(./scripts/ci/gh-actions-get-branch-name.sh "$GITHUB_EVENT_NAME" "$GITHUB_REF" "$GITHUB_BASE_REF")"
+          BRANCH_NAME="$(./scripts/ci/gh-actions-get-branch-name.sh "$GITHUB_EVENT_NAME" "$GITHUB_REF" "$GITHUB_BASE_REF")"
           echo "##[set-output name=name;]$(./scripts/ci/gh-actions-branch-name-serialize.sh "$BRANCH_NAME")"
 
       # | This step removes build files for current branch, if files are existing.
