@@ -69,8 +69,8 @@ jobs:
           path: ./scripts
 
       - name: 'Extract existing build folder name'
-        if: ${{ steps.check_branch_existence.outputs.exists == 'true' }}
         id: build_folder_name
+        if: ${{ steps.check_branch_existence.outputs.exists == 'true' }}
         shell: bash
         run: |
           sudo chmod +x ./scripts/ci/gh-actions-get-branch-name.sh
