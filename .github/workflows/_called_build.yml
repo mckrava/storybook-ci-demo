@@ -19,7 +19,7 @@ on:
 
 jobs:
   build:
-    name: Build
+    name: "Build"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -43,7 +43,6 @@ jobs:
 #      - name: "Update browserslist"
 #        run: npx browserslist@latest --update-db
 
-
       - name: "Extract branch name"
         id: branch_name
         shell: bash
@@ -56,21 +55,6 @@ jobs:
         shell: bash
         run: echo "##[set-output name=name;]$(./scripts/ci/gh-actions-branch-name-serialize.sh "$BRANCH_NAME")"
 
-#      - name: "Extract branch folder name"
-#        id: extract_branch
-#        shell: bash
-#        run: |
-#          if [[ $GITHUB_EVENT_NAME = 'push' ]]
-#          then
-#            echo "##[set-output name=branch;]$(./scripts/ci/gh-actions-branch-name-sanitize.sh "${GITHUB_REF#refs/heads/}")"
-#          elif [[ $GITHUB_EVENT_NAME = 'pull_request' ]]
-#          then
-#            echo "##[set-output name=branch;]$(./scripts/ci/gh-actions-branch-name-sanitize.sh "$GITHUB_BASE_REF")"
-#          else
-#            echo "##[set-output name=branch;]$(./scripts/ci/gh-actions-branch-name-sanitize.sh "${GITHUB_REF#refs/heads/}")"
-#          fi
-        
-
       - name: "Build App and Storybook"
         run: |
           yarn run build
@@ -80,12 +64,6 @@ jobs:
           REACT_APP_GIT_BRANCH: ${{ steps.branch_name.outputs.name }}
           REACT_APP_GIT_BRANCH_SANITIZED: ${{ steps.branch_name_sanitized.outputs.name }}
           NODE_OPTIONS: --openssl-legacy-provider
-
-#      - name: "Upload script files"
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: script-files
-#          path: ./scripts
 
       - name: "Upload production-ready App build files"
         uses: actions/upload-artifact@v2

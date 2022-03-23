@@ -24,19 +24,19 @@ jobs:
       app-build-artifact-name: app-build-files
       storybook-build-artifact-name: sb-build-files
 
-#  deploy:
-#    # | Deploy Application and Storybook into GitHub Pages.
-#    name: 'Deploy'
-#    needs: build
-#    uses: ./.github/workflows/_called_deploy.yml
-#    if: ${{ needs.build.result=='success' }}
-#    with:
-#      app-build-artifact-name: app-build-files
-#      storybook-build-artifact-name: sb-build-files
-#    secrets:
-#      gh_token: ${{ secrets.GH_TOKEN }}
-#      gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
-#
+  deploy:
+    # | Deploy Application and Storybook into GitHub Pages.
+    name: 'Deploy'
+    needs: build
+    uses: ./.github/workflows/_called_deploy.yml
+    if: ${{ needs.build.result=='success' }}
+    with:
+      app-build-artifact-name: app-build-files
+      storybook-build-artifact-name: sb-build-files
+    secrets:
+      gh_token: ${{ secrets.GH_TOKEN }}
+      gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
+
 #  # | Publish status of testing in PR comment, if PRr is available.
 #  report-statuses-in-issue:
 #    # | Publish build and deployment statuses as pull request comment,
