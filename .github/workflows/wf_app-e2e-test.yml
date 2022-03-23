@@ -2,43 +2,44 @@
 
 name: 'E2E testing App'
 
-on:
-  push:
-    branches:
-      - 'fix/**'
-      - 'feat/**'
-      - develop
-  pull_request:
-    types:
-      - opened
-    branches:
-      - develop
+#on:
+#  push:
+#    branches:
+#      - 'fix/**'
+#      - 'feat/**'
+#      - develop
+#  pull_request:
+#    types:
+#      - opened
+#    branches:
+#      - develop
 
 jobs:
+  # | Build Application and Storybook
   build:
     name: 'Build'
     uses: ./.github/workflows/_called_build.yml
     with:
       app-build-artifact-name: app-build-files
       storybook-build-artifact-name: sb-build-files
-      app-node-modules-cache-key: cache-node-modules-ui-app
 
+  #| Run Ent-To-Ent tests for Application
   app-e2e-tests:
     name: 'Run tests'
     needs: build
-    uses: ./.github/workflows/_called_run-e2e-tests-app.yml
     if: ${{ needs.build.result=='success' }}
+    uses: ./.github/workflows/_called_run-e2e-tests-app.yml
     with:
       app-build-artifact-name: app-build-files
-      app-node-modules-cache-key: cache-node-modules-ui-app
 
+  # | Publish status of testing in PR comment, if PRr is available.
   report-statuses-in-issue:
     # | Publish build and deployment statuses as pull request comment,
     # | if any pull request is associated with triggered commit.
     name: 'Report in PR'
-    uses: ./.github/workflows/_called_report-status-in-issue.yml
+    needs: [ build, app-e2e-tests ]
     if: ${{ always() && needs.build.result != 'cancelled' && needs.app-e2e-tests.result != 'cancelled' }}
-    needs: [build, app-e2e-tests]
+    uses: ./.github/workflows/_called_report-status-in-issue.yml
     with:
       publish-artifacts-list: true
 
@@ -48,7 +49,6 @@ jobs:
       app-storybook-build-pub-report: false
       app-storybook-deploy-pub-report: false
       app-unit-test-pub-report: false
-
     secrets:
       gh_token: ${{ secrets.GH_TOKEN }}
       gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}

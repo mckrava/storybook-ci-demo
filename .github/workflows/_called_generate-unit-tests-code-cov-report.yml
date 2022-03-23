@@ -1,7 +1,12 @@
 # | This workflow can be invoked only from root workflow.
 # | More information about Reusing workflows - https://docs.github.com/en/actions/using-workflows/reusing-workflows
 
-name: "Reusable :: Generate unit tests codecov report"
+# | Generate unit tests code coverage overall report with "lcov.info" files from artifacts
+# | ("base-branch-codecov-artifact-name", "working-branch-codecov-artifact-name"). Workflow generates 2 output values:
+# | - codecov_unit_percentage - tests code coverage percent in working branch ;
+# | - codecov_unit_diff - tests code coverage difference with base branch, if PR is available for current commit;
+
+name: "Reusable :: Generate unit tests code coverage overall report"
 
 on:
   workflow_call:
@@ -13,7 +18,8 @@ on:
         required: true
         type: string
 
-    # https://docs.github.com/en/actions/using-workflows/reusing-workflows#using-outputs-from-a-reusable-workflow:
+    # | More details about reusable workflow outputs -
+    # | https://docs.github.com/en/actions/using-workflows/reusing-workflows#using-outputs-from-a-reusable-workflow
     outputs:
       codecov_unit_percentage:
         description: "Total Percentage coverage"
@@ -34,15 +40,15 @@ jobs:
       codecov_output_diff: ${{ steps.code-coverage.outputs.diff }}
     steps:
       - name: "Download code coverage report from base branch"
-        uses: actions/download-artifact@v2
         id: download-base
+        uses: actions/download-artifact@v2
         with:
           name: ${{inputs.base-branch-codecov-artifact-name}}
           path: ./base-report
 
       - name: "Download code coverage report from working branch"
-        uses: actions/download-artifact@v2
         id: download-working
+        uses: actions/download-artifact@v2
         with:
           name: ${{inputs.working-branch-codecov-artifact-name}}
           path: ./working-report

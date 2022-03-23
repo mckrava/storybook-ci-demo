@@ -1,8 +1,12 @@
 # | This workflow can be invoked only from root workflow.
 # | More information about Reusing workflows - https://docs.github.com/en/actions/using-workflows/reusing-workflows
 
+# | Run Unit tests in Application.
 # | If any PR is available for commit which has triggered current run, unit tests will be executed for both base and
 # | working branches for generation code coverage difference value.
+# | Tests code coverage reports ("lcov.info" files) will be saved as artifacts and can be used in further steps for
+# | creation overall tests code coverage report.
+
 name: "Reusable :: Unit tests :: App"
 
 on:
@@ -28,7 +32,7 @@ on:
 jobs:
   base_branch_coverage_check:
     name: "Run base branch"
-    runs-on: macos-11
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
@@ -37,7 +41,7 @@ jobs:
       - name: "Setup Node.js"
         uses: actions/setup-node@v1
         with:
-          node-version: 17.3
+          node-version: 17
 
       - name: "Cache Node Modules for ui-app"
         id: cache-node-modules-ui-app
@@ -60,8 +64,8 @@ jobs:
           path: ./coverage/lcov.info
 
   unit_testing:
-    name: Run work branch
-    runs-on: macos-11
+    name: "Run work branch"
+    runs-on: ubuntu-latest
     if: ${{ always() && needs.base_branch_coverage_check.result != 'cancelled' }}
     outputs:
       codecov_output_percentage: ${{ steps.code-coverage.outputs.percentage }}
@@ -70,7 +74,7 @@ jobs:
       - name: "Install Node.js"
         uses: actions/setup-node@v1
         with:
-          node-version: 17.3
+          node-version: 17
 
       - uses: actions/checkout@v2
 

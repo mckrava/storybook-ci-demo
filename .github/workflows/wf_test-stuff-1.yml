@@ -1,16 +1,16 @@
 name: Report demo v1
 
-#on:
-#  push:
-#    branches:
-#      - 'fix/**'
-#      - 'feat/**'
-#      - develop
-#  pull_request:
-#    types:
-#      - opened
-#    branches:
-#      - develop
+on:
+  push:
+    branches:
+      - 'fix/**'
+      - 'feat/**'
+      - develop
+  pull_request:
+    types:
+      - opened
+    branches:
+      - develop
 
 jobs:
   publish-dummy-artifacts:
@@ -56,7 +56,7 @@ jobs:
       app-storybook-build-pub-report: true
       app-storybook-build-status: true
 
-      app-storybook-deploy-pub-report: true
+      app-storybook-deploy-pub-report: false
       app-storybook-deploy-status: false
 
       app-unit-test-pub-report: false

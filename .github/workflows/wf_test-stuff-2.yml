@@ -1,16 +1,16 @@
 name: Report demo v2
 
-#on:
-#  push:
-#    branches:
-#      - 'fix/**'
-#      - 'feat/**'
-#      - develop
-#  pull_request:
-#    types:
-#      - opened
-#    branches:
-#      - develop
+on:
+  push:
+    branches:
+      - 'fix/**'
+      - 'feat/**'
+      - develop
+  pull_request:
+    types:
+      - opened
+    branches:
+      - develop
 
 jobs:
   delay:
@@ -40,13 +40,16 @@ jobs:
     with:
       publish-artifacts-list: true
 
-      app-storybook-build-pub-report: false
-      app-storybook-build-status: true
+        app-storybook-build-pub-report: false
+        app-storybook-build-status: true
 
-      app-storybook-deploy-pub-report: true
-      app-storybook-deploy-status: true
+        app-storybook-deploy-pub-report: true
+        app-storybook-deploy-status: false
 
-      app-unit-test-pub-report: false
+        app-unit-test-pub-report: false
+
+        app-e2e-test-pub-report: true
+        app-e2e-test-status: true
     secrets:
       gh_token: ${{ secrets.GH_TOKEN }}
       gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
