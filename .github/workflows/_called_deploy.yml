@@ -38,7 +38,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: 'Check GH Pages branch existence'
-        id: check_branch_existence
+        id: check-branch-existence
         env:
           GH_PAGES_FULL_BRANCH: ${{ secrets.gh_pages_full_branch }}
         shell: bash
@@ -55,22 +55,22 @@ jobs:
           path: ./scripts
 
       - name: 'Checkout GH Pages branch'
-        if: ${{ steps.check_branch_existence.outputs.exists == 'true' }}
+        if: ${{ steps.check-branch-existence.outputs.exists == 'true' }}
         uses: actions/checkout@v2
         with:
           ref: ${{ secrets.gh_pages_full_branch }}
 
 
       - name: 'Download artifact (gh-actions-scripts)'
-        if: ${{ steps.check_branch_existence.outputs.exists == 'true' }}
+        if: ${{ steps.check-branch-existence.outputs.exists == 'true' }}
         uses: actions/download-artifact@v2
         with:
           name: gh-actions-scripts
           path: ./scripts
 
       - name: 'Extract existing build folder name'
-        id: build_folder_name
-        if: ${{ steps.check_branch_existence.outputs.exists == 'true' }}
+        id: extract-build-folder-name
+        if: ${{ steps.check-branch-existence.outputs.exists == 'true' }}
         shell: bash
         run: |
           sudo chmod +x ./scripts/ci/gh-actions-get-branch-name.sh
@@ -80,19 +80,19 @@ jobs:
 
       # | This step removes build files for current branch, if files are existing.
       - name: 'Remove Existing build folder (app and storybook)'
-        if: ${{ success() && steps.check_branch_existence.outputs.exists == 'true' }}
+        if: ${{ success() && steps.check-branch-existence.outputs.exists == 'true' }}
         uses: JesseTG/rm@v1.0.2
         with:
-          path: ${{ steps.build_folder_name.outputs.name }}
+          path: ${{ steps.extract-build-folder-name.outputs.name }}
 
       - name: 'Clear garbage'
-        if: ${{ steps.check_branch_existence.outputs.exists == 'true' }}
+        if: ${{ steps.check-branch-existence.outputs.exists == 'true' }}
         shell: bash
         run: rm -r ./scripts
 
       # | Commit build files if changes are existing.
       - name: 'Commit changes'
-        if: steps.auto-commit-action.outputs.changes_detected == 'true' && steps.check_branch_existence.outputs.exists == 'true'
+        if: steps.auto-commit-action.outputs.changes_detected == 'true' && steps.check-branch-existence.outputs.exists == 'true'
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           branch: ${{ secrets.gh_pages_full_branch }}

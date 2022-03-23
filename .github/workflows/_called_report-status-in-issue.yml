@@ -83,7 +83,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: 'Get Timestamp'
-        id: get_timestamp
+        id: get-timestamp
         uses: nanzm/get-time-action@v1.1
         with:
           format: 'YYYYMMDDHHmmssSSS'
@@ -92,7 +92,7 @@ jobs:
         id: cache-reporter-content
         uses: actions/cache@v2
         env:
-          TIMESTAMP: ${{ steps.get_timestamp.outputs.time }}
+          TIMESTAMP: ${{ steps.get-timestamp.outputs.time }}
         with:
           path: ./reporter-artifacts
           key: reporter-artifacts-branch-${{ github.ref_name }}-commit-${{ github.sha }}-${{ steps.timestamp.outputs.time }}

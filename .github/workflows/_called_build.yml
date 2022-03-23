@@ -38,22 +38,22 @@ jobs:
 
       - name: "Install Node modules"
         if: steps.cache-node-modules-ui-app.outputs.cache-hit != 'true'
-        run: rm -rf node_modules && yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile
 
 #      - name: "Update browserslist"
 #        run: npx browserslist@latest --update-db
 
       - name: "Extract branch name"
-        id: branch_name
+        id: extract-branch-name
         shell: bash
         run: |
           sudo chmod +x ./scripts/ci/gh-actions-get-branch-name.sh
           echo "##[set-output name=name;]$(./scripts/ci/gh-actions-get-branch-name.sh "$GITHUB_EVENT_NAME" "$GITHUB_REF" "$GITHUB_BASE_REF")"
 
       - name: "Sanitize branch name"
-        id: branch_name_sanitized
+        id: branch-name-sanitized
         env:
-          BRANCH_NAME: ${{ steps.branch_name.outputs.name }}
+          BRANCH_NAME: ${{ steps.extract-branch-name.outputs.name }}
         shell: bash
         run: |
           sudo chmod +x ./scripts/ci/gh-actions-branch-name-serialize.sh
@@ -65,8 +65,8 @@ jobs:
           yarn run build-storybook -- -o sb-build-files
         env:
           CI: false
-          REACT_APP_GIT_BRANCH: ${{ steps.branch_name.outputs.name }}
-          REACT_APP_GIT_BRANCH_SANITIZED: ${{ steps.branch_name_sanitized.outputs.name }}
+          REACT_APP_GIT_BRANCH: ${{ steps.extract-branch-name.outputs.name }}
+          REACT_APP_GIT_BRANCH_SANITIZED: ${{ steps.branch-name-sanitized.outputs.name }}
           NODE_OPTIONS: --openssl-legacy-provider
 
       - name: "Upload production-ready App build files"
