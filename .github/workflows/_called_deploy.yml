@@ -42,7 +42,9 @@ jobs:
         env:
           GH_PAGES_FULL_BRANCH: ${{ secrets.gh_pages_full_branch }}
         shell: bash
-        run: echo "##[set-output name=exists;]$(./scripts/ci/gh-actions-is-branch-exists.sh "$GH_PAGES_FULL_BRANCH")"
+        run: |
+          sudo chmod +x ./scripts/ci/gh-actions-get-branch-name.sh
+          echo "##[set-output name=exists;]$(./scripts/ci/gh-actions-is-branch-exists.sh "$GH_PAGES_FULL_BRANCH")"
 
       # | Upload "./scripts" folder with shell scripts to artifacts for further usage in next steps where context will
       # | be changed to another branch ("gh_pages_full_branch").
@@ -71,6 +73,8 @@ jobs:
         id: build_folder_name
         shell: bash
         run: |
+          sudo chmod +x ./scripts/ci/gh-actions-get-branch-name.sh
+          sudo chmod +x ./scripts/ci/gh-actions-branch-name-serialize.sh
           BRANCH_NAME="(./scripts/ci/gh-actions-get-branch-name.sh "$GITHUB_EVENT_NAME" "$GITHUB_REF" "$GITHUB_BASE_REF")"
           echo "##[set-output name=name;]$(./scripts/ci/gh-actions-branch-name-serialize.sh "$BRANCH_NAME")"
 
