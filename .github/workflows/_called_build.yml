@@ -46,14 +46,18 @@ jobs:
       - name: "Extract branch name"
         id: branch_name
         shell: bash
-        run: echo "##[set-output name=name;]$(./scripts/ci/gh-actions-get-branch-name.sh "$GITHUB_EVENT_NAME" "$GITHUB_REF" "$GITHUB_BASE_REF")"
+        run: |
+          sudo chmod +x ./scripts/ci/gh-actions-get-branch-name.sh
+          echo "##[set-output name=name;]$(./scripts/ci/gh-actions-get-branch-name.sh "$GITHUB_EVENT_NAME" "$GITHUB_REF" "$GITHUB_BASE_REF")"
 
       - name: "Sanitize branch name"
         id: branch_name_sanitized
         env:
           BRANCH_NAME: ${{ steps.branch_name.outputs.name }}
         shell: bash
-        run: echo "##[set-output name=name;]$(./scripts/ci/gh-actions-branch-name-serialize.sh "$BRANCH_NAME")"
+        run: |
+          sudo chmod +x ./scripts/ci/gh-actions-branch-name-serialize.sh
+          echo "##[set-output name=name;]$(./scripts/ci/gh-actions-branch-name-serialize.sh "$BRANCH_NAME")"
 
       - name: "Build App and Storybook"
         run: |

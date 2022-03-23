@@ -80,8 +80,8 @@ jobs:
 
       # | This step removes build files for current branch, if files are existing.
       - name: 'Remove Existing build folder (app and storybook)'
-        uses: JesseTG/rm@v1.0.2
         if: ${{ success() && steps.check_branch_existence.outputs.exists == 'true' }}
+        uses: JesseTG/rm@v1.0.2
         with:
           path: ${{ steps.build_folder_name.outputs.name }}
 
@@ -92,8 +92,8 @@ jobs:
 
       # | Commit build files if changes are existing.
       - name: 'Commit changes'
-        uses: stefanzweifel/git-auto-commit-action@v4
         if: steps.auto-commit-action.outputs.changes_detected == 'true' && steps.check_branch_existence.outputs.exists == 'true'
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
           branch: ${{ secrets.gh_pages_full_branch }}
 
@@ -103,7 +103,7 @@ jobs:
     needs: clear_existing_build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+#      - uses: actions/checkout@v2
 
       - name: 'Download artifact - App (build files)'
         uses: actions/download-artifact@v2
