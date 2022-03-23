@@ -16,20 +16,20 @@ on:
       - develop
 
 jobs:
-  build:
-    # | Build Application and Storybook.
-    name: 'Build'
-    uses: ./.github/workflows/_called_build.yml
-    with:
-      app-build-artifact-name: app-build-files
-      storybook-build-artifact-name: sb-build-files
+#  build:
+#    # | Build Application and Storybook.
+#    name: 'Build'
+#    uses: ./.github/workflows/_called_build.yml
+#    with:
+#      app-build-artifact-name: app-build-files
+#      storybook-build-artifact-name: sb-build-files
 
   deploy:
     # | Deploy Application and Storybook into GitHub Pages.
     name: 'Deploy'
-    needs: build
+#    needs: build
     uses: ./.github/workflows/_called_deploy.yml
-    if: ${{ needs.build.result=='success' }}
+#    if: ${{ needs.build.result=='success' }}
     with:
       app-build-artifact-name: app-build-files
       storybook-build-artifact-name: sb-build-files
