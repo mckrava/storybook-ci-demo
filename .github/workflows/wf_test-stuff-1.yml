@@ -1,16 +1,16 @@
 name: Report demo v1
 
-on:
-  push:
-    branches:
-      - 'fix/**'
-      - 'feat/**'
-      - develop
-  pull_request:
-    types:
-      - opened
-    branches:
-      - develop
+#on:
+#  push:
+#    branches:
+#      - 'fix/**'
+#      - 'feat/**'
+#      - develop
+#  pull_request:
+#    types:
+#      - opened
+#    branches:
+#      - develop
 
 jobs:
   publish-dummy-artifacts:
