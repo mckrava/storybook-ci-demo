@@ -2,9 +2,18 @@
 
 Basilisk-UI GitHub Actions are configured with using ["Reusing workflows"](https://docs.github.com/en/actions/using-workflows/reusing-workflows)
 and [GitHub Script](https://github.com/actions/github-script).
-We have root workflows which are configured for specific purposes with different 
+We have caller workflows which are configured for specific purposes with different 
 trigger events (`pull_request`, `push`) and reusable modules/workflows which can be reused in different 
-combinations/sequence in root workflow. 
+combinations/sequence in caller workflow. 
+
+<details>
+<summary><i>Short info about Reusable workflows</i></summary>
+A workflow that uses another workflow is referred to as a "caller" workflow. The reusable workflow is a 
+"called" workflow. One caller workflow can use multiple called workflows. Each called workflow is 
+referenced in a single line. The result is that the caller workflow file may contain just a few lines of 
+YAML, but may perform a large number of tasks when it's run. When you reuse a workflow, the entire called 
+workflow is used, just as if it was part of the caller workflow.
+</details>
 
 ---
 
@@ -15,17 +24,17 @@ combinations/sequence in root workflow.
 
 
 ### Files naming/structure convention
-- __root workflow file__ - (`.github/workflows/wf_*.yml`) has prefix `wf_`. Consists of reusable 
+- __caller workflow file__ - (`.github/workflows/wf_*.yml`) has prefix `wf_`. Consists of reusable 
   workflow calls in different combinations regarding purposes. Should not contain any functionality for 
-  building, testing, deployment, etc.
+  building, testing, deployment, etc., only calls of called workflows.
 - __dispatched workflow__ - (`.github/workflows/wfd_*.yml`) has prefix `wfd_`. Workflow which is triggering after dispatch event,
-  which is created manually or from another workflow via github API. More details [here](https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event).
-_**IMPORTANT** - All updates in such workflow file will be applied only if they pushed into default repository branch (`main | develop`)._
-- __reusable workflow file__ - (`.github/workflows/_called_*.yml`) has prefix `_called_`. Contains 
+  which is created manually or from another workflow via GitHub API. More details [here](https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event).
+_**IMPORTANT** - All updates in such workflow file and related github-script files will be applied only if they pushed 
+into default repository branch (`main | develop`)._
+- __called workflow file__ - (`.github/workflows/_called_*.yml`) has prefix `_called_`. Contains 
   functionality for specific purpose (application build, unit testing, etc.). Should contain independent piece of full
   workflow, generate artifacts for next steps, publish reports, etc.
-- __github scripts root module__ - (`./scripts/ci/github-script-src/*.js`) contains JavaScript logic for GitHub Script action.
-- __github scripts imported module__ - (`./scripts/ci/github-script-src/_*.js`) contains JavaScript import modules for GitHub Script action.
+- __github-scripts sources__ - (`./scripts/ci/github-script-src/**/*.js`) contains JavaScript logic for GitHub Script action.
 
 ---
 
@@ -84,7 +93,7 @@ Jobs:
 
 ## Existing reusing workflows
 
-#### :chains:  Build App and Storybook ([.github/workflows/_called_build.yml](.github/workflows/_called_build.yml))
+#### :chains:  Build App and Storybook ([.github/workflows/_called_build.yml](/.github/workflows/_called_build.yml))
 Build application and storybook. Results are saved as artifacts with passed names.
 
 :inbox_tray: ***Inputs***:
@@ -100,7 +109,7 @@ Build application and storybook. Results are saved as artifacts with passed name
 
 <hr />
 
-#### :chains:  Deploy App and Storybook ([.github/workflows/_called_deploy.yml](.github/workflows/_called_deploy.yml))
+#### :chains:  Deploy App and Storybook ([.github/workflows/_called_deploy.yml](/.github/workflows/_called_deploy.yml))
 Deploy application and storybook to github pages.
 
 
@@ -167,41 +176,47 @@ workflow inputs.
 
 <hr />
 
-#### :chains:  Publish reports in Discord ([.github/workflows/_called_publish-report-discord.yml](/.github/workflows/_called_publish-report-discord.yml))
-Publish statuses and reports from different steps of root workflow in Discord channel. Workflow is based on libraries
-`GitHub Script`, `Discord for GitHub Actions`.
-
-:inbox_tray: ***Inputs***:
-- `app-build-pub-in-discord`: **Boolean, required** - _publish application build status in Discord channel_
-- `app-build-status`: **Boolean** - _is application build successful_
-- `app-sb-deploy-pub-report-in-discord`: **Boolean, required** - _publish application and Storybook in Discord channel_
-- `app-sb-deploy-status`: **Boolean** - _is application and storybook deployment successful_
-- `app-unit-test-pub-report-in-discord`: **Boolean** - _publish application unit tests report in Discord channel_
-- `app-unit-test-status`: **Boolean** - _is application unit testing successful_
-- `app-unit-test-codecov-percentage`: **String** - _Total Percentage coverage_
-- `app-unit-test-codecov-diff`: **String** - _Percentage difference between head branch_
-
-:outbox_tray: ***Outputs***: -//-
-
-:bricks: ***Artifacts***: -//-
-
-:lock: ***Secrets***:
-- `gh_pages_full_branch`: _required_
-- `discord_alert_ui_web_hook`: _required_
-
-<hr />
-
 ### :chains:  Report status in issue ([.github/workflows/_called_report-status-in-issue.yml](/.github/workflows/_called_report-status-in-issue.yml))
-Publish statuses and reports from different steps of root workflow as comment in related PR. Workflow is based on libraries
-`GitHub Script`. If we need fetch available artifacts, so it can be done only in separate/next workflow run after workflow run
+Publish statuses and reports from different steps of caller workflow as comment in related PR. Workflow is based on libraries
+`GitHub Script`. 
+
+#### Artifacts
+If we need fetch available artifacts, so it can be done only in separate/next workflow after workflow 
 which generates these artifacts. Artifacts are not visible for API before run is completed. More details in 
-[this](https://github.com/actions/upload-artifact/issues/50) issue. As result current called workflow has logic, 
-explained in diagram below:
+[this](https://github.com/actions/upload-artifact/issues/50) issue. If `publish-artifacts-list == true`, current called 
+workflow generates dispatch event for workflow, which can fetch artifacts from current workflow run.
 
-[//]: # (![Publish reports as issue comment]&#40;./publish-reports-in-issue-comment-flow.png | width=100px&#41;)
+As result `Report status in issue` workflow has logic, explained in diagram below:
+
+<img src="./publish-reports-in-issue-comment-flow.png" alt="Publish reports as issue comment" width="700px">
+
+Report status workflow can collect statuses from different workflows and publish them in one single comment.
+This is possible through the usage of actions caching feature (`actions/cache@v2`). Each `push` or `pull_request` events can 
+trigger multiple workflows, which contains `Report status in issue` job (_called workflow_). If trigger commit is related
+with some open pull request or trigger event is [pull_rerquest:opened](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request),
+each run will publish it's statuses/artifacts as comment in appropriate Pull Request post. If comment is already existing,
+reporter from each caller workflow will update existing comment by it's own status and republish statuses from other 
+workflow runs. It's possible though cached comment data (stringified JSON saved in the file) from each reporter, which 
+has been triggered buy the same event. Each reported fetches cached data from reporter job of previously finished 
+workflow run, extends cached data by it's own and uses extended data for comment publication.
+This provides inheritance of comment data between workflows.
+
+`actions/cache@v2` can read files from GitHub cache. Also, if `key` parameter is unique in the repo, file in 
+`path` location will be added into cache after successful completion of the job. Each reporter generates it's own cache
+with key by next pattern - `reporter-artifacts-branch-${{ github.ref_name }}-commit-${{ github.sha }}-${{ steps.timestamp.outputs.time }}`
+what ensures caching comment data from each run. As `restore-keys` next patters is used - `reporter-artifacts-branch-${{ github.ref_name }}-commit-${{ github.sha }}-`.
+It means that comment data file with the most recent creation date for trigger event will be restored, as last part of `key` with timestamp
+will be ignored in search (more details [here](https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows#matching-a-cache-key)).
 
 
-<img src="./publish-reports-in-issue-comment-flow.png" width="500px">
+Illustrations below show flow with 3 workflows, which has been triggered in parallel by the same event.
+(_workflow names are provided only for example purposes and can be different in real case_):
+
+<img src="./cached-comment-data-flows.png" alt="Cached comment data flows" width="900px">
+
+Crucial point of this example (**improvement is required in this place**) is that each `Report status in issue` job in each 
+parallel workflow must be started after completion of reporter job from another parallel workflow. If we get overlapping 
+of reporter jobs A and B, comment data (statuses) from reporter A or B will be lost.
 
 
 :inbox_tray: ***Inputs***:
@@ -237,3 +252,8 @@ ___
 
 #### :question: `RequestError [HttpError]: Bad credentials` in GitHub API calls
 Probably access token is expired or wrong. Check `GH_TOKEN` token which is saved in Actions secrets.
+
+___
+
+#### :question: `*.sh: Permission denied` 
+Change file permission (`chmod +x`) and push updated file.
