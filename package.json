@@ -1,7 +1,7 @@
 {
   "homepage": ".",
   "name": "basilisk-ui",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.5.7",
@@ -105,7 +105,8 @@
     "translations:compile": "formatjs compile src/lang/en.json --out-file src/compiled-lang/en.json",
     "codegen": "graphql-codegen --config codegen.yml",
     "codegen:watch": "graphql-codegen --config codegen.yml --watch src/**/*.graphql",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "release": "standard-version"
   },
   "engines": {
     "node": ">=17"
@@ -221,12 +222,13 @@
     "css-loader": "5.2.6",
     "cz-conventional-changelog": "^3.2.0",
     "http-server": "^14.1.0",
-    "node-sass": "^6.0.1",
+    "node-sass": "^7.0.1",
     "playwright": "^1.18.0",
     "prettier": "2.5.1",
     "react-test-renderer": "^17.0.2",
     "sass": "^1.42.1",
     "sass-loader": "10.1.1",
+    "standard-version": "^9.3.2",
     "storybook-react-router-dom": "^6.1.21",
     "style-loader": "2.0.0",
     "wait-for-expect": "^3.0.2",
