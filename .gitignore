@@ -8,6 +8,7 @@
 
 # testing
 /coverage
+/storybook-testing/results
 /traces
 
 # production
@@ -29,3 +30,4 @@ ui-app-unit-tests-results.html
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+/storybook-static
