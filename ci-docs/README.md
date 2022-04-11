@@ -24,6 +24,7 @@ workflow is used, just as if it was part of the caller workflow.
 - [code-coverage-action](https://github.com/barecheck/code-coverage-action) - generate/publish testing code coverage reports to PR.
 
 
+
 ### Files naming/structure convention
 - __caller workflow file__ - (`.github/workflows/*.yml`) does not have any prefix. Consists of reusable 
   workflow calls in different combinations regarding purposes. Should not contain any functionality for 
