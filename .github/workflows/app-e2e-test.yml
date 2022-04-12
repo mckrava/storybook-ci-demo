@@ -14,6 +14,7 @@ name: 'E2E testing App'
 #    branches:
 #      - develop
 
+
 jobs:
   # Build Application and Storybook
   build:
