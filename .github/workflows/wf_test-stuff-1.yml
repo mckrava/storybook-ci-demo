@@ -67,3 +67,33 @@ jobs:
       gh_token: ${{ secrets.GH_TOKEN }}
       gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
       gh_pages_custom_domain: ${{ secrets.GH_PAGES_CUSTOM_DOMAIN }}
+
+  report-statuses-discord:
+    name: Report Discord
+    needs: publish-dummy-artifacts
+    uses: ./.github/workflows/_called_publish-report-discord.yml
+    if: always()
+    with:
+      app-storybook-build-pub-report: true
+      app-build-status: ${{ needs.build-app-storybook.result == 'success' }}
+
+      app-sb-deploy-pub-report-in-discord: true
+      app-sb-deploy-status: ${{ needs.deploy-app-storybook-builds.result == 'success' }}
+
+      app-unit-test-pub-report-in-discord: true
+      app-unit-test-status: ${{ needs.unit-tests.result == 'success' }}
+      app-unit-test-codecov-percentage: ${{ needs.generate-unit-tests-codecov-report.outputs.codecov_unit_percentage }}
+      app-unit-test-codecov-diff: ${{ needs.generate-unit-tests-codecov-report.outputs.codecov_unit_diff }}
+      # -------
+      publish-artifacts-list: true
+
+      app-e2e-test-pub-report: true
+      app-e2e-test-status: ${{ needs.app-e2e-tests.result == 'success' }}
+      
+      app-storybook-build-pub-report: false
+      app-storybook-deploy-pub-report: false
+      app-unit-test-pub-report: false
+
+    secrets:
+      gh_pages_full_branch: ${{ secrets.GH_PAGES_FULL_BRANCH }}
+      discord_alert_ui_web_hook: ${{ secrets.DISCORD_ALERT_UI_WEB_HOOK }}
