@@ -28,13 +28,14 @@ jobs:
       - name: 'Check out code'
         uses: actions/checkout@v2
 
+      # More details about config - https://github.com/conventional-changelog/standard-version/issues/635
       - name: 'Change version number and name with passed value'
         if: github.event.inputs.versionName != ''
-        run: npx standard-version --release-as ${{ github.event.inputs.versionName }} --skip.commit
+        run: npx standard-version --release-as ${{ github.event.inputs.versionName }}
 
       - name: 'Automatic bumping version number and name'
         if: github.event.inputs.versionName == ''
-        run: npx standard-version --skip.commit
+        run: npx standard-version
 
       - name: 'Get new bumped version'
         id: package-version
