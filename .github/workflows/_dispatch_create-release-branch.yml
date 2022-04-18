@@ -35,7 +35,7 @@ jobs:
 
       - name: 'Automatic bumping version number and name'
         if: github.event.inputs.versionName == ''
-        run: npx standard-version --skip.commit
+        run: npx standard-version --skip.commit=true
 
       - name: 'Get new bumped version'
         id: package-version
