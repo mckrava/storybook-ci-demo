@@ -16,7 +16,7 @@ on:
         type: string
 
 jobs:
-  createrelease:
+  create_release:
     runs-on: ubuntu-latest
 
     steps:
@@ -60,8 +60,7 @@ jobs:
           title: v${{ github.event.inputs.versionName }} into main
           reviewers: ${{ github.event.issue.user.login }}
           body: |
-            Hi!
-            This PR was created in response workflow running.
+            This PR was created in response Release workflow running.
             I've updated the version name and code commit: ${{ steps.make-commit.outputs.commit }}.
 
       - name: Create pull request to develop
@@ -73,6 +72,5 @@ jobs:
           title: v${{ github.event.inputs.versionName }} into develop
           reviewers: ${{ github.event.issue.user.login }}
           body: |
-            Hi!
-            This PR was created in response workflow running.
+            This PR was created in response Release workflow running.
             I've updated the version name and code commit: ${{ steps.make-commit.outputs.commit }}.
