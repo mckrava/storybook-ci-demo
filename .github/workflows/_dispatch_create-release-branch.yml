@@ -31,11 +31,11 @@ jobs:
       # More details about config - https://github.com/conventional-changelog/standard-version/issues/635
       - name: 'Change version number and name with passed value'
         if: github.event.inputs.versionName != ''
-        run: npx standard-version --release-as ${{ github.event.inputs.versionName }}
+        run: npx standard-version --release-as ${{ github.event.inputs.versionName }} --skip.commit=true
 
       - name: 'Automatic bumping version number and name'
         if: github.event.inputs.versionName == ''
-        run: npx standard-version
+        run: npx standard-version --skip.commit=true
 
       - name: 'Get new bumped version'
         id: package-version
