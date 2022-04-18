@@ -30,11 +30,11 @@ jobs:
 
       - name: 'Change version number and name with passed value'
         if: github.event.inputs.versionName != ''
-        run: npx standard-version --release-as ${{ github.event.inputs.versionName }}
+        run: npx standard-version --release-as ${{ github.event.inputs.versionName }} --skip.commit
 
       - name: 'Automatic bumping version number and name'
         if: github.event.inputs.versionName == ''
-        run: npx standard-version
+        run: npx standard-version --skip.commit
 
       - name: 'Get new bumped version'
         id: package-version
