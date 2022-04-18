@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.0.0 (2022-04-18)
+
+
+### Bug Fixes
+
+* pj ([c4d180b](https://github.com/mckrava/storybook-ci-demo/commit/c4d180bea1f8e5a3264ebcd122d53dbc4e6efae4))
+
 ## [1.0.0-alpha](https://github.com/mckrava/storybook-ci-demo/compare/v1.0.0...v1.0.0-alpha) (2022-04-12)
 
 ## [1.0.0](https://github.com/mckrava/storybook-ci-demo/compare/v0.1.5...v1.0.0) (2022-04-12)
