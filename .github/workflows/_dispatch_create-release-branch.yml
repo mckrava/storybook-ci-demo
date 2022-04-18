@@ -40,10 +40,6 @@ jobs:
 #        run: printf 'ext.version_code = ${{ github.event.inputs.versionCode }}\next.version_name = "${{ github.event.inputs.versionName }}"\n' > app_versions.gradle
         run: npx standard-version -- --release-as ${{ github.event.inputs.versionName }}
 
-      - name: '--- REF --- Update Changelog'
-        uses: thomaseizinger/keep-a-changelog-new-release@v1
-        with:
-          version: ${{ github.event.inputs.versionName }}
       - name: '--- REF --- Commit changelog and manifest files'
         id: make-commit
         run: |
