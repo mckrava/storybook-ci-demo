@@ -38,7 +38,7 @@ jobs:
 
       - name: '--- REF --- Change version number and name'
 #        run: printf 'ext.version_code = ${{ github.event.inputs.versionCode }}\next.version_name = "${{ github.event.inputs.versionName }}"\n' > app_versions.gradle
-        run: yarn release -- --release-as ${{ github.event.inputs.versionName }}
+        run: npx standard-version -- --release-as ${{ github.event.inputs.versionName }}
 
       - name: '--- REF --- Update Changelog'
         uses: thomaseizinger/keep-a-changelog-new-release@v1
