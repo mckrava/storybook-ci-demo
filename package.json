@@ -237,5 +237,10 @@
   },
   "resolutions": {
     "playwright": "^1.18.0"
+  },
+  "standard-version": {
+    "skip": {
+      "commit": true
+    }
   }
 }
