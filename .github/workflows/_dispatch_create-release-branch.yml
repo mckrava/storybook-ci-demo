@@ -80,7 +80,7 @@ jobs:
 
       # https://github.com/actions/checkout/issues/164
       - run: |
-          chmod -R ugo+rwX .
+          sudo chmod -R ugo+rwX .
 
       - name: "Upload logs"
         uses: actions/upload-artifact@v2
