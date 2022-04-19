@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.2](https://github.com/mckrava/storybook-ci-demo/compare/v0.2.1...v0.2.2) (2022-04-19)
+
+
+### CI
+
+* Prepare release 0.2.1 ([761e87c](https://github.com/mckrava/storybook-ci-demo/commit/761e87cf393ddbe08b9a6c47d2a2b633f5d608f2))
+* upds wf ([8abd553](https://github.com/mckrava/storybook-ci-demo/commit/8abd553ca5f322d39c655bddb361fcde8d53e6ab))
+
 ### 0.2.1 (2022-04-19)
 
 
