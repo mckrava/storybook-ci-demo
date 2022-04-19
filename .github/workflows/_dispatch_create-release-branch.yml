@@ -73,10 +73,14 @@ jobs:
       - name: Create changelog
         uses: commitizen-tools/commitizen-action@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GH_TOKEN }}
           changelog_increment_filename: RELEASE_NOTES.md
           push: false
           commit: false
+
+      # https://github.com/actions/checkout/issues/164
+      - run: |
+          chmod -R ugo+rwX .
 
       - name: "Upload logs"
         uses: actions/upload-artifact@v2
