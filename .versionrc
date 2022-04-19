@@ -1,5 +1,4 @@
 {
-  "header": "What ever you want at the top of your changelog",
   "types": [
       {"type": "chore", "section":"Build process changes", "hidden":false},
       {"type": "revert", "section":"Reverts 1", "hidden":false},
