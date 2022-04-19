@@ -65,7 +65,18 @@ jobs:
           echo "::set-output name=commit::$(git rev-parse HEAD)"
 
       - name: 'Push new branch'
-        run: git push origin release/v${{ steps.package-version.outputs.current-version }}
+        run: git push origin release/v${{ steps.package-version.outputs.current-version }} --tags
+
+      - name: Get notes
+        id: generate_notes
+        uses: anmarkoulis/commitizen-changelog-reader@master
+        with:
+          tag_name: ${{ steps.package-version.outputs.current-version }}
+          changelog: CHANGELOG.md
+
+      - name: Extract release notes
+        id: extract_release_notes
+        uses: ffurrer2/extract-release-notes@v1
 
       - name: Create pull request into main
         uses: thomaseizinger/create-pull-request@1.0.0

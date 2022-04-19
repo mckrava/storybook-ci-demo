@@ -1,5 +1,7 @@
 # Basilisk UI
 
+[![GitHub Release](https://img.shields.io/github/v/release/mckrava/storybook-ci-demo?sort=semver)](https://github.com/mckrava/storybook-ci-demo/releases/latest)
+
 Storybook based front-end for Basilisk parachain employing react-use hooks and Apollo Client for data layer.
 
 ## Develop
