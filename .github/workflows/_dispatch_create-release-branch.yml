@@ -34,10 +34,21 @@ jobs:
       - name: 'Check out code'
         uses: actions/checkout@v2
 
-      - name: 'Initialize mandatory git config'
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email noreply@github.com
+#      - name: 'Initialize mandatory git config'
+#        run: |
+#          git config user.name "GitHub Actions"
+#          git config user.email noreply@github.com
+
+
+      - name: 'LOGS 1'
+        run: git log
+
+      - uses: oleksiyrudenko/gha-git-credentials@v2-latest
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+
+      - name: 'LOGS 2'
+        run: git log
 
 
       # More details about config - https://github.com/conventional-changelog/standard-version/issues/635
