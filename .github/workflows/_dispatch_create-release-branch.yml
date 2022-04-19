@@ -37,11 +37,11 @@ jobs:
       # More details about config - https://github.com/conventional-changelog/standard-version/issues/635
       - name: 'Change version number and name with passed value'
         if: github.event.inputs.versionName != ''
-        run: npx standard-version --release-as ${{ github.event.inputs.versionName }} --skip.commit=true
+        run: npx standard-version --release-as ${{ github.event.inputs.versionName }} --skip.commit=true --skip.tag=true
 
       - name: 'Automatic bumping version number and name'
         if: github.event.inputs.versionName == ''
-        run: npx standard-version --skip.commit=true
+        run: npx standard-version --skip.commit=true --skip.tag=true
 
       - name: 'Get new bumped version from package.json'
         id: package-version
@@ -65,18 +65,7 @@ jobs:
           echo "::set-output name=commit::$(git rev-parse HEAD)"
 
       - name: 'Push new branch'
-        run: git push origin release/v${{ steps.package-version.outputs.current-version }} --tags
-
-#      - name: Get notes
-#        id: generate_notes
-#        uses: anmarkoulis/commitizen-changelog-reader@master
-#        with:
-#          tag_name: ${{ steps.package-version.outputs.current-version }}
-#          changelog: CHANGELOG.md
-
-      - name: Extract release notes
-        id: extract_release_notes
-        uses: ffurrer2/extract-release-notes@v1
+        run: git push origin release/v${{ steps.package-version.outputs.current-version }}
 
       - name: Create pull request into main
         uses: thomaseizinger/create-pull-request@1.0.0
