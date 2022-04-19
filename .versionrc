@@ -1,0 +1,25 @@
+{
+  "header": "What ever you want at the top of your changelog",
+  "types": [
+      {"type": "chore", "section":"Build process changes", "hidden":false},
+      {"type": "revert", "section":"Reverts 1", "hidden":false},
+      {"type": "feat", "section":"Features 1", "hidden":false},
+      {"type": "fix", "section":"Bug Fixes 1", "hidden":false},
+      {"type": "improvement", "section":"FeatureImprovements", "hidden":false},
+      {"type": "docs", "section":"Docs 1", "hidden":false},
+      {"type": "style", "section":"Styling", "hidden":false},
+      {"type": "refactor", "section":"CodeRefactoring", "hidden":false},
+      {"type": "perf", "section":"PerformanceImprovements", "hidden":false},
+      {"type": "test", "section":"Tests", "hidden":false},
+      {"type": "build", "section":"BuildSystem", "hidden":false},
+      {"type": "ci", "section": "CI", "hidden":false},
+      {"type": "quality", "section": "Qualityfixes", "hidden":false}
+  ],
+  "compareUrlFormat":  "https://BITBUCKET_URL/projects/{{owner}}/repos/{{repository}}/compare/diff?targetBranch=refs%2Ftags%2F{{previousTag}}&sourceBranch=refs%2Ftags%2F{{currentTag}}",
+  "issueUrlFormat": "https://JIRA_URL/browse/{{id}}",
+  "commitUrlFormat": "https://BITBUCKET_URL/projects/{{owner}}/repos/{{repository}}/commits/{{hash}}",
+  "skip": {
+    "commit": true,
+    "tag": true
+  }
+}
