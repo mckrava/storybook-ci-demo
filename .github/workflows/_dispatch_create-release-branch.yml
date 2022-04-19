@@ -49,15 +49,15 @@ jobs:
 
       - name: 'Change version number and name with passed value'
         if: github.event.inputs.versionName != '' && github.event.inputs.firstRelease == 'false'
-        run: npx standard-version --release-as ${{ github.event.inputs.versionName }}
+        run: npx standard-version --release-as ${{ github.event.inputs.versionName }} -t "v"
 
       - name: 'Automatic bumping version number and name'
         if: github.event.inputs.versionName == '' && github.event.inputs.firstRelease == 'false'
-        run: npx standard-version
+        run: npx standard-version -t "v"
 
       - name: 'Create first release'
         if: github.event.inputs.firstRelease == 'true'
-        run: npx standard-version --first-release
+        run: npx standard-version --first-release -t "v"
 
       - name: 'Get new bumped version from package.json'
         id: package-version
