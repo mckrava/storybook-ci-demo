@@ -70,7 +70,6 @@ jobs:
           changelog_increment_filename: RELEASE_NOTES.md
           push: false
           commit: false
-          commitizen_version: ${{ steps.package-version.outputs.current-version }}
 
       - name: 'Stash updated release files'
         run: git stash
