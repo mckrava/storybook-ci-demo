@@ -8,7 +8,7 @@
 # https://keepachangelog.com/en/1.0.0/
 
 
-name: 'Create release branch (dispatch)'
+name: 'Bump version, create release branch (dispatch)'
 
 on:
   workflow_dispatch:
@@ -63,6 +63,37 @@ jobs:
         id: package-version
         uses: martinbeentjes/npm-get-version-action@master
 
+      - name: Edit Toml
+        uses: ciiiii/toml-editor@1.0.0
+        with:
+          file: ".cz.toml"
+          key: "version"
+          value: ${{ steps.package-version.outputs.current-version }}
+
+      - name: Create changelog
+        uses: commitizen-tools/commitizen-action@master
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          changelog_increment_filename: RELEASE_NOTES.md
+          push: false
+          commit: false
+
+      # https://github.com/actions/checkout/issues/164
+      - run: |
+          sudo chmod -R ugo+rwX .
+
+      - name: "Upload logs"
+        uses: actions/upload-artifact@v2
+        with:
+          name: changelog
+          path: ./CHANGELOG.md
+
+      - name: "Upload logs"
+        uses: actions/upload-artifact@v2
+        with:
+          name: RELEASE_NOTES
+          path: ./RELEASE_NOTES.md
+
       - name: 'Stash updated release files'
         run: git stash
 
@@ -75,9 +106,11 @@ jobs:
       - name: 'Commit changelog and package.json files'
         id: make-commit
         run: |
+          git add .cz.toml
           git add package.json
           git add CHANGELOG.md
-          git commit --message "ci: Prepare release ${{ steps.package-version.outputs.current-version }}"
+          git add RELEASE_NOTES.md
+          git commit --message "Prepare release ${{ steps.package-version.outputs.current-version }}"
           echo "::set-output name=commit::$(git rev-parse HEAD)"
 
       - name: 'Push new branch'
