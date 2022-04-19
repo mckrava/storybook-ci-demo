@@ -63,6 +63,15 @@ jobs:
         id: package-version
         uses: martinbeentjes/npm-get-version-action@master
 
+      - name: Create changelog
+        uses: commitizen-tools/commitizen-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          changelog_increment_filename: RELEASE_NOTES.md
+          push: false
+          commit: false
+          commitizen_version: ${{ steps.package-version.outputs.current-version }}
+
       - name: 'Stash updated release files'
         run: git stash
 
@@ -77,7 +86,8 @@ jobs:
         run: |
           git add package.json
           git add CHANGELOG.md
-          git commit --message "ci: Prepare release ${{ steps.package-version.outputs.current-version }}"
+          git add RELEASE_NOTES.md
+          git commit --message "Prepare release ${{ steps.package-version.outputs.current-version }}"
           echo "::set-output name=commit::$(git rev-parse HEAD)"
 
       - name: 'Push new branch'
