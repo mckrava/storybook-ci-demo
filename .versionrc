@@ -15,7 +15,6 @@
       {"type": "quality", "section": "Qualityfixes", "hidden":false}
   ],
   "skip": {
-    "commit": true,
-    "tag": true
+    "commit": true
   }
 }
