@@ -8,7 +8,7 @@
 # https://keepachangelog.com/en/1.0.0/
 
 
-name: 'Create release branch (dispatch)'
+name: 'Bump version, create release branch (dispatch)'
 
 on:
   workflow_dispatch:
@@ -62,6 +62,13 @@ jobs:
       - name: 'Get new bumped version from package.json'
         id: package-version
         uses: martinbeentjes/npm-get-version-action@master
+
+      - name: Edit Toml
+        uses: ciiiii/toml-editor@1.0.0
+        with:
+          file: "file/path/xx.toml"
+          key: "version"
+          value: ${{ steps.package-version.outputs.current-version }}
 
       - name: Create changelog
         uses: commitizen-tools/commitizen-action@master
