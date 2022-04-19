@@ -78,6 +78,18 @@ jobs:
           push: false
           commit: false
 
+      - name: "Upload logs"
+        uses: actions/upload-artifact@v2
+        with:
+          name: changelog
+          path: ./CHANGELOG.md
+
+      - name: "Upload logs"
+        uses: actions/upload-artifact@v2
+        with:
+          name: RELEASE_NOTES
+          path: ./RELEASE_NOTES.md
+
       - name: 'Stash updated release files'
         run: git stash
 
@@ -90,6 +102,7 @@ jobs:
       - name: 'Commit changelog and package.json files'
         id: make-commit
         run: |
+          git add .cz.toml
           git add package.json
           git add CHANGELOG.md
           git add RELEASE_NOTES.md
