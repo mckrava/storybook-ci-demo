@@ -15,9 +15,6 @@
       {"type": "ci", "section": "CI", "hidden":false},
       {"type": "quality", "section": "Qualityfixes", "hidden":false}
   ],
-  "compareUrlFormat":  "https://BITBUCKET_URL/projects/{{owner}}/repos/{{repository}}/compare/diff?targetBranch=refs%2Ftags%2F{{previousTag}}&sourceBranch=refs%2Ftags%2F{{currentTag}}",
-  "issueUrlFormat": "https://JIRA_URL/browse/{{id}}",
-  "commitUrlFormat": "https://BITBUCKET_URL/projects/{{owner}}/repos/{{repository}}/commits/{{hash}}",
   "skip": {
     "commit": true,
     "tag": true
