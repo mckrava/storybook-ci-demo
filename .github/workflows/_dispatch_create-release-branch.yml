@@ -42,15 +42,15 @@ jobs:
 
       # More details about config - https://github.com/conventional-changelog/standard-version/issues/635
       - name: 'Change version number and name with passed value'
-        if: github.event.inputs.versionName != '' && github.event.inputs.firstRelease == false
+        if: github.event.inputs.versionName != '' && github.event.inputs.firstRelease == 'false'
         run: npx standard-version --release-as ${{ github.event.inputs.versionName }}
 
       - name: 'Automatic bumping version number and name'
-        if: github.event.inputs.versionName == '' && github.event.inputs.firstRelease == false
+        if: github.event.inputs.versionName == '' && github.event.inputs.firstRelease == 'false'
         run: npx standard-version
 
       - name: 'Create first release'
-        if: github.event.inputs.firstRelease == true
+        if: github.event.inputs.firstRelease == 'true'
         run: npx standard-version --first-release
 
       - name: 'Get new bumped version from package.json'
