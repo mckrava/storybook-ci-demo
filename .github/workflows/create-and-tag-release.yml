@@ -21,9 +21,16 @@ jobs:
         id: package-version
         uses: martinbeentjes/npm-get-version-action@master
 
-      - name: Extract release notes
-        id: extract_release_notes
-        uses: ffurrer2/extract-release-notes@v1
+#      - name: Extract release notes
+#        id: extract_release_notes
+#        uses: ffurrer2/extract-release-notes@v1
+      -
+      - name: Get notes
+        id: generate_notes
+        uses: anmarkoulis/commitizen-changelog-reader@master
+        with:
+          tag_name: ${{ steps.package-version.outputs.current-version }}
+          changelog: CHANGELOG.md
 
       - name: Create Release
         id: create_release
@@ -33,6 +40,6 @@ jobs:
         with:
           tag_name: ${{ steps.package-version.outputs.current-version }}
           release_name: v${{ steps.package-version.outputs.current-version }}
-          body: ${{ steps.extract_release_notes.outputs.release_notes }}
+          body: ${{join(fromJson(steps.generate_notes.outputs.notes).notes, '')}}
           draft: false
           prerelease: false
