@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.2.0 (2022-04-19)
+
+
+### Features
+
+* add rer ([e6d7860](https://github.com/mckrava/storybook-ci-demo/commit/e6d78608750b85391f51e9ece23ae9ab7d3db8e3))
+
 ## [1.0.0-alpha](https://github.com/mckrava/storybook-ci-demo/compare/v1.0.0...v1.0.0-alpha) (2022-04-12)
 
 ## [1.0.0](https://github.com/mckrava/storybook-ci-demo/compare/v0.1.5...v1.0.0) (2022-04-12)

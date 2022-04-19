@@ -1,7 +1,7 @@
 {
   "homepage": ".",
   "name": "basilisk-ui",
-  "version": "1.0.0-alpha",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.5.7",
@@ -237,10 +237,5 @@
   },
   "resolutions": {
     "playwright": "^1.18.0"
-  },
-  "standard-version": {
-    "skip": {
-      "commit": true
-    }
   }
 }

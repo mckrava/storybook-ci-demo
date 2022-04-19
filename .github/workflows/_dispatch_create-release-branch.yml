@@ -2,7 +2,7 @@
 # branch first (eg. "develop" branch) to take effect. This concerns all github-scripts which are used in such workflow.
 # More details - https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch
 
-name: "Create release branch (dispatch)"
+name: 'Create release branch (dispatch)'
 
 on:
   workflow_dispatch:
@@ -16,11 +16,11 @@ on:
         type: string
 
 jobs:
-  createrelease:
+  create_release:
     runs-on: ubuntu-latest
 
     steps:
-      - name: "Setup Node.js"
+      - name: 'Setup Node.js'
         uses: actions/setup-node@v2
         with:
           node-version: 17
@@ -28,51 +28,65 @@ jobs:
       - name: 'Check out code'
         uses: actions/checkout@v2
 
-      - name: 'Create release branch'
-        run: git checkout -b release/v${{ github.event.inputs.versionName }}
-
       - name: 'Initialize mandatory git config'
         run: |
           git config user.name "GitHub Actions"
           git config user.email noreply@github.com
 
-      - name: '--- REF --- Change version number and name'
-#        run: printf 'ext.version_code = ${{ github.event.inputs.versionCode }}\next.version_name = "${{ github.event.inputs.versionName }}"\n' > app_versions.gradle
-        run: npx standard-version -- --release-as ${{ github.event.inputs.versionName }}
 
-      - name: '--- REF --- Commit changelog and manifest files'
+      # More details about config - https://github.com/conventional-changelog/standard-version/issues/635
+      - name: 'Change version number and name with passed value'
+        if: github.event.inputs.versionName != ''
+        run: npx standard-version --release-as ${{ github.event.inputs.versionName }} --skip.commit=true
+
+      - name: 'Automatic bumping version number and name'
+        if: github.event.inputs.versionName == ''
+        run: npx standard-version --skip.commit=true
+
+      - name: 'Get new bumped version from package.json'
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@master
+
+      - name: 'Stash updated release files'
+        run: git stash
+
+      - name: 'Create release branch'
+        run: git checkout -b release/v${{ steps.package-version.outputs.current-version }}
+
+      - name: 'Apply stashed release files into new release branch'
+        run: git stash pop
+
+      - name: 'Commit changelog and package.json files'
         id: make-commit
         run: |
           git add package.json
           git add CHANGELOG.md
-          git commit --message "ci: Prepare release ${{ github.event.inputs.versionName }}"
+          git commit --message "ci: Prepare release ${{ steps.package-version.outputs.current-version }}"
           echo "::set-output name=commit::$(git rev-parse HEAD)"
 
       - name: 'Push new branch'
-        run: git push origin release/v${{ github.event.inputs.versionName }}
+        run: git push origin release/v${{ steps.package-version.outputs.current-version }}
 
       - name: Create pull request into main
         uses: thomaseizinger/create-pull-request@1.0.0
         with:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          head: release/v${{ github.event.inputs.versionName }}
+          head: release/v${{ steps.package-version.outputs.current-version }}
           base: main
-          title: v${{ github.event.inputs.versionName }} into main
+          title: v${{ steps.package-version.outputs.current-version }} into main
           reviewers: ${{ github.event.issue.user.login }}
           body: |
-            Hi!
-            This PR was created in response workflow running.
+            This PR was created in response Release workflow running.
             I've updated the version name and code commit: ${{ steps.make-commit.outputs.commit }}.
 
       - name: Create pull request to develop
         uses: thomaseizinger/create-pull-request@1.0.0
         with:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          head: release/v${{ github.event.inputs.versionName }}
+          head: release/v${{ steps.package-version.outputs.current-version }}
           base: develop
-          title: v${{ github.event.inputs.versionName }} into develop
+          title: v${{ steps.package-version.outputs.current-version }} into develop
           reviewers: ${{ github.event.issue.user.login }}
           body: |
-            Hi!
-            This PR was created in response workflow running.
+            This PR was created in response Release workflow running.
             I've updated the version name and code commit: ${{ steps.make-commit.outputs.commit }}.
