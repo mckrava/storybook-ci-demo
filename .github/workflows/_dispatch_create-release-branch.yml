@@ -43,7 +43,7 @@ jobs:
         if: github.event.inputs.versionName == ''
         run: npx standard-version --skip.commit=true
 
-      - name: 'Get new bumped version'
+      - name: 'Get new bumped version from package.json'
         id: package-version
         uses: martinbeentjes/npm-get-version-action@master
 
