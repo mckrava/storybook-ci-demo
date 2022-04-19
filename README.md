@@ -18,7 +18,6 @@ Start Storybook component development environment.
 yarn storybook
 ```
 
-
 Storybook can be opened at [:6006](http://localhost:6006)
 
 Run the app in the development mode locally.
