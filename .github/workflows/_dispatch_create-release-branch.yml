@@ -28,6 +28,12 @@ jobs:
       - name: 'Check out code'
         uses: actions/checkout@v2
 
+      - name: 'Initialize mandatory git config'
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email noreply@github.com
+
+
       # More details about config - https://github.com/conventional-changelog/standard-version/issues/635
       - name: 'Change version number and name with passed value'
         if: github.event.inputs.versionName != ''
@@ -49,11 +55,6 @@ jobs:
 
       - name: 'Apply stashed release files into new release branch'
         run: git stash pop
-
-      - name: 'Initialize mandatory git config'
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email noreply@github.com
 
       - name: 'Commit changelog and package.json files'
         id: make-commit
