@@ -75,6 +75,7 @@ jobs:
         with:
           github_token: ${{ secrets.GH_TOKEN }}
           changelog_increment_filename: RELEASE_NOTES.md
+          extra_requirements: 'commitizen-emoji'
           push: false
           commit: false
 
