@@ -1,6 +1,11 @@
-[tool.commitizen]
-version = "0.3.0"
+version = "0.2.4"
 
-[tool.commitizen.customize]
-changelog_pattern = "^(feat|fix|refactor|ci|docs|test|build)?(!)?"
-change_type_map = {"feature" = "Feat 1", "fix" = "Fix 1"}
+[tool.commitizen]
+version = "0.4.0"
+
+  [tool.commitizen.customize]
+  changelog_pattern = "^(feat|fix|refactor|ci|docs|test|build)?(!)?"
+
+    [tool.commitizen.customize.change_type_map]
+    feature = "Feat 1"
+    fix = "Fix 1"
