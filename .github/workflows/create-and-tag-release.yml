@@ -41,7 +41,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-#          tag_name: ${{ steps.package-version.outputs.current-version }}
+          tag_name: ${{ steps.package-version.outputs.version }}
           release_name: v${{ steps.package-version.outputs.version }}
           #          body: ${{join(fromJson(steps.generate_notes.outputs.notes).notes, '')}}
           body_path: RELEASE_NOTES.md
