@@ -16,6 +16,6 @@
   ],
   "skip": {
     "commit": true,
-    "changelog": true
+    "changelog": false
   }
 }
