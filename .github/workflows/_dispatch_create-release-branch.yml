@@ -86,18 +86,6 @@ jobs:
       - run: |
           sudo chmod -R ugo+rwX .
 
-      - name: "Upload logs"
-        uses: actions/upload-artifact@v2
-        with:
-          name: changelog
-          path: ./CHANGELOG.md
-
-      - name: "Upload logs"
-        uses: actions/upload-artifact@v2
-        with:
-          name: RELEASE_NOTES
-          path: ./RELEASE_NOTES.md
-
       - name: 'Stash updated release files'
         run: git stash
 
@@ -113,7 +101,6 @@ jobs:
           git add .cz.toml
           git add package.json
           git add CHANGELOG.md
-          git add RELEASE_NOTES.md
           git commit --message "Prepare release ${{ steps.package-version.outputs.version }}"
           echo "::set-output name=commit::$(git rev-parse HEAD)"
 

@@ -17,9 +17,9 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email noreply@github.com
 
-#      - name: 'Get new bumped version from package.json'
-#        id: package-version
-#        uses: martinbeentjes/npm-get-version-action@master
+      #      - name: 'Get new bumped version from package.json'
+      #        id: package-version
+      #        uses: martinbeentjes/npm-get-version-action@master
 
       - name: Extract version
         id: package-version
@@ -39,7 +39,7 @@ jobs:
         id: generate_release_notes
         uses: mckrava/standard-version-release-notes@v1
         with:
-          tag_name: refs/tags/v${{ steps.package-version.outputs.current-version }}
+          tag_name: refs/tags/${{ steps.package-version.outputs.version }} # "v" must be removed
           changelog: CHANGELOG.md
 
       - name: Create Release
@@ -51,10 +51,9 @@ jobs:
           tag_name: v${{ steps.package-version.outputs.version }}
           release_name: v${{ steps.package-version.outputs.version }}
           body: ${{join(fromJson(steps.generate_release_notes.outputs.notes).notes, '')}}
-#          body_path: RELEASE_NOTES.md
+          #          body_path: RELEASE_NOTES.md
           draft: false
           prerelease: false
-
 #      - name: Release
 #        uses: softprops/action-gh-release@v1
 #        with:
