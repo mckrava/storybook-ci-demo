@@ -37,7 +37,7 @@ jobs:
 
       - name: Get notes
         id: generate_release_notes
-        uses: mckrava/standard-version-release-notes@v1
+        uses: mckrava/standard-version-release-notes@v1.0.2
         with:
           tag_name: refs/tags/${{ steps.package-version.outputs.version }} # "v" must be removed
           changelog: CHANGELOG.md
