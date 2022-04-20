@@ -59,16 +59,19 @@ jobs:
         if: github.event.inputs.firstRelease == 'true'
         run: npx standard-version --first-release -t "v"
 
-      - name: 'Get new bumped version from package.json'
+#      - name: 'Get new bumped version from package.json'
+#        id: package-version
+#        uses: martinbeentjes/npm-get-version-action@main
+      - name: Extract version
         id: package-version
-        uses: martinbeentjes/npm-get-version-action@main
+        uses: Saionaro/extract-package-version@v1.0.6
 
       - name: Edit Toml
         uses: ciiiii/toml-editor@1.0.0
         with:
           file: ".cz.toml"
           key: "version"
-          value: ${{ steps.package-version.outputs.current-version }}
+          value: ${{ steps.package-version.outputs.version }}
 
 #      - name: Create changelog
 #        uses: commitizen-tools/commitizen-action@master
@@ -99,7 +102,7 @@ jobs:
         run: git stash
 
       - name: 'Create release branch'
-        run: git checkout -b release/v${{ steps.package-version.outputs.current-version }}
+        run: git checkout -b release/v${{ steps.package-version.outputs.version }}
 
       - name: 'Apply stashed release files into new release branch'
         run: git stash pop
@@ -111,19 +114,19 @@ jobs:
           git add package.json
           git add CHANGELOG.md
           git add RELEASE_NOTES.md
-          git commit --message "Prepare release ${{ steps.package-version.outputs.current-version }}"
+          git commit --message "Prepare release ${{ steps.package-version.outputs.version }}"
           echo "::set-output name=commit::$(git rev-parse HEAD)"
 
       - name: 'Push new branch'
-        run: git push origin release/v${{ steps.package-version.outputs.current-version }} --tags
+        run: git push origin release/v${{ steps.package-version.outputs.version }} --tags
 
       - name: Create pull request into main
         uses: thomaseizinger/create-pull-request@1.0.0
         with:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          head: release/v${{ steps.package-version.outputs.current-version }}
+          head: release/v${{ steps.package-version.outputs.version }}
           base: main
-          title: v${{ steps.package-version.outputs.current-version }} into main
+          title: v${{ steps.package-version.outputs.version }} into main
           reviewers: ${{ github.event.issue.user.login }}
           body: |
             This PR was created in response Release workflow running.
@@ -133,9 +136,9 @@ jobs:
         uses: thomaseizinger/create-pull-request@1.0.0
         with:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          head: release/v${{ steps.package-version.outputs.current-version }}
+          head: release/v${{ steps.package-version.outputs.version }}
           base: develop
-          title: v${{ steps.package-version.outputs.current-version }} into develop
+          title: v${{ steps.package-version.outputs.version }} into develop
           reviewers: ${{ github.event.issue.user.login }}
           body: |
             This PR was created in response Release workflow running.

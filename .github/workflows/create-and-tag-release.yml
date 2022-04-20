@@ -17,9 +17,13 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email noreply@github.com
 
-      - name: 'Get new bumped version from package.json'
+#      - name: 'Get new bumped version from package.json'
+#        id: package-version
+#        uses: martinbeentjes/npm-get-version-action@master
+
+      - name: Extract version
         id: package-version
-        uses: martinbeentjes/npm-get-version-action@master
+        uses: Saionaro/extract-package-version@v1.0.6
 
       #      - name: Extract release notes
       #        id: extract_release_notes
@@ -38,7 +42,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
 #          tag_name: ${{ steps.package-version.outputs.current-version }}
-          release_name: v${{ steps.package-version.outputs.current-version }}
+          release_name: v${{ steps.package-version.outputs.version }}
           #          body: ${{join(fromJson(steps.generate_notes.outputs.notes).notes, '')}}
           body_path: RELEASE_NOTES.md
           draft: false
