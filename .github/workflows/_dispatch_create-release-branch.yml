@@ -66,22 +66,6 @@ jobs:
         id: package-version
         uses: Saionaro/extract-package-version@v1.0.6
 
-      - name: Edit Toml
-        uses: ciiiii/toml-editor@1.0.0
-        with:
-          file: ".cz.toml"
-          key: "version"
-          value: ${{ steps.package-version.outputs.version }}
-
-#      - name: Create changelog
-#        uses: commitizen-tools/commitizen-action@master
-#        with:
-#          github_token: ${{ secrets.GH_TOKEN }}
-#          changelog_increment_filename: RELEASE_NOTES.md
-#          extra_requirements: 'commitizen-emoji'
-#          push: false
-#          commit: false
-
       # https://github.com/actions/checkout/issues/164
       - run: |
           sudo chmod -R ugo+rwX .
@@ -98,7 +82,6 @@ jobs:
       - name: 'Commit changelog and package.json files'
         id: make-commit
         run: |
-          git add .cz.toml
           git add package.json
           git add CHANGELOG.md
           git commit --message "Prepare release ${{ steps.package-version.outputs.version }}"
