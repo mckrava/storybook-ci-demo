@@ -51,11 +51,5 @@ jobs:
           tag_name: v${{ steps.package-version.outputs.version }}
           release_name: v${{ steps.package-version.outputs.version }}
           body: ${{join(fromJson(steps.generate_release_notes.outputs.notes).notes, '')}}
-          #          body_path: RELEASE_NOTES.md
           draft: false
           prerelease: false
-#      - name: Release
-#        uses: softprops/action-gh-release@v1
-#        with:
-#          body_path: CHANGELOG.md
-#          token: ${{ secrets.GH_TOKEN }}
