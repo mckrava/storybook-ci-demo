@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0](https://github.com/mckrava/storybook-ci-demo/compare/v0.1.1...v1.0.0) (2022-04-20)
+
+
+### Feat
+
+* add awesome thing ([843e4f2](https://github.com/mckrava/storybook-ci-demo/commit/843e4f2805ec62c8292bb573eb994f24b4778250))
+
 ### [0.1.1](https://github.com/mckrava/storybook-ci-demo/compare/v0.1.0...v0.1.1) (2022-04-20)
 
 
