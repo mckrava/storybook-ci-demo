@@ -104,6 +104,7 @@ jobs:
           git add package.json
           git add CHANGELOG.md
           git commit --message "Prepare release ${{ steps.package-version.outputs.version }}"
+          git tag v${{ steps.package-version.outputs.version }} HEAD
           echo "::set-output name=commit::$(git rev-parse HEAD)"
 
       - name: 'Push new branch'
