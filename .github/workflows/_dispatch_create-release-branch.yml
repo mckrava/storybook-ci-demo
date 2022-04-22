@@ -24,13 +24,13 @@ on:
         type: boolean
 
       prerelease:
-        description: 'Make prerelease (result will be like 1.0.1-0)'
+        description: 'Make prerelease (result will look like 1.0.1-0). NOTICE - cannot be used together with specified version name.'
         required: true
         default: false
         type: boolean
 
       prereleaseName:
-        description: 'Set prerelease suffix (e.g. alpha | beta so version will be like 1.0.1-alpha.0)'
+        description: 'Set prerelease suffix (e.g. alpha | beta,  version will look like 1.0.1-alpha.0). NOTICE - cannot be used without selected "prerelease" option.'
         required: false
         default: ''
         type: string
