@@ -6,13 +6,14 @@
 #PRERELEASE_NAME=$4
 
 VERSION_NAME='1.6.0'
-FIRST_RELEASE='false'
-PRERELEASE='true'
+FIRST_RELEASE='true'
+PRERELEASE='false'
 PRERELEASE_NAME=''
 
 # VERSION_NAME [ ] - FIRST_RELEASE [ ] - PRERELEASE [ ] - PRERELEASE_NAME [?]
 # VERSION_NAME [+] - FIRST_RELEASE [ ] - PRERELEASE [ ] - PRERELEASE_NAME [?]
 # VERSION_NAME [ ] - FIRST_RELEASE [+] - PRERELEASE [ ] - PRERELEASE_NAME [?]
+# VERSION_NAME [+] - FIRST_RELEASE [+] - PRERELEASE [ ] - PRERELEASE_NAME [?]
 # VERSION_NAME [ ] - FIRST_RELEASE [+] - PRERELEASE [+] - PRERELEASE_NAME [ ]
 # VERSION_NAME [ ] - FIRST_RELEASE [ ] - PRERELEASE [+] - PRERELEASE_NAME [ ]
 # VERSION_NAME [ ] - FIRST_RELEASE [ ] - PRERELEASE [+] - PRERELEASE_NAME [+]
@@ -39,6 +40,12 @@ elif [[ -z $VERSION_NAME && $FIRST_RELEASE == "true" && $PRERELEASE == "false" ]
 then
   npx standard-version --first-release
   echo ">>> 3"
+
+# VERSION_NAME [+] - FIRST_RELEASE [+] - PRERELEASE [ ] - PRERELEASE_NAME [?]
+elif [[ ! -z $VERSION_NAME && $FIRST_RELEASE == "true" && $PRERELEASE == "false" ]]
+then
+  npx standard-version --release-as "$VERSION_NAME" --first-release
+  echo ">>> 3.1"
 
 # VERSION_NAME [] - FIRST_RELEASE [+] - PRERELEASE [+] - PRERELEASE_NAME []
 elif [[ -z $VERSION_NAME && $FIRST_RELEASE == "true" && $PRERELEASE == "true" && -z $PRERELEASE_NAME ]]

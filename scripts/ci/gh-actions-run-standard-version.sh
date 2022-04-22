@@ -6,11 +6,14 @@ PRERELEASE=$3
 PRERELEASE_NAME=$4
 
 # VERSION_NAME [ ] - FIRST_RELEASE [ ] - PRERELEASE [ ] - PRERELEASE_NAME [?]
+# VERSION_NAME [+] - FIRST_RELEASE [ ] - PRERELEASE [ ] - PRERELEASE_NAME [?]
 # VERSION_NAME [ ] - FIRST_RELEASE [+] - PRERELEASE [ ] - PRERELEASE_NAME [?]
+# VERSION_NAME [+] - FIRST_RELEASE [+] - PRERELEASE [ ] - PRERELEASE_NAME [?]
 # VERSION_NAME [ ] - FIRST_RELEASE [+] - PRERELEASE [+] - PRERELEASE_NAME [ ]
 # VERSION_NAME [ ] - FIRST_RELEASE [ ] - PRERELEASE [+] - PRERELEASE_NAME [ ]
 # VERSION_NAME [ ] - FIRST_RELEASE [ ] - PRERELEASE [+] - PRERELEASE_NAME [+]
 # VERSION_NAME [+] - FIRST_RELEASE [+] - PRERELEASE [+] - PRERELEASE_NAME [ ]
+# VERSION_NAME [+] - FIRST_RELEASE [ ] - PRERELEASE [+] - PRERELEASE_NAME [ ]
 # VERSION_NAME [ ] - FIRST_RELEASE [+] - PRERELEASE [+] - PRERELEASE_NAME [+]
 # VERSION_NAME [+] - FIRST_RELEASE [+] - PRERELEASE [+] - PRERELEASE_NAME [+]
 
@@ -20,10 +23,20 @@ if [[ -z $VERSION_NAME && $FIRST_RELEASE == "false" && $PRERELEASE == "false" ]]
 then
   npx standard-version
 
+# VERSION_NAME [+] - FIRST_RELEASE [+] - PRERELEASE [ ] - PRERELEASE_NAME [?]
+elif [[ ! -z $VERSION_NAME && $FIRST_RELEASE == "false" && $PRERELEASE == "false" ]]
+then
+  npx standard-version --release-as "$VERSION_NAME"
+
 # VERSION_NAME [] - FIRST_RELEASE [+] - PRERELEASE [ ] - PRERELEASE_NAME [?]
 elif [[ -z $VERSION_NAME && $FIRST_RELEASE == "true" && $PRERELEASE == "false" ]]
 then
   npx standard-version --first-release
+
+# VERSION_NAME [+] - FIRST_RELEASE [+] - PRERELEASE [ ] - PRERELEASE_NAME [?]
+elif [[ ! -z $VERSION_NAME && $FIRST_RELEASE == "true" && $PRERELEASE == "false" ]]
+then
+  npx standard-version --release-as "$VERSION_NAME" --first-release
 
 # VERSION_NAME [] - FIRST_RELEASE [+] - PRERELEASE [+] - PRERELEASE_NAME []
 elif [[ -z $VERSION_NAME && $FIRST_RELEASE == "true" && $PRERELEASE == "true" && -z $PRERELEASE_NAME ]]
@@ -44,6 +57,11 @@ then
 elif [[ -z $VERSION_NAME && $FIRST_RELEASE == "true" && $PRERELEASE == "true" && -z $PRERELEASE_NAME ]]
 then
   npx standard-version --release-as "$VERSION_NAME" --first-release --prerelease
+
+# VERSION_NAME [+] - FIRST_RELEASE [ ] - PRERELEASE [+] - PRERELEASE_NAME []
+elif [[ ! -z $VERSION_NAME && $FIRST_RELEASE == "false" && $PRERELEASE == "true" && -z $PRERELEASE_NAME ]]
+then
+  npx standard-version --release-as "$VERSION_NAME"
 
 # VERSION_NAME [] - FIRST_RELEASE [+] - PRERELEASE [+] - PRERELEASE_NAME [+]
 elif [[ -z $VERSION_NAME && $FIRST_RELEASE == "true" && $PRERELEASE == "true" && ! -z $PRERELEASE_NAME ]]
