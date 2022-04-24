@@ -85,7 +85,7 @@ jobs:
       - name: 'Apply stashed release files into new release branch'
         run: git stash pop
 
-      #          git tag v${{ steps.package-version.outputs.version }} HEAD
+      # git tag v${{ steps.package-version.outputs.version }} HEAD
       - name: 'Commit changelog and package.json files'
         id: make-commit
         run: |
