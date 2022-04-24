@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/mckrava/storybook-ci-demo/compare/v1.1.1...v1.3.0) (2022-04-24)
+
+
+### Feat
+
+* add new act ([9105c97](https://github.com/mckrava/storybook-ci-demo/commit/9105c9731647305cbcd90d899c5922b5171b5d2e))
+
+
+### Refactor
+
+* fff ([b716889](https://github.com/mckrava/storybook-ci-demo/commit/b71688974ea3140b64d47f72e309163594382a16))
+
+
+### Fix
+
+* action ([82eb95b](https://github.com/mckrava/storybook-ci-demo/commit/82eb95b329e7be57efceeed479005db525646b8b))
+* clear ([681318c](https://github.com/mckrava/storybook-ci-demo/commit/681318ca28bf1330b4e3aa1e633fe26af5dc7db2))
+* fix tags ([0bd5778](https://github.com/mckrava/storybook-ci-demo/commit/0bd57782e49251aba483ddaed4199d60f62c31a8))
+* fixccc ([07d971a](https://github.com/mckrava/storybook-ci-demo/commit/07d971a585f41143acd4e1e14fd907fd1611fa34))
+* rename ([6bf96ef](https://github.com/mckrava/storybook-ci-demo/commit/6bf96ef3acf0495e44403a83cc43ee6529a6c8ae))
+* rename ([f82737c](https://github.com/mckrava/storybook-ci-demo/commit/f82737cd8514857032f4202106da24f869a4d72d))
+* test fix ([d820802](https://github.com/mckrava/storybook-ci-demo/commit/d8208029b862851d8d6391c48a60335417b35fa5))
+
 ## [1.2.0](https://github.com/mckrava/storybook-ci-demo/compare/v1.1.1...v1.2.0) (2022-04-24)
 
 
