@@ -68,6 +68,7 @@ jobs:
           PRERELEASE_NAME: ${{ github.event.inputs.prereleaseName }}
 
       # As alternative actions can be use this one - martinbeentjes/npm-get-version-action@main
+      
       - name: Extract version
         id: package-version
         uses: Saionaro/extract-package-version@v1.0.6
