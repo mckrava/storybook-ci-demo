@@ -1,0 +1,122 @@
+# IMPORTANT - any changes to workflow with trigger event "workflow_dispatch" requires to push changes to default
+# branch first (eg. "develop" branch) to take effect. This concerns all github-scripts which are used in such workflow.
+# More details - https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch
+
+# More details about config - https://github.com/conventional-changelog/standard-version/issues/635
+# https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.1.0/README.md
+# https://keepachangelog.com/en/1.0.0/
+
+
+name: 'Prepare release (dispatch)'
+
+on:
+  workflow_dispatch:
+    inputs:
+      versionName:
+        description: 'Release version (must fit to Semantic Versioning). If empty, version will be bumped automatically.'
+        required: false
+        default: ''
+        type: string
+
+      firstRelease:
+        description: "First release (rebuild CHANGELOG.md from scratch and don't bump version automatically)."
+        required: true
+        default: false
+        type: boolean
+
+      prerelease:
+        description: 'Make prerelease (result will look like 1.0.1-0). NOTICE - cannot be used together with specified version name.'
+        required: true
+        default: false
+        type: boolean
+
+      prereleaseName:
+        description: 'Set prerelease suffix (e.g. alpha | beta,  version will look like 1.0.1-alpha.0). NOTICE - cannot be used without selected "prerelease" option.'
+        required: false
+        default: ''
+        type: string
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Setup Node.js'
+        uses: actions/setup-node@v2
+        with:
+          node-version: 17
+
+      - name: 'Check out code'
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: 'Initialize mandatory git config'
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email noreply@github.com
+
+      - name: 'Run standard-version script conditionally'
+        shell: bash
+        timeout-minutes: 2
+        run: |
+          . ./scripts/ci/gh-actions-run-standard-version.sh "$VERSION_NAME" "$FIRST_RELEASE" "$PRERELEASE" "$PRERELEASE_NAME"
+        env:
+          VERSION_NAME: ${{ github.event.inputs.versionName }}
+          FIRST_RELEASE: ${{ github.event.inputs.firstRelease }}
+          PRERELEASE: ${{ github.event.inputs.prerelease }}
+          PRERELEASE_NAME: ${{ github.event.inputs.prereleaseName }}
+
+      # As alternative actions can be use this one - martinbeentjes/npm-get-version-action@main
+      - name: Extract version
+        id: package-version
+        uses: Saionaro/extract-package-version@v1.0.6
+
+      # https://github.com/actions/checkout/issues/164
+      - run: |
+          sudo chmod -R ugo+rwX .
+
+      - name: 'Stash updated release files'
+        run: git stash
+
+      - name: 'Create release branch'
+        run: git checkout -b release/v${{ steps.package-version.outputs.version }}
+
+      - name: 'Apply stashed release files into new release branch'
+        run: git stash pop
+
+      - name: 'Commit changelog and package.json files'
+        id: make-commit
+        run: |
+               git add package.json
+               git add CHANGELOG.md
+               git commit --message "Prepare release ${{ steps.package-version.outputs.version }}"
+          #          git tag v${{ steps.package-version.outputs.version }} HEAD
+               echo "::set-output name=commit::$(git rev-parse HEAD)"
+
+      - name: 'Push new branch'
+        run: git push origin release/v${{ steps.package-version.outputs.version }}
+
+      - name: Create pull request into main
+        uses: thomaseizinger/create-pull-request@1.0.0
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          head: release/v${{ steps.package-version.outputs.version }}
+          base: main
+          title: v${{ steps.package-version.outputs.version }} into main
+          reviewers: ${{ github.event.issue.user.login }}
+          body: |
+            This PR was created in response Release workflow running.
+            I've updated the version name and code commit: ${{ steps.make-commit.outputs.commit }}.
+
+      - name: Create pull request to develop
+        uses: thomaseizinger/create-pull-request@1.0.0
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          head: release/v${{ steps.package-version.outputs.version }}
+          base: develop
+          title: v${{ steps.package-version.outputs.version }} into develop
+          reviewers: ${{ github.event.issue.user.login }}
+          body: |
+            This PR was created in response Release workflow running.
+            I've updated the version name and code commit: ${{ steps.make-commit.outputs.commit }}.
