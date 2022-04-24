@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
     inputs:
       versionName:
-        description: 'Release version (branch, tag, PR for this release will be removed)'
+        description: 'Release version without "v" prefix (branch, tag, PR for this release will be removed)'
         required: true
         default: ''
         type: string

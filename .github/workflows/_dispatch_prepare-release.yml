@@ -50,7 +50,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
       - name: "Cancel if permissions denied"
-        if: steps.chack_permission.outputs.has-permission == "1"
+        if: ${{ steps.chack_permission.outputs.has-permission == "1" }}
         uses: andymckay/cancel-action@0.2
 
       - name: 'Setup Node.js'
