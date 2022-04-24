@@ -71,7 +71,7 @@ jobs:
         shell: bash
         timeout-minutes: 2
         run: |
-          . ./scripts/ci/gh-actions-run-standard-version.sh $VERSION_NAME $VERSION_NAME $PRERELEASE $PRERELEASE_NAME
+          . ./scripts/ci/gh-actions-run-standard-version.sh "$VERSION_NAME" "$FIRST_RELEASE" "$PRERELEASE" "$PRERELEASE_NAME"
         env:
           VERSION_NAME: ${{ github.event.inputs.versionName }}
           FIRST_RELEASE: ${{ github.event.inputs.firstRelease }}
