@@ -41,6 +41,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: 'Check user permissions'
+        uses: scherermichael-oss/action-has-permission@master
+        id: chack_permission
+        with:
+          required-permission: write
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - name: "Cancel if permissions denied"
+        if: steps.chack_permission.outputs.has-permission == "1"
+        uses: andymckay/cancel-action@0.2
+
       - name: 'Setup Node.js'
         uses: actions/setup-node@v2
         with:
@@ -68,7 +80,7 @@ jobs:
           PRERELEASE_NAME: ${{ github.event.inputs.prereleaseName }}
 
       # As alternative actions can be use this one - martinbeentjes/npm-get-version-action@main
-      
+
       - name: Extract version
         id: package-version
         uses: Saionaro/extract-package-version@v1.0.6
