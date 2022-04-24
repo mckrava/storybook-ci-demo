@@ -55,18 +55,6 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email noreply@github.com
 
-      #      - name: 'Change version number and name with passed value'
-      #        if: github.event.inputs.versionName != '' && github.event.inputs.firstRelease == 'false'
-      #        run: npx standard-version --release-as ${{ github.event.inputs.versionName }} -t "v"
-      #
-      #      - name: 'Automatic bumping version number and name'
-      #        if: github.event.inputs.versionName == '' && github.event.inputs.firstRelease == 'false'
-      #        run: npx standard-version -t "v"
-      #
-      #      - name: 'Create first release'
-      #        if: github.event.inputs.firstRelease == 'true'
-      #        run: npx standard-version --first-release -t "v"
-
       - name: 'Run standard-version script conditionally'
         shell: bash
         timeout-minutes: 2
@@ -78,9 +66,7 @@ jobs:
           PRERELEASE: ${{ github.event.inputs.prerelease }}
           PRERELEASE_NAME: ${{ github.event.inputs.prereleaseName }}
 
-      #      - name: 'Get new bumped version from package.json'
-      #        id: package-version
-      #        uses: martinbeentjes/npm-get-version-action@main
+      # As alternative actions can be use this one - martinbeentjes/npm-get-version-action@main
       - name: Extract version
         id: package-version
         uses: Saionaro/extract-package-version@v1.0.6
