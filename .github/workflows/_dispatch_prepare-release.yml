@@ -6,7 +6,8 @@
 # https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.1.0/README.md
 # https://keepachangelog.com/en/1.0.0/
 
-name: 'Bump version, create release branch (dispatch)'
+
+name: 'Prepare release (dispatch)'
 
 on:
   workflow_dispatch:
@@ -84,17 +85,17 @@ jobs:
       - name: 'Apply stashed release files into new release branch'
         run: git stash pop
 
+      #          git tag v${{ steps.package-version.outputs.version }} HEAD
       - name: 'Commit changelog and package.json files'
         id: make-commit
         run: |
-          git add package.json
-          git add CHANGELOG.md
-          git commit --message "Prepare release ${{ steps.package-version.outputs.version }}"
-          git tag v${{ steps.package-version.outputs.version }} HEAD
-          echo "::set-output name=commit::$(git rev-parse HEAD)"
+           git add package.json
+           git add CHANGELOG.md
+           git commit --message "Prepare release ${{ steps.package-version.outputs.version }}"
+           echo "::set-output name=commit::$(git rev-parse HEAD)"
 
       - name: 'Push new branch'
-        run: git push origin release/v${{ steps.package-version.outputs.version }} --tags
+        run: git push origin release/v${{ steps.package-version.outputs.version }}
 
       - name: Create pull request into main
         uses: thomaseizinger/create-pull-request@1.0.0
