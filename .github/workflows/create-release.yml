@@ -1,4 +1,4 @@
-name: Create and Tag Release
+name: Create Release
 
 on:
   push:
@@ -17,25 +17,12 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email noreply@github.com
 
-      #      - name: 'Get new bumped version from package.json'
-      #        id: package-version
-      #        uses: martinbeentjes/npm-get-version-action@master
-
       - name: Extract version
         id: package-version
         uses: Saionaro/extract-package-version@v1.0.6
 
-      #      - name: Extract release notes
-      #        id: extract_release_notes
-      #        uses: ffurrer2/extract-release-notes@v1
-      #      - name: Get notes
-      #        id: generate_notes
-      #        uses: anmarkoulis/commitizen-changelog-reader@master
-      #        with:
-      #          tag_name: refs/tags/v${{ steps.package-version.outputs.current-version }}
-      #          changelog: CHANGELOG.md
-
-      - name: Get notes
+      # Alternative action - anmarkoulis/commitizen-changelog-reader@master
+      - name: Get release notes
         id: generate_release_notes
         uses: mckrava/standard-version-release-notes@v1.0.2
         with:
