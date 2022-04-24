@@ -7,7 +7,7 @@
 # https://keepachangelog.com/en/1.0.0/
 
 
-name: 'Clean up release environment (dispatch)'
+name: 'Release :: Clean up (dispatch)'
 
 on:
   workflow_dispatch:
