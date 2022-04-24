@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/mckrava/storybook-ci-demo/compare/v1.4.0...v2.0.0) (2022-04-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* breaking fix
+
+### Feat
+
+* ppo ([33255b7](https://github.com/mckrava/storybook-ci-demo/commit/33255b7a416e8ecf584d1ec85c0469480253fe7a))
+
+
+### Fix
+
+* breaking fix ([10f5322](https://github.com/mckrava/storybook-ci-demo/commit/10f5322123006dcae9cd2062c01f48cc864b90c8))
+* dsdsd ([7b1505a](https://github.com/mckrava/storybook-ci-demo/commit/7b1505a92a1e2101f87979f1ebf392fc354c5a59))
+* fiddsd ([a6b57fa](https://github.com/mckrava/storybook-ci-demo/commit/a6b57fa021d077178fdbfa218c36a2e1d4b6ac05))
+* ggfgfg ([0f7e0fa](https://github.com/mckrava/storybook-ci-demo/commit/0f7e0fa588cbe8b13ee1e241def1ec348bf7c6af))
+* soome patch ([7065597](https://github.com/mckrava/storybook-ci-demo/commit/706559735d3e47350ecc72d94e967c9f58f6a533))
+
 ## [1.4.0](https://github.com/mckrava/storybook-ci-demo/compare/v1.1.1...v1.4.0) (2022-04-24)
 
 
