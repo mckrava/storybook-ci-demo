@@ -90,11 +90,11 @@ jobs:
           git add package.json
           git add CHANGELOG.md
           git commit --message "Prepare release ${{ steps.package-version.outputs.version }}"
-          git tag v${{ steps.package-version.outputs.version }} HEAD
+#          git tag v${{ steps.package-version.outputs.version }} HEAD
           echo "::set-output name=commit::$(git rev-parse HEAD)"
 
       - name: 'Push new branch'
-        run: git push origin release/v${{ steps.package-version.outputs.version }} --tags
+        run: git push origin release/v${{ steps.package-version.outputs.version }}
 
       - name: Create pull request into main
         uses: thomaseizinger/create-pull-request@1.0.0

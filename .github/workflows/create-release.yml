@@ -21,6 +21,11 @@ jobs:
         id: package-version
         uses: Saionaro/extract-package-version@v1.0.6
 
+      - name: 'Tag release'
+        run: |
+          git tag v${{ steps.package-version.outputs.version }} HEAD
+          git push origin v${{ steps.package-version.outputs.version }}
+
       # Alternative action - anmarkoulis/commitizen-changelog-reader@master
       - name: Get release notes
         id: generate_release_notes
