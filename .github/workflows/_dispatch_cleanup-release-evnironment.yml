@@ -1,0 +1,40 @@
+# IMPORTANT - any changes to workflow with trigger event "workflow_dispatch" requires to push changes to default
+# branch first (eg. "develop" branch) to take effect. This concerns all github-scripts which are used in such workflow.
+# More details - https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch
+
+# More details about config - https://github.com/conventional-changelog/standard-version/issues/635
+# https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.1.0/README.md
+# https://keepachangelog.com/en/1.0.0/
+
+
+name: 'Clean up release environment (dispatch)'
+
+on:
+  workflow_dispatch:
+    inputs:
+      versionName:
+        description: 'Release version (branch, tag, PR for this release will be removed)'
+        required: true
+        default: ''
+        type: string
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Setup Node.js'
+        uses: actions/setup-node@v2
+        with:
+          node-version: 17
+
+      - name: 'Check out code'
+        uses: actions/checkout@v2
+
+      - name: Delete branch
+        uses: dawidd6/action-delete-branch@v3
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          branches: release/v${{ github.event.inputs.versionName }}
+          soft_fail: true
+
+      - run: git push --delete origin v${{ github.event.inputs.versionName }}
