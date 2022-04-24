@@ -85,14 +85,14 @@ jobs:
       - name: 'Apply stashed release files into new release branch'
         run: git stash pop
 
+      #          git tag v${{ steps.package-version.outputs.version }} HEAD
       - name: 'Commit changelog and package.json files'
         id: make-commit
         run: |
-               git add package.json
-               git add CHANGELOG.md
-               git commit --message "Prepare release ${{ steps.package-version.outputs.version }}"
-          #          git tag v${{ steps.package-version.outputs.version }} HEAD
-               echo "::set-output name=commit::$(git rev-parse HEAD)"
+           git add package.json
+           git add CHANGELOG.md
+           git commit --message "Prepare release ${{ steps.package-version.outputs.version }}"
+           echo "::set-output name=commit::$(git rev-parse HEAD)"
 
       - name: 'Push new branch'
         run: git push origin release/v${{ steps.package-version.outputs.version }}
