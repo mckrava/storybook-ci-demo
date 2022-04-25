@@ -39,19 +39,7 @@ on:
 jobs:
   create_release:
     runs-on: ubuntu-latest
-
     steps:
-      - name: 'Check user permissions'
-        uses: scherermichael-oss/action-has-permission@master
-        id: chack_permission
-        with:
-          required-permission: write
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-
-      - name: "Cancel if permissions denied"
-        if: ${{ ! steps.chack_permission.outputs.has-permission }}
-        uses: andymckay/cancel-action@0.2
 
       - name: 'Setup Node.js'
         uses: actions/setup-node@v2
@@ -63,10 +51,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 'Initialize mandatory git config'
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email noreply@github.com
+#      - name: 'Initialize mandatory git config'
+#        run: |
+#          git config user.name "GitHub Actions"
+#          git config user.email noreply@github.com
 
       - name: 'Run standard-version script conditionally'
         shell: bash
