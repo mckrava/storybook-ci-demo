@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.1](https://github.com/mckrava/storybook-ci-demo/compare/v1.4.0...v1.4.1) (2022-04-26)
+
+
+### Fix
+
+* fix some weird stuff ([a424f6a](https://github.com/mckrava/storybook-ci-demo/commit/a424f6aa0c3650d5d12314c8e0e087f991ea0846))
+* Resolve merge branch 'develop' into develop ([af38569](https://github.com/mckrava/storybook-ci-demo/commit/af385696ee270e9b315f8ed23c9019208c130a9a))
+
 ## 1.4.0 (2022-04-26)
 
 
