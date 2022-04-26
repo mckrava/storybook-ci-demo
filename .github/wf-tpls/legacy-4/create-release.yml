@@ -1,0 +1,47 @@
+name: "Release :: Create"
+
+on:
+  push:
+    branches: main
+
+jobs:
+  report-with-artifacts:
+    name: 'Report'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Check out code'
+        uses: actions/checkout@v2
+
+      - name: 'Initialize mandatory git config'
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email noreply@github.com
+
+      - name: Extract version
+        id: package-version
+        uses: Saionaro/extract-package-version@v1.0.6
+
+      - name: 'Tag release'
+        run: |
+          git tag v${{ steps.package-version.outputs.version }} HEAD
+          git push origin v${{ steps.package-version.outputs.version }}
+
+      # Alternative action - anmarkoulis/commitizen-changelog-reader@master
+      - name: Get release notes
+        id: generate_release_notes
+        uses: mckrava/standard-version-release-notes@v1.0.2
+        with:
+          tag_name: refs/tags/${{ steps.package-version.outputs.version }} # "v" must be removed
+          changelog: CHANGELOG.md
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.package-version.outputs.version }}
+          release_name: v${{ steps.package-version.outputs.version }}
+          body: ${{join(fromJson(steps.generate_release_notes.outputs.notes).notes, '')}}
+          draft: false
+          prerelease: false
