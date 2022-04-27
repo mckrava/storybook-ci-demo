@@ -1,0 +1,46 @@
+# Build Application and Storybook. Deploy builds into GitHub Pages. Publish build and deployment statuses as
+# pull request comment, if any pull request is associated with latest commit.
+
+name: 'Test sandbox'
+
+on:
+  push:
+    branches:
+      - 'fix/**'
+      - 'feat/**'
+      - develop
+      - 'release/**'
+      - main
+  pull_request:
+    types:
+      - opened
+    branches:
+      - develop
+      - main
+
+jobs:
+  build:
+    name: "Sandbox"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: "Setup Node.js"
+        uses: actions/setup-node@v2
+        with:
+          node-version: 17
+
+      - name: 'Run github-script for preparation and publication comment content'
+        id: pr-comment-data
+        uses: actions/github-script@v6
+        env:
+          # | Env variables
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          # | "github-token" parameter is required for work with GitHub API
+          github-token: ${{ secrets.GH_TOKEN }}
+          script: |
+            const script = require('./scripts/ci/github-script-src/test-sandbox.js')
+            return await script({github, context, core})
+
