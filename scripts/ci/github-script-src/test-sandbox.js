@@ -1,3 +1,5 @@
+const apiUtils = require('./utils/github-api');
+
 module.exports = async ({ github, context, core }) => {
   console.log('[LOG]:: context - ', context);
   console.log('[LOG]:: env - ', process.env);
@@ -10,6 +12,14 @@ module.exports = async ({ github, context, core }) => {
     repo,
   });
 
+  const sourcePr = await apiUtils.getMergedPullRequest(
+    github,
+    owner,
+    repo,
+    GITHUB_SHA
+  );
+
+  console.log('sourcePr - ', sourcePr);
   console.log('GITHUB_SHA - ', GITHUB_SHA);
   console.log('tagsList - ', tagsListResp);
 
