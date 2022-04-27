@@ -106,6 +106,7 @@ async function getMergedPullRequest(github, owner, repo, sha) {
 
   return {
     title: pull.title,
+    head_ref: pull.head.ref,
     body: pull.body,
     number: pull.number,
     labels: pull.labels.map((l) => l.name),

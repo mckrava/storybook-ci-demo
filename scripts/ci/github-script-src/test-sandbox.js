@@ -2,7 +2,6 @@ const apiUtils = require('./utils/github-api');
 
 module.exports = async ({ github, context, core }) => {
   console.log('[LOG]:: context - ', context);
-  console.log('[LOG]:: env - ', process.env);
 
   const { GITHUB_SHA } = process.env;
   const [owner, repo] = context.payload.repository.full_name.split('/');
@@ -12,6 +11,14 @@ module.exports = async ({ github, context, core }) => {
     repo,
   });
 
+  const commitTag = tagsListResp.data.find(
+    (tagItem) => tagItem.commit.sha === GITHUB_SHA
+  );
+
+  console.log('[LOG]:: commitTag - ', commitTag);
+
+  if (commitTag) return commitTag.name || GITHUB_SHA;
+
   const sourcePr = await apiUtils.getMergedPullRequest(
     github,
     owner,
@@ -19,11 +26,11 @@ module.exports = async ({ github, context, core }) => {
     GITHUB_SHA
   );
 
-  console.log('sourcePr - ', sourcePr);
-  console.log('GITHUB_SHA - ', GITHUB_SHA);
-  console.log('tagsList - ', tagsListResp);
+  console.log('[LOG]:: sourcePr - ', sourcePr)
 
-  for (const tagItem of tagsListResp.data) {
-    console.log('tagItem - commit - ', tagItem.commit);
-  }
+  if (!sourcePr) return GITHUB_SHA;
+
+  if (!sourcePr.head_ref.startsWith('release/')) return GITHUB_SHA;
+
+  return sourcePr.head_ref.replace('release/', '') || GITHUB_SHA;
 };
