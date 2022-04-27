@@ -1,7 +1,7 @@
 {
   "homepage": ".",
   "name": "basilisk-ui",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.5.7",
