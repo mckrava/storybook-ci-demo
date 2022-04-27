@@ -33,7 +33,7 @@ jobs:
           node-version: 17
 
       - name: 'Run github-script for preparation and publication comment content'
-        id: pr-comment-data
+        id: get-app-version-name
         uses: actions/github-script@v6
         env:
           # | Env variables
@@ -43,6 +43,8 @@ jobs:
           # | "github-token" parameter is required for work with GitHub API
           github-token: ${{ secrets.GH_TOKEN }}
           script: |
-            const script = require('./scripts/ci/github-script-src/test-sandbox.js')
+            const script = require('./scripts/ci/github-script-src/get-app-version-name.js')
             return await script({github, context, core})
 
+      - name: 'Save PR comment data'
+        run: echo ${{ steps.get-app-version-name.outputs.result }}

@@ -102,8 +102,6 @@ async function getMergedPullRequest(github, owner, repo, sha) {
     return null;
   }
 
-  console.log('target pull - ', pull);
-
   return {
     title: pull.title,
     head_ref: pull.head.ref,
