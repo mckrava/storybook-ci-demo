@@ -56,6 +56,16 @@ jobs:
           sudo chmod +x ./scripts/ci/gh-actions-branch-name-serialize.sh
           echo "##[set-output name=name;]$(./scripts/ci/gh-actions-branch-name-serialize.sh "$BRANCH_NAME")"
 
+      - name: 'Run github-script for get application version name'
+        id: get-app-version-name
+        uses: actions/github-script@v6
+        with:
+          # | "github-token" parameter is required for work with GitHub API
+          github-token: ${{ secrets.GH_TOKEN }}
+          script: |
+            const script = require('./scripts/ci/github-script-src/get-app-version-name.js')
+            return await script({github, context, core})
+
       - name: "Build App and Storybook"
         run: |
           yarn run build
@@ -65,6 +75,7 @@ jobs:
           CI: false
           REACT_APP_GIT_BRANCH: ${{ steps.extract-branch-name.outputs.name }}
           REACT_APP_GIT_BRANCH_SANITIZED: ${{ steps.branch-name-sanitized.outputs.name }}
+          REACT_APP_VERSION_NAME: ${{ steps.get-app-version-name.outputs.result }}
           NODE_OPTIONS: --openssl-legacy-provider
 
       - name: "Upload production-ready App build files"

@@ -8,8 +8,8 @@ on:
     branches:
       - 'fix/**'
       - 'feat/**'
-      - develop
       - 'release/**'
+      - develop
       - main
   pull_request:
     types:
