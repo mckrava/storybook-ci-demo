@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.2](https://github.com/mckrava/storybook-ci-demo/compare/v1.4.1-alpha.1...v1.5.2) (2022-04-27)
+
+
+### Feat
+
+* test 1 ([caa4b41](https://github.com/mckrava/storybook-ci-demo/commit/caa4b41b127ebe5ce5823a8ac78fe2e8896eff17))
+
+
+### Fix
+
+* 333 ([86b95e3](https://github.com/mckrava/storybook-ci-demo/commit/86b95e38a764e559da7193985877dbb61feedfbc))
+* 334 ([483343d](https://github.com/mckrava/storybook-ci-demo/commit/483343d3cd01397b355bf90bc24295bd329b8f9a))
+* 335 ([844e81a](https://github.com/mckrava/storybook-ci-demo/commit/844e81a151ec648c0efaae92cb6cb5fc5e929907))
+
 ### [1.4.1](https://github.com/mckrava/storybook-ci-demo/compare/v1.4.0...v1.4.1) (2022-04-26)
 
 
