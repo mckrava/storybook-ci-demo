@@ -22,6 +22,8 @@ jobs:
     with:
       app-build-artifact-name: app-build-files
       storybook-build-artifact-name: sb-build-files
+    secrets:
+      gh_token: ${{ secrets.GH_TOKEN }}
 
   #| Run Ent-To-Ent tests for Application
   app-e2e-tests:

@@ -16,6 +16,9 @@ on:
       storybook-build-artifact-name:
         required: true
         type: string
+    secrets:
+      gh_token:
+        required: true
 
 jobs:
   build:
@@ -59,8 +62,6 @@ jobs:
       - name: 'Run github-script for get application version name'
         id: get-app-version-name
         uses: actions/github-script@v6
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           # "github-token" parameter is required for work with GitHub API
           github-token: ${{ secrets.GH_TOKEN }}
