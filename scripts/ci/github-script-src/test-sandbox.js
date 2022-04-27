@@ -4,15 +4,15 @@ module.exports = async ({ github, context, core }) => {
   const { GITHUB_SHA } = process.env;
   const [owner, repo] = context.payload.repository.full_name.split('/');
 
-  const tagsList = await github.rest.repos.listTags({
+  const tagsListResp = await github.rest.repos.listTags({
     owner,
     repo,
   });
 
   console.log('GITHUB_SHA - ', GITHUB_SHA);
-  console.log('tagsList - ', tagsList);
+  console.log('tagsList - ', tagsListResp);
 
-  for (const tagItem of tagsList) {
+  for (const tagItem of tagsListResp.data) {
     console.log('tagItem - commit - ', tagItem.commit);
   }
 };
