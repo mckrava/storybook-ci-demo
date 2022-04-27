@@ -59,8 +59,10 @@ jobs:
       - name: 'Run github-script for get application version name'
         id: get-app-version-name
         uses: actions/github-script@v6
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
-          # | "github-token" parameter is required for work with GitHub API
+          # "github-token" parameter is required for work with GitHub API
           github-token: ${{ secrets.GH_TOKEN }}
           script: |
             const script = require('./scripts/ci/github-script-src/get-app-version-name.js')
