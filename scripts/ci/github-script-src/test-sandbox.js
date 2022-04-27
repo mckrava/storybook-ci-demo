@@ -1,6 +1,4 @@
-
 module.exports = async ({ github, context, core }) => {
-
   console.log('[LOG]:: context - ', context);
 
   const { GITHUB_SHA } = process.env;
@@ -11,10 +9,10 @@ module.exports = async ({ github, context, core }) => {
     repo,
   });
 
-  tagsList.forEach(tagItem => {
-    console.log('tagItem - commit - ', tagItem.commit)
-  });
+  console.log('GITHUB_SHA - ', GITHUB_SHA);
+  console.log('tagsList - ', tagsList);
 
-  console.log('GITHUB_SHA - ', GITHUB_SHA)
-  console.log('tagsList - ', tagsList)
+  for (const tagItem of tagsList) {
+    console.log('tagItem - commit - ', tagItem.commit);
+  }
 };
