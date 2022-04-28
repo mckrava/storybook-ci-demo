@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/mckrava/storybook-ci-demo/compare/v1.7.1-alpha.4...v1.8.0) (2022-04-28)
+
+
+### Feat
+
+* Feat/test squash ([#197](https://github.com/mckrava/storybook-ci-demo/issues/197)) ([873ab2d](https://github.com/mckrava/storybook-ci-demo/commit/873ab2d2152073c59f23e99b2de8b1bafaa07c60))
+
 ### [1.7.1](https://github.com/mckrava/storybook-ci-demo/compare/v1.7.0...v1.7.1) (2022-04-27)
 
 
