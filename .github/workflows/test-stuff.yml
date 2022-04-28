@@ -19,7 +19,6 @@ on:
       - develop
       - main
 
-
 jobs:
   build:
     name: "Sandbox"
