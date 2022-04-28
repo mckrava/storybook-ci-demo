@@ -87,6 +87,8 @@ async function findIssueComment({
   return null;
 }
 
+
+
 async function getMergedPullRequest(github, owner, repo, sha) {
   const resp = await github.rest.pulls.list({
     owner,
