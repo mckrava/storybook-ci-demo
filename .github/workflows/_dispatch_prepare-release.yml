@@ -112,9 +112,7 @@ jobs:
       # Such steps order is required because we need a new version value for creation of a new release branch. Therefore,
       # version is bumping in default branch in previous steps.
       - name: 'Stash updated release files'
-        run: |
-          git add .
-          git stash
+        run: git stash
 
       - name: 'Create release branch'
         run: git checkout -b release/v${{ steps.package-version.outputs.version }}
