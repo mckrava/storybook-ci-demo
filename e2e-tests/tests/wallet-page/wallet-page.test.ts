@@ -19,7 +19,8 @@ let page: Page;
 let browserContext: ChromiumBrowserContext;
 let extensionURL: string;
 
-test.skip('The Polkadot.js Extension browser should', () => {
+// test.skip('The Polkadot.js Extension browser should', () => {
+test.describe('The Polkadot.js Extension browser should', () => {
   test.beforeAll(async () => {
     const init = await initBrowserWithExtension();
 
