@@ -142,7 +142,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: app-e2e-tests-traces-screenshots
-          path: ./ui-app/test-results # must be changed to "traces"
+          path: ./ui-app/test-results #  must be changed to "traces"
 
       - name: 'Upload e2e tests report file'
         if: always()
