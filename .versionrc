@@ -1,10 +1,10 @@
 {
   "types": [
-      {"type": "chore", "section":"Build process changes", "hidden":false},
+      {"type": "chore", "section":"Build process changes", "hidden":true},
       {"type": "revert", "section":"Reverts", "hidden":false},
       {"type": "feat", "section":"Feat", "hidden":false},
       {"type": "fix", "section":"Fix", "hidden":false},
-      {"type": "improvement", "section":"FeatureImprovements", "hidden":false},
+      {"type": "improvement", "section":"Feature Improvements", "hidden":false},
       {"type": "docs", "section":"Docs", "hidden":false},
       {"type": "style", "section":"Styling", "hidden":false},
       {"type": "refactor", "section":"Refactor", "hidden":false},
@@ -12,7 +12,7 @@
       {"type": "test", "section":"Tests", "hidden":false},
       {"type": "build", "section":"Build System", "hidden":false},
       {"type": "ci", "section": "CI", "hidden":false},
-      {"type": "quality", "section": "Qualityfixes", "hidden":false}
+      {"type": "quality", "section": "Quality fixes", "hidden":false}
   ],
   "skip": {
     "commit": true,
