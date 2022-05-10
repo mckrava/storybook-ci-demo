@@ -4,10 +4,10 @@
 name: 'Release :: Create'
 
 on:
-#  pull_request:
-#    branches:
-#      - main
-#    types: [ closed ]
+  pull_request:
+    branches:
+      - main
+    types: [ closed ]
 
 
 jobs:
@@ -19,6 +19,26 @@ jobs:
       - name: 'Check out code'
         uses: actions/checkout@v2
 
+      - name: 'Run github-script to check pull request head branch'
+        id: check-pr-head-branch-name
+        uses: actions/github-script@v6
+        env:
+          # | Env variables
+          MATCH_BRANCH_NAME: 'release'
+        with:
+          # | "github-token" parameter is required for work with GitHub API
+          github-token: ${{ secrets.GH_TOKEN }}
+          result-encoding: string
+          script: |
+            const script = require('./scripts/ci/github-script-src/check-pr-head-branch-name.js')
+            return await script({github, context, core})
+
+      - name: "Cancel workflow"
+        if: steps.check-pr-head-branch-name.outputs.result == false
+        uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ secrets.GH_TOKEN }}
+
       # Set default git config with credentials of default GitHub Actions account.
       # More options are explained here - https://github.com/actions/checkout/issues/13#issuecomment-724415212
       - name: 'Initialize git config'
@@ -29,6 +49,13 @@ jobs:
       - name: 'Extract app version'
         id: package-version
         uses: Saionaro/extract-package-version@v1.0.6
+
+      - name: 'Create tag'
+        id: make-commit
+        run: |
+          git tag -a "v${{ steps.package-version.outputs.version }}" -m "Release v${{ steps.package-version.outputs.version }}" HEAD
+          git push origin --tags
+          
 
       # Extract release notes from CHANGELOG.md for specific version with mckrava/standard-version-release-notes@v1.1.0
       # (https://github.com/marketplace/actions/get-release-notes-from-standard-version-changelog)
@@ -50,3 +77,21 @@ jobs:
           body: ${{join(fromJson(steps.generate_release_notes.outputs.notes).notes, '')}}
           draft: false
           prerelease: false
+
+      - name: "Create pull request into main"
+        id: back-merge-main-develop-pr
+        uses: thomaseizinger/create-pull-request@1.0.0
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          head: main
+          base: develop
+          title: Back-merge main into develop after Release v${{ steps.package-version.outputs.version }}
+          reviewers: ${{ github.event.issue.user.login }}
+          body: |
+            This PR was created in response Release workflow running.
+
+      - uses: peter-evans/enable-pull-request-automerge@v2
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          pull-request-number: ${{ steps.back-merge-main-develop-pr.outputs.number }}
+
