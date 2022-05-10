@@ -94,4 +94,5 @@ jobs:
         with:
           token: ${{ secrets.GH_TOKEN }}
           pull-request-number: ${{ steps.back-merge-main-develop-pr.outputs.number }}
+          merge-method: squash
 
