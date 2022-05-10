@@ -17,6 +17,8 @@ module.exports = async ({ github, context }) => {
   const [owner, repo] = context.payload.repository.full_name.split('/');
 
   console.log('context- ', context)
+  console.log('context base - ', context.payload.pull_request.base)
+  console.log('context head - ', context.payload.pull_request.head)
 
   const sourcePr = await apiUtils.getMergedPullRequest(
     github,

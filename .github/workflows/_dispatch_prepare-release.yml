@@ -126,9 +126,8 @@ jobs:
           git add package.json
           git add CHANGELOG.md
           git commit --message "Prepare release ${{ steps.package-version.outputs.version }}"
-          git tag v${{ steps.package-version.outputs.version }} HEAD
           echo "::set-output name=commit::$(git rev-parse HEAD)"
-          git push origin release/v${{ steps.package-version.outputs.version }} --tags
+          git push origin release/v${{ steps.package-version.outputs.version }}
 
       - name: "Create pull request into main"
         uses: thomaseizinger/create-pull-request@1.0.0
@@ -142,14 +141,14 @@ jobs:
             This PR was created in response Release workflow running.
             I've updated the version name and code commit: ${{ steps.make-commit.outputs.commit }}.
 
-      - name: "Create pull request to develop"
-        uses: thomaseizinger/create-pull-request@1.0.0
-        with:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          head: release/v${{ steps.package-version.outputs.version }}
-          base: develop
-          title: v${{ steps.package-version.outputs.version }} into develop
-          reviewers: ${{ github.event.issue.user.login }}
-          body: |
-            This PR was created in response Release workflow running.
-            I've updated the version name and code commit: ${{ steps.make-commit.outputs.commit }}.
+#      - name: "Create pull request to develop"
+#        uses: thomaseizinger/create-pull-request@1.0.0
+#        with:
+#          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+#          head: release/v${{ steps.package-version.outputs.version }}
+#          base: develop
+#          title: v${{ steps.package-version.outputs.version }} into develop
+#          reviewers: ${{ github.event.issue.user.login }}
+#          body: |
+#            This PR was created in response Release workflow running.
+#            I've updated the version name and code commit: ${{ steps.make-commit.outputs.commit }}.

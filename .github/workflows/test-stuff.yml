@@ -5,10 +5,10 @@
 name: 'Test sandbox'
 
 on:
-  pull_request:
-    branches:
-      - develop
-    types: [ closed ]
+#  pull_request:
+#    branches:
+#      - develop
+#    types: [ closed ]
 #  push:
 #    branches:
 #      - 'fix/**'

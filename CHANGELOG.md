@@ -2,14 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [0.1.1](https://github.com/mckrava/storybook-ci-demo/compare/v0.1.0...v0.1.1) (2022-05-10)
-
-
-### Feat
-
-* snbx 1 ([4fea6df](https://github.com/mckrava/storybook-ci-demo/commit/4fea6dfebfad947db570cd183f7ab28b660cd160))
-
-## 0.1.0 (2022-05-09)
+### 0.1.2 (2022-05-10)
 
 
 ### ⚠ BREAKING CHANGES
@@ -45,6 +38,18 @@ All notable changes to this project will be documented in this file. See [standa
 * upds wf ([8abd553](https://github.com/mckrava/storybook-ci-demo/commit/8abd553ca5f322d39c655bddb361fcde8d53e6ab))
 
 
+### Refactor
+
+* add magic ([1b4ba63](https://github.com/mckrava/storybook-ci-demo/commit/1b4ba63384455b434ae146298309772b29bc37b5))
+* clean up ch ([0c15b47](https://github.com/mckrava/storybook-ci-demo/commit/0c15b47f6067cf6a5f34b5d253bbbee07e104775))
+* clean up changelog ([aa60a7c](https://github.com/mckrava/storybook-ci-demo/commit/aa60a7cad732abb4266e3454ca31e86b863a362d))
+* fff ([b716889](https://github.com/mckrava/storybook-ci-demo/commit/b71688974ea3140b64d47f72e309163594382a16))
+* Refacto actioions ([d2e598d](https://github.com/mckrava/storybook-ci-demo/commit/d2e598dc2b215c11fabf28e651d9cad47b4cde4b))
+* reffff ([79a9af4](https://github.com/mckrava/storybook-ci-demo/commit/79a9af4fa6315dbe92133ba34a984beca0175540))
+* reset version ([03a3223](https://github.com/mckrava/storybook-ci-demo/commit/03a3223e00d4f1573019ac0578498237ea9165bc))
+* some ref ([134e9f7](https://github.com/mckrava/storybook-ci-demo/commit/134e9f7871845373c488ec251227ac3c03dd953c))
+
+
 ### Feat
 
 * 20 ([3f71d4f](https://github.com/mckrava/storybook-ci-demo/commit/3f71d4f16910b6eb6065cc92fa63294e62271c84))
@@ -69,6 +74,7 @@ All notable changes to this project will be documented in this file. See [standa
 * rel1 ([24c6d3a](https://github.com/mckrava/storybook-ci-demo/commit/24c6d3aac6f59679b2931f6a722f0380fd8f8d61))
 * sdsdsdsd ([02f5ad9](https://github.com/mckrava/storybook-ci-demo/commit/02f5ad901ccf004c63a3568d6b8ead990b259181))
 * skip ([1aedf4b](https://github.com/mckrava/storybook-ci-demo/commit/1aedf4be63ff5afe8d360ee2b3b69d4194f8b8f0))
+* snbx 1 ([4fea6df](https://github.com/mckrava/storybook-ci-demo/commit/4fea6dfebfad947db570cd183f7ab28b660cd160))
 * some feat ([a8dfc2a](https://github.com/mckrava/storybook-ci-demo/commit/a8dfc2a235579e386745e97fc61fb3f9cab4076f))
 * some feat stuff 1 ([2b926dd](https://github.com/mckrava/storybook-ci-demo/commit/2b926dd4f05a781a7f1e1d2ea1e8882a4f9f086d))
 * some fix ([1f770db](https://github.com/mckrava/storybook-ci-demo/commit/1f770dbfbbd3f16a017fa88c2c6ba2a43306bf08))
@@ -76,18 +82,6 @@ All notable changes to this project will be documented in this file. See [standa
 * test ([af3f105](https://github.com/mckrava/storybook-ci-demo/commit/af3f105c7892417d25ff8b14444936f01b3f78f8))
 * test 1 ([caa4b41](https://github.com/mckrava/storybook-ci-demo/commit/caa4b41b127ebe5ce5823a8ac78fe2e8896eff17))
 * test 1 ([9fd8cc0](https://github.com/mckrava/storybook-ci-demo/commit/9fd8cc00777b93c54f3ef75b5ff7302ef1f1ab19))
-
-
-### Refactor
-
-* add magic ([1b4ba63](https://github.com/mckrava/storybook-ci-demo/commit/1b4ba63384455b434ae146298309772b29bc37b5))
-* clean up ch ([0c15b47](https://github.com/mckrava/storybook-ci-demo/commit/0c15b47f6067cf6a5f34b5d253bbbee07e104775))
-* clean up changelog ([aa60a7c](https://github.com/mckrava/storybook-ci-demo/commit/aa60a7cad732abb4266e3454ca31e86b863a362d))
-* fff ([b716889](https://github.com/mckrava/storybook-ci-demo/commit/b71688974ea3140b64d47f72e309163594382a16))
-* Refacto actioions ([d2e598d](https://github.com/mckrava/storybook-ci-demo/commit/d2e598dc2b215c11fabf28e651d9cad47b4cde4b))
-* reffff ([79a9af4](https://github.com/mckrava/storybook-ci-demo/commit/79a9af4fa6315dbe92133ba34a984beca0175540))
-* reset version ([03a3223](https://github.com/mckrava/storybook-ci-demo/commit/03a3223e00d4f1573019ac0578498237ea9165bc))
-* some ref ([134e9f7](https://github.com/mckrava/storybook-ci-demo/commit/134e9f7871845373c488ec251227ac3c03dd953c))
 
 
 ### Fix
@@ -110,6 +104,7 @@ All notable changes to this project will be documented in this file. See [standa
 * check 1 ([a7e0c29](https://github.com/mckrava/storybook-ci-demo/commit/a7e0c294aef63b3f060c48589be09764d02b2376))
 * check version bump ([49f44ed](https://github.com/mckrava/storybook-ci-demo/commit/49f44ed49747afad42025252559aa67f9e61379b))
 * clean again ([77fe4b6](https://github.com/mckrava/storybook-ci-demo/commit/77fe4b69f3418429c8523cda874ebc03e17b2f68))
+* clean fff ([1caf976](https://github.com/mckrava/storybook-ci-demo/commit/1caf97693e1433a9e88f2170b5faec3799ebe87d))
 * clean up stuff ([8a69c2a](https://github.com/mckrava/storybook-ci-demo/commit/8a69c2a9aabc01a0ff69dfce94c252505702619a))
 * clear ([681318c](https://github.com/mckrava/storybook-ci-demo/commit/681318ca28bf1330b4e3aa1e633fe26af5dc7db2))
 * clear checngelog ([a98d31a](https://github.com/mckrava/storybook-ci-demo/commit/a98d31a0ad9d68c416174f94d4bba97a37a0fcde))
@@ -139,6 +134,7 @@ All notable changes to this project will be documented in this file. See [standa
 * fix string ([f9b0f7e](https://github.com/mckrava/storybook-ci-demo/commit/f9b0f7ed1d2681acec64d920db603c9915ce9398))
 * fix tag creation ([cda0818](https://github.com/mckrava/storybook-ci-demo/commit/cda0818e550ca2d16914827342f8cfe452c0f82d))
 * fix tags ([0bd5778](https://github.com/mckrava/storybook-ci-demo/commit/0bd57782e49251aba483ddaed4199d60f62c31a8))
+* fix tags 111 ([128b2ae](https://github.com/mckrava/storybook-ci-demo/commit/128b2ae5dc9b88a691ec8c8e9fdb94cfd4e1d5ba))
 * fix ver ([b548ad8](https://github.com/mckrava/storybook-ci-demo/commit/b548ad8088f845f27e43be408e1ca3e6b2a6e4f0))
 * fix vers ([e5bfa3d](https://github.com/mckrava/storybook-ci-demo/commit/e5bfa3d0638982b33bfc81cf9df95569ada6bd84))
 * fixccc ([07d971a](https://github.com/mckrava/storybook-ci-demo/commit/07d971a585f41143acd4e1e14fd907fd1611fa34))
@@ -164,6 +160,7 @@ All notable changes to this project will be documented in this file. See [standa
 * reset stufff ([67f8bcb](https://github.com/mckrava/storybook-ci-demo/commit/67f8bcbc51b4cc45da040a6e70cbf157e2579181))
 * Resolve merge branch 'develop' into develop ([af38569](https://github.com/mckrava/storybook-ci-demo/commit/af385696ee270e9b315f8ed23c9019208c130a9a))
 * script ([4c1fb0c](https://github.com/mckrava/storybook-ci-demo/commit/4c1fb0cd92cbbd97be98f82481e2c40bd0530c3b))
+* snbx 2 ([9078444](https://github.com/mckrava/storybook-ci-demo/commit/90784445ac5f1484a83c47f3a9b6b83fdbadbd7c))
 * some fix stuff ([9d122fc](https://github.com/mckrava/storybook-ci-demo/commit/9d122fc9275f481b3616793d65b9ae80b191b72b))
 * some super fix ([368b7e0](https://github.com/mckrava/storybook-ci-demo/commit/368b7e0d8b250f0227dc53ff759aed659bda3e3f))
 * soome patch ([7065597](https://github.com/mckrava/storybook-ci-demo/commit/706559735d3e47350ecc72d94e967c9f58f6a533))
