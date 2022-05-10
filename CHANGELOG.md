@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](https://github.com/mckrava/storybook-ci-demo/compare/v0.1.3...v0.1.4) (2022-05-10)
+
+
+### Docs
+
+* bump 222 ([dc8b954](https://github.com/mckrava/storybook-ci-demo/commit/dc8b9544b0423103ed34e9637b97cb637fbbe5e5))
+* bunp 111 ([9faf47d](https://github.com/mckrava/storybook-ci-demo/commit/9faf47debc44e802070a1f6ca47444049fdf01fd))
+
 ### 0.1.3 (2022-05-10)
 
 
