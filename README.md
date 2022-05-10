@@ -91,6 +91,8 @@ those are fed data via containers through props. Dumb components should be devel
 
 Example:
 
+
+
 ```tsx
 // reuse generated models from the data layer
 import { Account } from './generated/graphql'
