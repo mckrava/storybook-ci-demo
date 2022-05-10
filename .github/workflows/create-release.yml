@@ -90,9 +90,3 @@ jobs:
           body: |
             This PR was created in response Release workflow running.
 
-      - uses: peter-evans/enable-pull-request-automerge@v2
-        with:
-          token: ${{ secrets.GH_TOKEN }}
-          pull-request-number: ${{ steps.back-merge-main-develop-pr.outputs.number }}
-          merge-method: squash
-
