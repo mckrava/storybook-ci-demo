@@ -5,19 +5,23 @@
 name: 'Test sandbox'
 
 on:
-  push:
-    branches:
-      - 'fix/**'
-      - 'feat/**'
-      - develop
-      - 'release/**'
-      - main
   pull_request:
-    types:
-      - opened
     branches:
       - develop
-      - main
+    types: [ closed ]
+#  push:
+#    branches:
+#      - 'fix/**'
+#      - 'feat/**'
+#      - develop
+#      - 'release/**'
+#      - main
+#  pull_request:
+#    types:
+#      - opened
+#    branches:
+#      - develop
+#      - main
 
 jobs:
   build:
@@ -43,7 +47,7 @@ jobs:
           github-token: ${{ secrets.GH_TOKEN }}
           result-encoding: string
           script: |
-            const script = require('./scripts/ci/github-script-src/get-app-version-name.js')
+            const script = require('./scripts/ci/github-script-src/check-pr-head-branch-name.js')
             return await script({github, context, core})
 
       - name: 'Save PR comment data'
