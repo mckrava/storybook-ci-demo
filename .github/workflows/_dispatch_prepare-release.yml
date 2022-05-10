@@ -14,7 +14,8 @@
 #   Specific version can be defined manually as well. Prerelease can be created with or without custom suffix.
 #
 # - generates CHANGELOG.md regarding conventional commit messages (https://www.conventionalcommits.org/en/v1.0.0/).
-#   Includes commits since latest release. Changelog sections titles and visibility can be configured in config file "./.versionrc"
+#   Includes commits since latest release. Changelog sections titles and visibility can be configured
+#   in config file "./.versionrc".
 #
 # - creates branch for new release with new app version (e.g. "release/vX.X.X")
 #
@@ -27,14 +28,11 @@
 # VERSION_NAME [ ] - FIRST_RELEASE [ ] - PRERELEASE [ ] - PRERELEASE_NAME [ ] - bump version automatically;
 # VERSION_NAME [+] - FIRST_RELEASE [ ] - PRERELEASE [ ] - PRERELEASE_NAME [ ] - bump version to provided value;
 # VERSION_NAME [ ] - FIRST_RELEASE [+] - PRERELEASE [ ] - PRERELEASE_NAME [ ] - keep current version, generate changelog since last release;
-# VERSION_NAME [+] - FIRST_RELEASE [+] - PRERELEASE [ ] - PRERELEASE_NAME [ ] - unavailable
-# VERSION_NAME [ ] - FIRST_RELEASE [+] - PRERELEASE [+] - PRERELEASE_NAME [ ] - unavailable
 # VERSION_NAME [ ] - FIRST_RELEASE [ ] - PRERELEASE [+] - PRERELEASE_NAME [ ] - create prerelease version e.g. vX.X.X-X
 # VERSION_NAME [ ] - FIRST_RELEASE [ ] - PRERELEASE [+] - PRERELEASE_NAME [+] - create prerelease version with suffix e.g. vX.X.X-alpha.X
-# VERSION_NAME [+] - FIRST_RELEASE [+] - PRERELEASE [+] - PRERELEASE_NAME [ ] - unavailable
-# VERSION_NAME [+] - FIRST_RELEASE [ ] - PRERELEASE [+] - PRERELEASE_NAME [ ] - unavailable
-# VERSION_NAME [ ] - FIRST_RELEASE [+] - PRERELEASE [+] - PRERELEASE_NAME [+] - unavailable
-# VERSION_NAME [+] - FIRST_RELEASE [+] - PRERELEASE [+] - PRERELEASE_NAME [+] - unavailable
+#
+# NOTICE: if you need change version and create prerelease with/without custom prerelease suffix, you need define it in
+# version name (e.g. "1.5.7-alpha.0" or "1.5.7-0"). This is workaround of "standard-version" library issue.
 
 
 name: 'Release :: Prepare (dispatch)'
@@ -61,7 +59,7 @@ on:
         type: string
 
       firstRelease:
-        description: "First release (rebuild CHANGELOG.md from scratch and don't bump version automatically)."
+        description: "First release (rebuild CHANGELOG.md since last release and don't bump version automatically). NOTICE - cannot be used together with any other option."
         required: true
         default: false
         type: boolean
@@ -128,7 +126,7 @@ jobs:
           git add package.json
           git add CHANGELOG.md
           git commit --message "Prepare release ${{ steps.package-version.outputs.version }}"
-          git tag -a v${{ steps.package-version.outputs.version }} -m "Release v${{ steps.package-version.outputs.version }}" HEAD
+          git tag v${{ steps.package-version.outputs.version }} HEAD
           echo "::set-output name=commit::$(git rev-parse HEAD)"
           git push origin release/v${{ steps.package-version.outputs.version }} --tags
 
