@@ -89,4 +89,5 @@ jobs:
           reviewers: ${{ github.event.issue.user.login }}
           body: |
             This PR was created in response Release workflow running.
+            :warning: This PR must be merged without squash!
 
