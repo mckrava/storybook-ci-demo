@@ -35,6 +35,3 @@ jobs:
           github_token: ${{ secrets.GH_TOKEN }}
           branches: release/v${{ github.event.inputs.versionName }}
           soft_fail: true
-
-      - name: "Delete tag"
-        run: git push --delete origin v${{ github.event.inputs.versionName }}
