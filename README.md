@@ -73,7 +73,6 @@ To build optimized production artifacts locally you can run
 yarn build
 ```
 
-
 ## Code style
 
 To ensure consistent code across our codebase, we're using both Prettier and ESLint.
