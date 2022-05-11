@@ -89,5 +89,7 @@ jobs:
           reviewers: ${{ github.event.issue.user.login }}
           body: |
             This PR was created in response Release workflow running.
-            :warning: This PR must be merged without squash!
+            :warning: Current PR must be merged without squash :warning:
+            Please, use simple `Merge pull request` strategy with creating merge commit in current case.
+            It's required for correct work of automated Release workflows.
 
