@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.2](https://github.com/mckrava/storybook-ci-demo/compare/v0.2.1...v0.2.2) (2022-05-11)
+
+
+### Fix
+
+* wf fix ([b05c148](https://github.com/mckrava/storybook-ci-demo/commit/b05c1485a7fe40667563c9e6424d24fe49f0f3ba))
+
 ### [0.2.1](https://github.com/mckrava/storybook-ci-demo/compare/v0.2.0...v0.2.1) (2022-05-10)
 
 
