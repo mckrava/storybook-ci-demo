@@ -51,10 +51,9 @@ jobs:
         uses: Saionaro/extract-package-version@v1.0.6
 
       - name: 'Create tag'
-        id: make-commit
         run: |
-          git tag -a "v${{ steps.package-version.outputs.version }}" -m "Release v${{ steps.package-version.outputs.version }}" HEAD
-          git push origin --tags
+          git tag -a "v${{ steps.package-version.outputs.version }}" -m "Release v${{ steps.package-version.outputs.version }}" main
+          git push origin "v${{ steps.package-version.outputs.version }}"
           
 
       # Extract release notes from CHANGELOG.md for specific version with mckrava/standard-version-release-notes@v1.1.0
