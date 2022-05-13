@@ -150,9 +150,12 @@ jobs:
           cd ui-app
           echo "ls ->"
           ls
-          echo "cd ui-app/e2e-tests ->"
-          cd ui-app/e2e-tests
+          echo "cd e2e-tests ->"
+          cd e2e-tests
           echo "ls ->"
+          ls
+          echo "cd app-e2e-traces ->"
+          cd app-e2e-traces
           ls
 
       - name: 'Upload trace files'
