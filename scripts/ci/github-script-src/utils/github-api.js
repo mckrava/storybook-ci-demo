@@ -99,7 +99,11 @@ async function getPullRequest(github, owner, repo, sha, state) {
 
   console.log('resp.data  - ', resp.data);
 
-  const pull = resp.data.find((prItem) => prItem.merge_commit_sha === sha);
+  const pull = resp.data.find(
+    (prItem) =>
+      (state === 'closed' && prItem.merge_commit_sha === sha) ||
+      (state === 'open' && prItem.head.sha === sha)
+  );
   if (!pull) {
     return null;
   }
