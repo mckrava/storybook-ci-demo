@@ -8,23 +8,34 @@ const apiUtils = require('./utils/github-api');
  * @returns {Promise<string>}
  */
 module.exports = async ({ github, context }) => {
-  const { GITHUB_SHA, MATCH_BRANCH_NAME = 'release', EXACT_MATCH = 'false' } = process.env;
+  const {
+    GITHUB_SHA,
+    MATCH_BRANCH_NAME = 'release',
+    EXACT_MATCH = 'false',
+    MERGED_PR = 'false',
+  } = process.env;
   const [owner, repo] = context.payload.repository.full_name.split('/');
 
-  console.log('EXACT_MATCH - ', EXACT_MATCH)
-  console.log('MATCH_BRANCH_NAME - ', MATCH_BRANCH_NAME)
+  console.log('EXACT_MATCH - ', EXACT_MATCH);
+  console.log('MATCH_BRANCH_NAME - ', MATCH_BRANCH_NAME);
 
-  const sourcePr = await apiUtils.getMergedPullRequest(
+  const sourcePr = await apiUtils.getPullRequest(
     github,
     owner,
     repo,
-    GITHUB_SHA
+    GITHUB_SHA,
+    MERGED_PR === 'false' ? 'open' : 'closed'
   );
 
-  console.log('sourcePr - ', sourcePr)
+  console.log('sourcePr - ', sourcePr);
 
   if (!sourcePr) return 'false';
-  if (EXACT_MATCH === 'true' && sourcePr.head_ref === MATCH_BRANCH_NAME) return 'true';
-  if (EXACT_MATCH === 'false' && sourcePr.head_ref.startsWith(MATCH_BRANCH_NAME)) return 'true';
-  return 'false'
+  if (EXACT_MATCH === 'true' && sourcePr.head_ref === MATCH_BRANCH_NAME)
+    return 'true';
+  if (
+    EXACT_MATCH === 'false' &&
+    sourcePr.head_ref.startsWith(MATCH_BRANCH_NAME)
+  )
+    return 'true';
+  return 'false';
 };
