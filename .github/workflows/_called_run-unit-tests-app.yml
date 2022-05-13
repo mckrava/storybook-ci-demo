@@ -90,7 +90,7 @@ jobs:
         run: yarn test:ci
 
       - name: 'Upload code coverage for ref branch'
-        if: github.event_name == 'pull_request' || steps.check-pr-head-branch-name.outputs.result == 'true'
+        if: always() && (github.event_name == 'pull_request' || steps.check-pr-head-branch-name.outputs.result == 'true')
         uses: actions/upload-artifact@v2
         with:
           name: ${{inputs.base-branch-codecov-artifact-name}}
@@ -133,6 +133,7 @@ jobs:
           path: ./ui-app-unit-tests-results.html
 
       - name: 'Upload code coverage info'
+        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: ${{inputs.working-branch-codecov-artifact-name}}
