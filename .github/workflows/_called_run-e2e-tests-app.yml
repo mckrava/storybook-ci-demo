@@ -142,11 +142,17 @@ jobs:
         if: always()
         shell: bash
         run: |
+          echo "pwd ->"
           pwd
+          echo "ls ->"
           ls
+          echo "cd ui-app ->"
           cd ui-app
+          echo "ls ->"
           ls
+          echo "cd ui-app/e2e-tests ->"
           cd ui-app/e2e-tests
+          echo "ls ->"
           ls
 
       - name: 'Upload trace files'
