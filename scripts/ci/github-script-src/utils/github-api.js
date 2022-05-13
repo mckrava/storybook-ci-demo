@@ -97,7 +97,7 @@ async function getPullRequest(github, owner, repo, sha, state) {
     per_page: 100,
   });
 
-  console.log('resp.data - ', resp.data);
+  console.log('resp.data  - ', resp.data);
 
   const pull = resp.data.find((prItem) => prItem.merge_commit_sha === sha);
   if (!pull) {
