@@ -28,7 +28,7 @@ jobs:
   # | Available outputs: "codecov_unit_percentage", "codecov_unit_diff".
   codecov-report:
     name: 'Generate codecove report'
-    needs: testing
+    needs: tests
     if: ${{ always() }}
     uses: ./.github/workflows/_called_generate-unit-tests-code-cov-report.yml
     with:
@@ -42,8 +42,8 @@ jobs:
     # Publish build and deployment statuses as pull request comment,
     # if any pull request is associated with triggered commit.
     name: 'Report in PR'
-    needs: tests
-    if: ${{ always() && needs.tests.result != 'cancelled' }}
+    needs: [tests, codecov-report]
+    if: ${{ always() && needs.tests.result != 'cancelled' && needs.codecov-report.result != 'cancelled' }}
     uses: ./.github/workflows/_called_report-status-in-pr.yml
     with:
       publish-artifacts-list: true
