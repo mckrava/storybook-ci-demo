@@ -132,6 +132,13 @@ jobs:
         run: |
           cd ui-app
           DEBUG=pw:browser* HEADFUL=true xvfb-run --auto-servernum -- yarn test:e2e-ci
+          ls
+          echo "----- wait -----"
+          sleep 30s
+          ls
+          echo "----"
+          cd e2e-tests
+          ls
 
       - name: 'Sleep for 30 seconds (for compiling html reports)'
         if: always()
