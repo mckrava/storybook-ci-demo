@@ -137,6 +137,16 @@ jobs:
         shell: bash
         run: sleep 30s
 
+      - name: 'debug'
+        shell: bash
+        run: |
+          pwd
+          ls
+          cd ui-app
+          ls
+          cd ui-app/e2e-tests
+          ls
+
       - name: 'Upload trace files'
         if: always()
         uses: actions/upload-artifact@v2
