@@ -23,6 +23,8 @@ jobs:
       base-branch-codecov-artifact-name: base-lcov.info
       working-branch-codecov-artifact-name: working-lcov.info
       app-node-modules-cache-key: cache-node-modules-ui-app
+    secrets:
+      gh_token: ${{ secrets.GH_TOKEN }}
 
   # | Generate code coverage report for App unit tests.
   # | Available outputs: "codecov_unit_percentage", "codecov_unit_diff".
