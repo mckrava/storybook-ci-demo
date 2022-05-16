@@ -78,7 +78,7 @@ jobs:
         shell: bash
         run: |
           cat > ui-app/.env.test.e2e.ci
-          export $(cat ui-app/.env.test.e2e.ci | grep -v '#' | sed 's/\r$//' | awk '/=/ {print $1}' )
+#          export $(cat ui-app/.env.test.e2e.ci | grep -v '#' | sed 's/\r$//' | awk '/=/ {print $1}' )
           cd ui-app
           ls -a
 
