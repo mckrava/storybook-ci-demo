@@ -93,7 +93,7 @@ jobs:
           E2E_TEST_ACCOUNT_PASSWORD_ALICE: ${{ secrets.E2E_TEST_ACCOUNT_PASSWORD_ALICE }}
           E2E_TEST_ACCOUNT_SEED_ALICE: ${{ secrets.E2E_TEST_ACCOUNT_SEED_ALICE }}
           NODE_ENV: CI
-          EXTENSSION_SRC: ../extensions/polkadot-dapp/extension/master-build
+          EXTENSION_SRC: ../extensions/polkadot-dapp/extension/master-build
           WS_URL: ws://127.0.0.1:9988
         run: |
           cd ui-app

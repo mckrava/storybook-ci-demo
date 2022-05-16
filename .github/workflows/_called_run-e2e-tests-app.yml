@@ -11,6 +11,13 @@ on:
       app-build-artifact-name:
         required: true
         type: string
+    secrets:
+      e2e_test_account_name_alice:
+        required: true
+      e2e_test_account_password_alice:
+        required: true
+      e2e_test_account_seed_alice:
+        required: true
 
 jobs:
   # Run E2E tests
@@ -111,12 +118,14 @@ jobs:
       - name: 'Run e2e tests'
         shell: bash
         env:
-          PLAYWRIGHT_TEST_BASE_URL: ${{ github.event.deployment_status.target_url }}
-          E2E_TEST_ACCOUNT_NAME_ALICE: ${{ secrets.E2E_TEST_ACCOUNT_NAME_ALICE }}
-          E2E_TEST_ACCOUNT_PASSWORD_ALICE: ${{ secrets.E2E_TEST_ACCOUNT_PASSWORD_ALICE }}
-          E2E_TEST_ACCOUNT_SEED_ALICE: ${{ secrets.E2E_TEST_ACCOUNT_SEED_ALICE }}
+#          PLAYWRIGHT_TEST_BASE_URL: ${{ github.event.deployment_status.target_url }}
+          # These secrets must be added as GitHub Actions secrets and passed to the current called action as secrets from
+          # caller workflow file.
+          E2E_TEST_ACCOUNT_NAME_ALICE: ${{ secrets.e2e_test_account_name_alice }}
+          E2E_TEST_ACCOUNT_PASSWORD_ALICE: ${{ secrets.e2e_test_account_password_alice }}
+          E2E_TEST_ACCOUNT_SEED_ALICE: ${{ secrets.e2e_test_account_seed_alice }}
           NODE_ENV: CI
-          EXTENSSION_SRC: ../extensions/polkadot-dapp/extension/master-build
+          EXTENSION_SRC: ../extensions/polkadot-dapp/extension/master-build
           WS_URL: ws://127.0.0.1:9988
         run: |
           cd ui-app

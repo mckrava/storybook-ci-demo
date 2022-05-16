@@ -6,10 +6,6 @@ env.config({
     process.env.NODE_ENV !== 'CI' ? `.env.test.e2e.local` : '.env.test.e2e.ci',
 });
 
-console.log('>>> process.env - ', process.env);
-console.log('>>> process.env.NODE_ENV - ', process.env.NODE_ENV);
-console.log('>>> process.env.EXTENSSION_SRC - ', process.env.EXTENSSION_SRC);
-
 const config: PlaywrightTestConfig = {
   globalTeardown: require.resolve('../global-teardown.ts'),
   timeout: 60000,
