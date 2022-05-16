@@ -121,6 +121,12 @@ jobs:
         with:
           filename: ui-app/e2e-tests-vars.txt
 
+      - name: 'debug'
+        if: always()
+        shell: bash
+        run: |
+          export $(cat ui-app/.env.test.e2e.ci | grep -v '#' | sed 's/\r$//' | awk '/=/ {print $1}' )
+
       - name: 'Make e2e testing env vars file hidden'
         shell: bash
         run: mv ui-app/e2e-tests-vars.txt ui-app/.env.test.e2e.ci
@@ -132,13 +138,13 @@ jobs:
         run: |
           cd ui-app
           DEBUG=pw:browser* HEADFUL=true xvfb-run --auto-servernum -- yarn test:e2e-ci
-          ls
+          ls -a
           echo "----- wait -----"
           sleep 60s
-          ls
+          ls -a
           echo "----"
           cd e2e-tests
-          ls
+          ls -a
 
       - name: 'Sleep for 30 seconds (for compiling html reports)'
         if: always()
