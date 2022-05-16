@@ -73,12 +73,12 @@ jobs:
         with:
           filename: ui-app/e2e-tests-vars.txt
 
+      #          export $(cat ui-app/.env.test.e2e.ci | grep -v '#' | sed 's/\r$//' | awk '/=/ {print $1}' )
       - name: 'debug'
         if: always()
         shell: bash
         run: |
           cat > ui-app/.env.test.e2e.ci
-#          export $(cat ui-app/.env.test.e2e.ci | grep -v '#' | sed 's/\r$//' | awk '/=/ {print $1}' )
           cd ui-app
           ls -a
 
