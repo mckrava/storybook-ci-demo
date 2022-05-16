@@ -25,6 +25,7 @@ export const CLOSE_PAGES = async (browserContext: ChromiumBrowserContext) => {
 export const initBrowserWithExtension = async () => {
   const userDataDir = `/tmp/test-user-data-${Math.random()}`;
   let extensionURL: string = '';
+  console.log('>>> EXTENSION_PATH - ', EXTENSION_PATH)
   const browserContext = (await chromium.launchPersistentContext(userDataDir, {
     headless: false,
     args: [
