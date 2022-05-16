@@ -121,12 +121,6 @@ jobs:
         with:
           filename: ui-app/e2e-tests-vars.txt
 
-      - name: 'debug'
-        if: always()
-        shell: bash
-        run: |
-          export $(cat ui-app/.env.test.e2e.ci | grep -v '#' | sed 's/\r$//' | awk '/=/ {print $1}' )
-
       - name: 'Make e2e testing env vars file hidden'
         shell: bash
         run: mv ui-app/e2e-tests-vars.txt ui-app/.env.test.e2e.ci
@@ -137,6 +131,7 @@ jobs:
           PLAYWRIGHT_TEST_BASE_URL: ${{ github.event.deployment_status.target_url }}
         run: |
           cd ui-app
+          sudo chmod 777 .env.test.e2e.ci
           DEBUG=pw:browser* HEADFUL=true xvfb-run --auto-servernum -- yarn test:e2e-ci
           ls -a
           echo "----- wait -----"
