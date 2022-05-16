@@ -87,12 +87,10 @@ jobs:
         run: mv ui-app/e2e-tests-vars.txt ui-app/.env.test.e2e.ci
 
       - name: 'Run e2e tests'
-        shell: bash
         env:
           PLAYWRIGHT_TEST_BASE_URL: ${{ github.event.deployment_status.target_url }}
         run: |
           cd ui-app
-          echo ">>> EXTENSSION_SRC - $EXTENSSION_SRC"
           DEBUG=pw:browser* HEADFUL=true xvfb-run --auto-servernum -- yarn test:e2e-ci
           ls -a
           echo "----- wait -----"
