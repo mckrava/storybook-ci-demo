@@ -108,43 +108,24 @@ jobs:
       - name: 'Install OS dependencies for Playwright'
         run: npx playwright install-deps
 
-      - name: 'Make e2e testing env vars file visible (required for falnyr/replace-env-vars-action@master)'
-        shell: bash
-        run: mv ui-app/.env.test.e2e.ci ui-app/e2e-tests-vars.txt
-
-      - name: 'Prepare E2E Tests Env Variables'
-        uses: falnyr/replace-env-vars-action@master
-        env:
-          E2E_TEST_ACCOUNT_NAME_ALICE: ${{ secrets.E2E_TEST_ACCOUNT_NAME_ALICE }}
-          E2E_TEST_ACCOUNT_PASSWORD_ALICE: ${{ secrets.E2E_TEST_ACCOUNT_PASSWORD_ALICE }}
-          E2E_TEST_ACCOUNT_SEED_ALICE: ${{ secrets.E2E_TEST_ACCOUNT_SEED_ALICE }}
-        with:
-          filename: ui-app/e2e-tests-vars.txt
-
-      - name: 'Make e2e testing env vars file hidden'
-        shell: bash
-        run: mv ui-app/e2e-tests-vars.txt ui-app/.env.test.e2e.ci
-
       - name: 'Run e2e tests'
         shell: bash
         env:
           PLAYWRIGHT_TEST_BASE_URL: ${{ github.event.deployment_status.target_url }}
+          E2E_TEST_ACCOUNT_NAME_ALICE: ${{ secrets.E2E_TEST_ACCOUNT_NAME_ALICE }}
+          E2E_TEST_ACCOUNT_PASSWORD_ALICE: ${{ secrets.E2E_TEST_ACCOUNT_PASSWORD_ALICE }}
+          E2E_TEST_ACCOUNT_SEED_ALICE: ${{ secrets.E2E_TEST_ACCOUNT_SEED_ALICE }}
+          NODE_ENV: CI
+          EXTENSSION_SRC: ../extensions/polkadot-dapp/extension/master-build
+          WS_URL: ws://127.0.0.1:9988
         run: |
           cd ui-app
-          sudo chmod 777 .env.test.e2e.ci
           DEBUG=pw:browser* HEADFUL=true xvfb-run --auto-servernum -- yarn test:e2e-ci
-          ls -a
-          echo "----- wait -----"
-          sleep 60s
-          ls -a
-          echo "----"
-          cd e2e-tests
-          ls -a
 
       - name: 'Sleep for 30 seconds (for compiling html reports)'
         if: always()
         shell: bash
-        run: sleep 60s
+        run: sleep 30s
 
       - name: 'debug'
         if: always()
@@ -153,18 +134,18 @@ jobs:
           echo "pwd ->"
           pwd
           echo "ls ->"
-          ls
+          ls -a
           echo "cd ui-app ->"
           cd ui-app
           echo "ls ->"
-          ls
+          ls -a
           echo "cd e2e-tests ->"
           cd e2e-tests
           echo "ls ->"
-          ls
+          ls -a
           echo "cd app-e2e-traces ->"
           cd app-e2e-traces
-          ls
+          ls -a
 
       - name: 'Upload trace files'
         if: always()
