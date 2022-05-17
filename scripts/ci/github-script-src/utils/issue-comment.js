@@ -477,6 +477,7 @@ async function runPublishArtifactsWorkflow({ github, commentData }) {
         )
       : null;
 
+  console.log('[LOG]:: publishArtifactsWf list - ', workflowsList.data.workflows);
   console.log('[LOG]:: publishArtifactsWf 3 - ', publishArtifactsWf);
 
   if (!publishArtifactsWf) return 1;
