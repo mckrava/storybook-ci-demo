@@ -466,7 +466,8 @@ async function runPublishArtifactsWorkflow({ github, commentData, githubSha }) {
     owner: commentMeta.owner,
     repo: commentMeta.repo,
     workflow_id: `.github/workflows/${commentMeta.publishArtifactsWorkflowDispatchFile}`,
-    ref: commentMeta.defaultBranch,
+    // ref: commentMeta.defaultBranch,
+    ref: commentMeta.branchName,
     inputs: {
       pr_comment_data: preparedInputs,
       cache_commit_sha: commentMeta.triggerCommit
