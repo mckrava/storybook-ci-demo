@@ -67,10 +67,10 @@ jobs:
         
 
       # Compile artifacts list from required runs and publish PR comment.
+        #          ISSUE_COMMENT_DATA: ${{ github.event.inputs.pr_comment_data }}
       - name: "Publish comment"
         uses: actions/github-script@v6
         env:
-#          ISSUE_COMMENT_DATA: ${{ github.event.inputs.pr_comment_data }}
           COMMENT_CACHED_CONTENT: ${{steps.parse-pr-comment-data.outputs.data || false}}
         with:
           github-token: ${{ secrets.GH_TOKEN }}
