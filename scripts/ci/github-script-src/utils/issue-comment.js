@@ -493,6 +493,7 @@ async function runPublishArtifactsWorkflow({ github, commentData }) {
     inputs: {
       pr_comment_data: preparedInputs,
       cache_commit_sha: commentData.commentMeta.triggerCommit.sha,
+      cache_branch_name: commentData.commentMeta.branchName,
     },
   });
 

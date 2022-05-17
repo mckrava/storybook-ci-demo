@@ -31,6 +31,11 @@ on:
         required: true
         default: ''
         type: string
+      cache_branch_name:
+        description: 'Commit SHA'
+        required: true
+        default: ''
+        type: string
 
 jobs:
   report-with-artifacts:
@@ -53,9 +58,9 @@ jobs:
           TIMESTAMP: ${{ steps.get-timestamp.outputs.time }}
         with:
           path: ./reporter-artifacts
-          key: reporter-artifacts-branch-${{ github.ref_name }}-commit-${{ github.event.inputs.cache_commit_sha }}-${{ steps.timestamp.outputs.time }}
+          key: reporter-artifacts-branch-${{ github.event.inputs.cache_branch_name }}-commit-${{ github.event.inputs.cache_commit_sha }}-${{ steps.timestamp.outputs.time }}
           restore-keys: |
-            reporter-artifacts-branch-${{ github.ref_name }}-commit-${{ github.event.inputs.cache_commit_sha }}-
+            reporter-artifacts-branch-${{ github.event.inputs.cache_branch_name }}-commit-${{ github.event.inputs.cache_commit_sha }}-
 
       - name: 'Parse PR comment data from cache'
         id: parse-pr-comment-data
