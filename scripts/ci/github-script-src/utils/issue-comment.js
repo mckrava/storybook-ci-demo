@@ -460,30 +460,6 @@ async function runPublishArtifactsWorkflow({ github, commentData }) {
   const { commentMeta } = commentData;
   const preparedInputs = JSON.stringify(commentData);
 
-  const workflowsList = await github.request(
-    `GET /repos/${commentMeta.owner}/${commentMeta.repo}/actions/workflows`,
-    {
-      owner: commentMeta.owner,
-      repo: commentMeta.repo,
-      per_page: 99,
-    }
-  );
-
-  const publishArtifactsWf =
-    workflowsList.data && workflowsList.data.total_count > 0
-      ? workflowsList.data.workflows.find(
-          (item) =>
-            item.path ===
-            `.github/workflows/${commentMeta.publishArtifactsWorkflowDispatchFile}`
-        )
-      : null;
-
-  console.log('[LOG]:: publishArtifactsWf list - ', workflowsList.data.workflows);
-  console.log('[LOG]:: publishArtifactsWf 3 - ', publishArtifactsWf);
-  console.log('[LOG]:: commentData - ', commentData);
-
-  if (!publishArtifactsWf) return 1;
-
   const dispatchResp = await github.rest.actions.createWorkflowDispatch({
     owner: commentMeta.owner,
     repo: commentMeta.repo,
