@@ -47,15 +47,15 @@ jobs:
 
       # Restore cached PR comment data from previous/parallel runs.
       - name: 'Restore PR comment cache'
-      id: cache-reporter-content
-      uses: actions/cache@v2
-      env:
-        TIMESTAMP: ${{ steps.get-timestamp.outputs.time }}
-      with:
-        path: ./reporter-artifacts
-        key: reporter-artifacts-branch-${{ github.ref_name }}-commit-${{ github.event.inputs.cache_commit_sha }}-${{ steps.timestamp.outputs.time }}
-        restore-keys: |
-          reporter-artifacts-branch-${{ github.ref_name }}-commit-${{ github.event.inputs.cache_commit_sha }}-
+        id: cache-reporter-content
+        uses: actions/cache@v2
+        env:
+          TIMESTAMP: ${{ steps.get-timestamp.outputs.time }}
+        with:
+          path: ./reporter-artifacts
+          key: reporter-artifacts-branch-${{ github.ref_name }}-commit-${{ github.event.inputs.cache_commit_sha }}-${{ steps.timestamp.outputs.time }}
+          restore-keys: |
+            reporter-artifacts-branch-${{ github.ref_name }}-commit-${{ github.event.inputs.cache_commit_sha }}-
 
       - name: 'Parse PR comment data from cache'
         id: parse-pr-comment-data
