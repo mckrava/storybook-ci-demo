@@ -480,6 +480,7 @@ async function runPublishArtifactsWorkflow({ github, commentData }) {
 
   console.log('[LOG]:: publishArtifactsWf list - ', workflowsList.data.workflows);
   console.log('[LOG]:: publishArtifactsWf 3 - ', publishArtifactsWf);
+  console.log('[LOG]:: commentData - ', commentData);
 
   if (!publishArtifactsWf) return 1;
 
@@ -491,7 +492,7 @@ async function runPublishArtifactsWorkflow({ github, commentData }) {
     ref: commentMeta.defaultBranch,
     inputs: {
       pr_comment_data: preparedInputs,
-      cache_commit_sha: commentData.triggerCommit.sha,
+      cache_commit_sha: commentData.commentMeta.triggerCommit.sha,
     },
   });
 
