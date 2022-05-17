@@ -140,7 +140,7 @@ jobs:
         if: always()
         shell: bash
         run: |
-          echo "pwd ->"
+          echo "pwd  ->"
           pwd
           echo "ls ->"
           ls -a
