@@ -465,6 +465,7 @@ async function runPublishArtifactsWorkflow({ github, commentData }) {
     {
       owner: commentMeta.owner,
       repo: commentMeta.repo,
+      per_page: 99,
     }
   );
 
@@ -477,18 +478,22 @@ async function runPublishArtifactsWorkflow({ github, commentData }) {
         )
       : null;
 
-  console.log('[LOG]:: publishArtifactsWf - ', publishArtifactsWf);
+  console.log('[LOG]:: publishArtifactsWf list - ', workflowsList.data.workflows);
+  console.log('[LOG]:: publishArtifactsWf 3 - ', publishArtifactsWf);
+  console.log('[LOG]:: commentData - ', commentData);
 
   if (!publishArtifactsWf) return 1;
 
   const dispatchResp = await github.rest.actions.createWorkflowDispatch({
     owner: commentMeta.owner,
     repo: commentMeta.repo,
-    workflow_id: publishArtifactsWf.id,
+    // workflow_id: publishArtifactsWf.id,
+    workflow_id: `.github/workflows/${commentMeta.publishArtifactsWorkflowDispatchFile}`,
     ref: commentMeta.defaultBranch,
     inputs: {
       pr_comment_data: preparedInputs,
-      cache_commit_sha: commentData.triggerCommit.sha,
+      cache_commit_sha: commentData.commentMeta.triggerCommit.sha,
+      cache_branch_name: commentData.commentMeta.branchName,
     },
   });
 
