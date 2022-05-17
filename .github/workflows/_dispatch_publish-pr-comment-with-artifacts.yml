@@ -38,8 +38,16 @@ on:
         type: string
 
 jobs:
+  delay:
+    name: "Delay"
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Delay'
+        run: sleep 90s
+
   report-with-artifacts:
     name: "Report"
+    needs: delay
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
