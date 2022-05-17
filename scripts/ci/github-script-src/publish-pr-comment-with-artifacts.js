@@ -2,12 +2,30 @@ const commentUtils = require('./utils/github-api');
 const issueCommentComponents = require('./utils/issue-comment');
 
 module.exports = async ({ github, context, core }) => {
-  const { ISSUE_COMMENT_DATA = '{}' } = process.env;
+  const { COMMENT_CACHED_CONTENT = '{}' } = process.env;
 
   console.log('[LOG]:: context 2 - ', context);
-  console.log(JSON.parse(ISSUE_COMMENT_DATA));
+  console.log(JSON.parse(COMMENT_CACHED_CONTENT));
 
-  const { commentMeta, commentSections } = JSON.parse(ISSUE_COMMENT_DATA);
+  let commentData = null;
+
+  if (COMMENT_CACHED_CONTENT !== 'false') {
+    try {
+      commentData =
+        typeof COMMENT_CACHED_CONTENT === 'string'
+          ? JSON.parse(COMMENT_CACHED_CONTENT)
+          : COMMENT_CACHED_CONTENT;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  console.log('>>> commentData - ', commentData);
+
+  if (!commentData) return 1;
+
+  const { commentMeta, commentSections } = commentData;
+  // const { commentMeta, commentSections } = JSON.parse(COMMENT_CACHED_CONTENT);
 
   if (
     !commentMeta.owner ||

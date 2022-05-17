@@ -1,0 +1,153 @@
+# Build Application and Storybook. Deploy builds into GitHub Pages. Publish build and deployment statuses as
+# pull request comment, if any pull request is associated with latest commit.
+
+
+name: 'Test sandbox'
+
+on:
+  push:
+    branches:
+      - 'fix/**'
+      - 'feat/**'
+      - develop
+      - 'release/**'
+      - main
+  pull_request:
+    types:
+      - opened
+    branches:
+      - develop
+      - main
+
+jobs:
+  build:
+    name: "Sandbox"
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: 'Setup Node.js'
+        uses: actions/setup-node@v2
+        with:
+          node-version: 17
+
+      # HTTP-Server is necessary for running UI Application built files
+      - name: 'Install Node.js HTTP-Server'
+        run: yarn global add http-server
+
+      - uses: actions/checkout@v2
+        with:
+          path: 'ui-app'
+
+      # Restore cached Node modules for ui-app.
+      - name: 'Restore cached Node modules'
+        id: cache-node-modules-ui-app
+        uses: actions/cache@v2
+        with:
+          path: ui-app/node_modules
+          key: node-modules-ui-app-${{ hashFiles('ui-app/yarn.lock') }}
+
+      - name: 'Install Node modules for App'
+        if: steps.cache-node-modules-ui-app.outputs.cache-hit != 'true'
+        run: |
+          cd ui-app
+          yarn install --frozen-lockfile
+
+      # Change CI scripts files permissions to prevent "Permission denied" error.
+      - name: 'Change folders permissions'
+        run: chmod -R 777 ui-app/scripts/ci
+
+
+      - name: 'Install OS dependencies for Playwright'
+        run: npx playwright install-deps
+
+      - name: 'Make e2e testing env vars file visible (required for falnyr/replace-env-vars-action@master)'
+        shell: bash
+        run: mv ui-app/.env.test.e2e.ci ui-app/e2e-tests-vars.txt
+
+      - name: 'Prepare E2E Tests Env Variables'
+        uses: falnyr/replace-env-vars-action@master
+        env:
+          E2E_TEST_ACCOUNT_NAME_ALICE: ${{ secrets.E2E_TEST_ACCOUNT_NAME_ALICE }}
+          E2E_TEST_ACCOUNT_PASSWORD_ALICE: ${{ secrets.E2E_TEST_ACCOUNT_PASSWORD_ALICE }}
+          E2E_TEST_ACCOUNT_SEED_ALICE: ${{ secrets.E2E_TEST_ACCOUNT_SEED_ALICE }}
+        with:
+          filename: ui-app/e2e-tests-vars.txt
+
+      #          export $(cat ui-app/.env.test.e2e.ci | grep -v '#' | sed 's/\r$//' | awk '/=/ {print $1}' )
+      - name: 'debug'
+        if: always()
+        shell: bash
+        run: |
+          cat > ui-app/.env.test.e2e.ci
+          cd ui-app
+          ls -a
+
+      - name: 'Make e2e testing env vars file hidden'
+        shell: bash
+        run: mv ui-app/e2e-tests-vars.txt ui-app/.env.test.e2e.ci
+
+      - name: 'Run e2e tests'
+        env:
+          PLAYWRIGHT_TEST_BASE_URL: ${{ github.event.deployment_status.target_url }}
+          E2E_TEST_ACCOUNT_NAME_ALICE: ${{ secrets.E2E_TEST_ACCOUNT_NAME_ALICE }}
+          E2E_TEST_ACCOUNT_PASSWORD_ALICE: ${{ secrets.E2E_TEST_ACCOUNT_PASSWORD_ALICE }}
+          E2E_TEST_ACCOUNT_SEED_ALICE: ${{ secrets.E2E_TEST_ACCOUNT_SEED_ALICE }}
+          NODE_ENV: CI
+          EXTENSION_SRC: ../extensions/polkadot-dapp/extension/master-build
+          WS_URL: ws://127.0.0.1:9988
+        run: |
+          cd ui-app
+          DEBUG=pw:browser* HEADFUL=true xvfb-run --auto-servernum -- yarn test:e2e-ci
+          ls -a
+          echo "----- wait -----"
+          sleep 60s
+          ls -a
+          echo "----"
+          cd e2e-tests
+          ls -a
+
+      - name: 'Sleep for 30 seconds (for compiling html reports)'
+        if: always()
+        shell: bash
+        run: sleep 60s
+
+      - name: 'debug'
+        if: always()
+        shell: bash
+        run: |
+          echo "pwd ->"
+          pwd
+          echo "ls ->"
+          ls
+          echo "cd ui-app ->"
+          cd ui-app
+          echo "ls ->"
+          ls
+          echo "cd e2e-tests ->"
+          cd e2e-tests
+          echo "ls ->"
+          ls
+          echo "cd app-e2e-traces ->"
+          cd app-e2e-traces
+          ls
+
+      - name: 'Upload trace files'
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-e2e-tests-traces-screenshots
+          path: ./ui-app/e2e-tests/app-e2e-traces
+
+      - name: 'Upload e2e tests report file'
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-e2e-tests-report-html
+          path: ./ui-app/ui-app-e2e-results.html
+
+      - name: 'Upload testnet logs'
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-e2e-tests-testnet-sandbox-logs
+          path: ./Basilisk-api/testnet-sandbox-logs
