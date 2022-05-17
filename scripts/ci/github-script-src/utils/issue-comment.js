@@ -87,12 +87,12 @@ async function getCommentDataMetadata({
   /**
    * Get triggered commit SHA
    */
-  if (context.payload.after) {
+  if (context.payload.after || GITHUB_SHA) {
     try {
       const triggerCommitResp = await github.rest.git.getCommit({
         owner,
         repo,
-        commit_sha: context.payload.after,
+        commit_sha: context.payload.after || GITHUB_SHA,
       });
       commentMetaData.triggerCommit = triggerCommitResp.data;
     } catch (e) {
@@ -403,7 +403,9 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
         ? ':white_check_mark: _Passed_ '
         : ':no_entry_sign: _Failed_ '
     }<br />
-    - Tests coverage: ${commentSections[commentDataKeys.appUnitTests].percentage}%
+    - Tests coverage: ${
+      commentSections[commentDataKeys.appUnitTests].percentage
+    }%
     `;
   }
 
@@ -456,20 +458,21 @@ function getCommentMarkdownBody({ github, context, commentData = {} }) {
  * @param commentData
  * @returns {Promise<number>}
  */
-async function runPublishArtifactsWorkflow({ github, commentData }) {
+async function runPublishArtifactsWorkflow({ github, commentData, githubSha }) {
   const { commentMeta } = commentData;
   const preparedInputs = JSON.stringify(commentData);
 
   const dispatchResp = await github.rest.actions.createWorkflowDispatch({
     owner: commentMeta.owner,
     repo: commentMeta.repo,
-    // workflow_id: publishArtifactsWf.id,
     workflow_id: `.github/workflows/${commentMeta.publishArtifactsWorkflowDispatchFile}`,
     ref: commentMeta.defaultBranch,
     inputs: {
       pr_comment_data: preparedInputs,
-      cache_commit_sha: commentData.commentMeta.triggerCommit.sha,
-      cache_branch_name: commentData.commentMeta.branchName,
+      cache_commit_sha: commentMeta.triggerCommit
+        ? commentMeta.triggerCommit.sha
+        : githubSha,
+      cache_branch_name: commentMeta.branchName,
     },
   });
 

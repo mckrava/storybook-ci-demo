@@ -2,7 +2,7 @@ const commentUtils = require('./utils/github-api');
 const issueCommentComponents = require('./utils/issue-comment');
 
 module.exports = async ({ github, context, core }) => {
-  const { PUBLISH_ARTIFACTS_LIST } = process.env;
+  const { PUBLISH_ARTIFACTS_LIST, GITHUB_SHA } = process.env;
 
   console.log('[LOG]:: context - ', context);
 
@@ -38,6 +38,7 @@ module.exports = async ({ github, context, core }) => {
     await issueCommentComponents.runPublishArtifactsWorkflow({
       github,
       commentData,
+      githubSha: GITHUB_SHA
     });
 
   return JSON.stringify(commentData);
