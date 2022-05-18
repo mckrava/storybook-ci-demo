@@ -17,6 +17,7 @@ workflow is used, just as if it was part of the caller workflow.
 
 ---
 
+
 ### Used actions/libraries
 - [GitHub Script](https://github.com/actions/github-script) - run JavaScript logic in GitHub Actions.
 - [Discord for GitHub Actions](https://github.com/Ilshidur/action-discord) - publication messages to Discord channels.
