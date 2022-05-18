@@ -1,7 +1,5 @@
 # Basilisk UI
 
-[![GitHub Release](https://img.shields.io/github/v/release/mckrava/storybook-ci-demo?sort=semver)](https://github.com/mckrava/storybook-ci-demo/releases/latest)
-
 Storybook based front-end for Basilisk parachain employing react-use hooks and Apollo Client for data layer.
 
 ## Develop
@@ -15,7 +13,7 @@ yarn install
 Start Storybook component development environment.
 
 ```
-yarn storybook
+yarn storybook:start
 ```
 
 Storybook can be opened at [:6006](http://localhost:6006)
@@ -61,10 +59,10 @@ push:
     - develop
     - 'fix/**'
     - 'feat/**'
+    - 'release/**'
 pull_request:
   branches:
-    - 'fix/**'
-    - 'feat/**'
+    - 'develop'
 ```
 
 To build optimized production artifacts locally you can run
@@ -90,8 +88,6 @@ The presentational layer is used to present and transform the normalized data pr
 those are fed data via containers through props. Dumb components should be developed in isolation via *storybook* to fit the visual/layout/structural design requirements. Dumb components should only hold local state specific to their own presentational logic (e.g. `isModalOpen`), and should communicate with their respective parent components via props and handlers (e.g. `onClick / handleOnClick`).
 
 Example:
-
-
 
 ```tsx
 // reuse generated models from the data layer
@@ -381,10 +377,12 @@ variable definitions as `.env.test.e2e.ci` but with replaced `__VAR_NAMER__` pla
 repo secrets during GH Actions workflow). 
 
 For running e2e test locally you should:
-1) Build UI project
-2) Run testnet
-3) Run built UI project in local server `http://127.0.0.1:3000`
-4) Run tests with `yarn test:e2e-local`
+1) `npx playwright install` if necessary
+2) Build UI project
+3) Run local testnet (with Basilisk-api).
+4) Run built UI project in local server `http://127.0.0.1:3000` (can be `yarn start`)
+5) Run tests with `yarn test:e2e-local`
+6) Check testing results in `ui-app-e2e-results.html` and screenshots in `./traces`
 
 
 ### Storybook testing
@@ -422,9 +420,13 @@ yarn storybook:test:watch-headed
 ```
 
 
-### Github Actions workflows
+## Github Actions workflows
 
-More details [here](./ci-docs/README.md)
+More details [here](./docs/CI.md)
+
+## Application release flow
+
+More details [here](./docs/RELEASE.md)
 
 
 ## VSCode extensions

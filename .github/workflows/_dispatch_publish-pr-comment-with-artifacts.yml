@@ -26,20 +26,67 @@ on:
         default: '{}'
         type: string
 
+      cache_commit_sha:
+        description: 'Commit SHA'
+        required: true
+        default: ''
+        type: string
+      cache_branch_name:
+        description: 'Commit SHA'
+        required: true
+        default: ''
+        type: string
+
 jobs:
+  delay:
+    name: "Delay"
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Delay'
+        run: sleep 90s
+
   report-with-artifacts:
     name: "Report"
+    needs: delay
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
+      - name: 'Get Timestamp'
+        id: get-timestamp
+        uses: nanzm/get-time-action@v1.1
+        with:
+          format: 'YYYYMMDDHHmmssSSS'
+
+      # Restore cached PR comment data from previous/parallel runs.
+      - name: 'Restore PR comment cache'
+        id: cache-reporter-content
+        uses: actions/cache@v2
+        env:
+          TIMESTAMP: ${{ steps.get-timestamp.outputs.time }}
+        with:
+          path: ./reporter-artifacts
+          key: reporter-artifacts-branch-${{ github.event.inputs.cache_branch_name }}-commit-${{ github.event.inputs.cache_commit_sha }}-${{ steps.timestamp.outputs.time }}
+          restore-keys: |
+            reporter-artifacts-branch-${{ github.event.inputs.cache_branch_name }}-commit-${{ github.event.inputs.cache_commit_sha }}-
+
+      - name: 'Parse PR comment data from cache'
+        id: parse-pr-comment-data
+        run: |
+          ISSUE_COMMENT_DATA=$(cat ./reporter-artifacts/pr-comment-data.txt)
+          echo $ISSUE_COMMENT_DATA
+          echo "::set-output name=data::$ISSUE_COMMENT_DATA"    
+          
+        
+
       # Compile artifacts list from required runs and publish PR comment.
+        #          ISSUE_COMMENT_DATA: ${{ github.event.inputs.pr_comment_data }}
       - name: "Publish comment"
         uses: actions/github-script@v6
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          ISSUE_COMMENT_DATA: ${{ github.event.inputs.pr_comment_data }}
+          COMMENT_CACHED_CONTENT: ${{steps.parse-pr-comment-data.outputs.data || false}}
         with:
+          github-token: ${{ secrets.GH_TOKEN }}
           script: |
             const script = require('./scripts/ci/github-script-src/publish-pr-comment-with-artifacts.js')
             await script({github, context, core})

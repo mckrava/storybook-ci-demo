@@ -7,7 +7,7 @@ export type PolkadotDappAccCredentials = {
   password: string;
 };
 
-export const EXTENSION_PATH = join(__dirname, process.env.EXTENSSION_SRC || '');
+export const EXTENSION_PATH = join(__dirname, process.env.EXTENSION_SRC || '');
 
 export const isExtensionURL = (url: string) =>
   url.startsWith('chrome-extension://');
@@ -25,6 +25,7 @@ export const CLOSE_PAGES = async (browserContext: ChromiumBrowserContext) => {
 export const initBrowserWithExtension = async () => {
   const userDataDir = `/tmp/test-user-data-${Math.random()}`;
   let extensionURL: string = '';
+  console.log('>>> EXTENSION_PATH - ', EXTENSION_PATH)
   const browserContext = (await chromium.launchPersistentContext(userDataDir, {
     headless: false,
     args: [

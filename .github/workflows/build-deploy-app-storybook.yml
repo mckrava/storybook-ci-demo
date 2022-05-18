@@ -8,15 +8,13 @@ on:
     branches:
       - 'fix/**'
       - 'feat/**'
-      - 'release/**'
       - develop
-      - main
+      - 'release/**'
   pull_request:
     types:
       - opened
     branches:
       - develop
-      - main
 
 jobs:
   build:
